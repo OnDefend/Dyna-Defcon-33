@@ -1,0 +1,36 @@
+psutil>=5.8.0
+numpy>=1.21.0
+pandas>=1.3.0
+scikit-learn>=1.0.0
+requests>=2.25.0
+detect-secrets>=1.4.0
+
+# Missing critical dependencies causing "No module named" errors
+cachetools>=5.0.0
+filetype>=1.2.0
+nltk>=3.7
+textblob>=0.17.1
+pycryptodome>=3.15.0
+
+# Additional dependencies for ML and enhanced features
+joblib>=1.1.0
+scipy>=1.7.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+
+# Rich text and UI dependencies
+rich>=12.0.0
+
+# YAML processing
+PyYAML>=6.0
+
+# HTTP and networking
+urllib3>=1.26.0
+certifi>=2021.10.8
+
+# XML processing
+lxml>=4.6.0
+
+# Additional utilities
+python-dateutil>=2.8.0
+tqdm>=4.60.0

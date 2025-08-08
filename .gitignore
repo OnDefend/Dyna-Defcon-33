@@ -1,0 +1,124 @@
+# IDE and editor files
+.cursor/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Decompiled APK directories (temporary)
+AndroGoat/
+tiktok-*/
+*/decompiled/
+workspace/*/
+
+# Generated reports and outputs
+*.json
+!config/*.json  # Keep config JSON files
+*_report.txt
+*_results.json
+*_security_report.json
+
+# Test artifacts and temporary files
+enhanced_patterns_test*
+filtered_test*
+integration_test*
+secrets_integration_test*
+
+# Command artifacts
+"h origin dyna-ml"
+"sues.py --help"
+"tatus"
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+aods_venv/
+venv/
+env/
+
+# Temporary and log files
+*.log
+*.tmp
+/tmp/
+.cache/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.apk
+*.pkl
+models/ml_cache/
+apks/
+workspace/
+outputs/
+*.log
+__pycache__/
+*.pyc
+.pytest_cache/
+tmp/
+temp/
+
+# Organized Project Structure Ignores
+outputs/*.html
+outputs/*.txt
+outputs/final_verification_scan
+cache/
+analytics/
+*.backup
+*.tmp
+*.log
+
+# Runtime directories  
+workspace/
+tmp/
+temp/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Development
+.pytest_cache/
+.coverage
+*.egg-info/
+
+# DefCon 33 - Exclude non-essential files
+*.md
+*_report.html
+*_analysis.py
+defcon_33*/
+defcon33_*
+ml_enhanced_*
+organic_*
+owasp.sat.agoat_*
+*comprehensive_report*
+*professional_report*
+*security_report*
+reports/
+test_*/
+baseline_comparison_test
+comprehensive_enhanced_test
+secret_diary_*
+run_androgoat_*
+create_html_report.py
+create_simplified_parser.py
+quick_comprehensive_report.py
+restore_comprehensive_report.py
+integrate_ml_reporting_with_dyna.py
+generate_professional_html_report.py
+dark_theme_*
+debug_*
+last_run_dir.txt
+final_*
