@@ -1,0 +1,763 @@
+# Native Binary Analysis Pattern Configuration
+# External configuration for all binary security patterns used in analysis
+
+# Pattern metadata
+version: "1.0.0"
+last_updated: "2024-01-01"
+total_patterns: 425  # Updated pattern count
+
+# Enhanced anti-debugging patterns for native binary analysis
+anti_debugging_patterns:
+  debug_detection_functions:
+    - "IsDebuggerPresent"
+    - "CheckRemoteDebuggerPresent"
+    - "OutputDebugString"
+    - "DebugActiveProcess"
+    - "DebugActiveProcessStop"
+    - "WaitForDebugEvent"
+    - "ContinueDebugEvent"
+    - "DebugBreak"
+    - "IsDebuggerPresent"
+    
+  process_monitoring_functions:
+    - "OpenProcess"
+    - "CreateToolhelp32Snapshot"
+    - "Process32First"
+    - "Process32Next"
+    - "GetProcessImageFileName"
+    - "EnumProcesses"
+    - "GetCurrentProcessId"
+    - "GetProcessId"
+    - "ReadProcessMemory"
+    - "WriteProcessMemory"
+    
+  timing_based_detection:
+    - "GetTickCount"
+    - "GetTickCount64"
+    - "QueryPerformanceCounter"
+    - "QueryPerformanceFrequency"
+    - "GetSystemTimeAsFileTime"
+    - "clock_gettime"
+    - "gettimeofday"
+    - "time"
+    - "rdtsc"
+    - "rdtscp"
+    
+  exception_based_detection:
+    - "SetUnhandledExceptionFilter"
+    - "AddVectoredExceptionHandler"
+    - "RemoveVectoredExceptionHandler"
+    - "RaiseException"
+    - "UnhandledExceptionFilter"
+    - "__try"
+    - "__except"
+    - "__finally"
+    - "SEH_"
+    - "vectored_exception"
+    
+  native_anti_debugging:
+    - "ptrace"
+    - "PTRACE_TRACEME"
+    - "PTRACE_ATTACH"
+    - "PTRACE_DETACH"
+    - "PTRACE_CONT"
+    - "PTRACE_KILL"
+    - "PTRACE_PEEKTEXT"
+    - "PTRACE_PEEKDATA"
+    - "PTRACE_POKETEXT"
+    - "PTRACE_POKEDATA"
+    - "PR_SET_DUMPABLE"
+    - "prctl"
+    - "kill"
+    - "getppid"
+    - "signal"
+    - "sigaction"
+    
+  register_manipulation:
+    - "DR0"
+    - "DR1"
+    - "DR2"
+    - "DR3"
+    - "DR6"
+    - "DR7"
+    - "debug_register"
+    - "hardware_breakpoint"
+    - "SetThreadContext"
+    - "GetThreadContext"
+    - "CONTEXT_DEBUG_REGISTERS"
+    
+  instruction_level_detection:
+    - "int3"
+    - "int 3"
+    - "\\xCC"  # INT3 opcode
+    - "\\xCD\\x03"  # INT 3 opcode
+    - "icebp"
+    - "\\xF1"  # ICEBP opcode
+    - "ud2"
+    - "\\x0F\\x0B"  # UD2 opcode
+    - "single_step"
+    - "trap_flag"
+    
+  vm_detection_patterns:
+    - "VMware"
+    - "VirtualBox"
+    - "QEMU"
+    - "Xen"
+    - "Hyper-V"
+    - "Parallels"
+    - "VMWare"
+    - "VBoxService"
+    - "vmmouse"
+    - "vmtools"
+    - "guest_additions"
+    - "vm_detection"
+    
+  sandbox_detection:
+    - "Cuckoo"
+    - "Anubis"
+    - "JoeBox"
+    - "ThreatExpert"
+    - "GFI"
+    - "CWSandbox"
+    - "sandbox"
+    - "analysis"
+    - "malware"
+    - "sample"
+    - "honeypot"
+
+# Debugger tool detection patterns
+debugger_tools:
+  common_debuggers:
+    - "gdb"
+    - "lldb"
+    - "jdb"
+    - "adb"
+    - "ida"
+    - "ida64"
+    - "idaw"
+    - "idaw64"
+    - "x32dbg"
+    - "x64dbg"
+    - "windbg"
+    - "cdb"
+    - "kd"
+    - "radare2"
+    - "r2"
+    - "ghidra"
+    - "binja"
+    - "immunity"
+    - "ollydbg"
+    
+  dynamic_analysis_tools:
+    - "frida"
+    - "frida-server"
+    - "frida-agent"
+    - "xposed"
+    - "substrate"
+    - "cydia"
+    - "objection"
+    - "medusa"
+    - "dwarf"
+    - "passionfruit"
+    
+  monitoring_tools:
+    - "strace"
+    - "ltrace"
+    - "dtrace"
+    - "systrace"
+    - "procmon"
+    - "procexp"
+    - "apimonitor"
+    - "detours"
+    - "easyhook"
+    - "mhook"
+
+# Anti-debugging technique patterns
+anti_debugging_techniques:
+  basic_checks:
+    - "debugger_present"
+    - "being_debugged"
+    - "debug_heap"
+    - "debug_flags"
+    - "debug_port"
+    - "system_kernel_debugger_information"
+    
+  advanced_checks:
+    - "parent_process_check"
+    - "window_detection"
+    - "registry_check"
+    - "file_system_check"
+    - "memory_check"
+    - "api_hooking_detection"
+    - "breakpoint_detection"
+    - "int_scanning"
+    
+  stealth_techniques:
+    - "thread_hiding"
+    - "process_hollowing"
+    - "dll_injection"
+    - "code_injection"
+    - "reflective_dll"
+    - "process_doppelganging"
+    - "atom_bombing"
+    - "process_ghosting"
+
+# Dangerous functions that pose security risks
+dangerous_functions:
+  buffer_overflow_risks:
+    - strcpy
+    - strcat
+    - sprintf
+    - gets
+    - scanf
+    - vsprintf
+    - strncpy
+    - strncat
+    - snprintf
+    - vsnprintf
+    - memcpy
+    - memmove
+    - memset
+    - alloca
+  
+  memory_management:
+    - malloc
+    - free
+    - realloc
+    - calloc
+    - new
+    - delete
+    
+  system_calls:
+    - system
+    - exec
+    - execl
+    - execlp
+    - execle
+    - execv
+    - execvp
+    - execve
+    - popen
+    - fork
+    - vfork
+    - setuid
+    - setgid
+    - setreuid
+    - setregid
+    - seteuid
+    - setegid
+
+# Cryptographic functions
+crypto_functions:
+  encryption:
+    - AES_encrypt
+    - AES_decrypt
+    - DES_encrypt
+    - DES_decrypt
+    - RSA_encrypt
+    - RSA_decrypt
+    - EVP_EncryptInit
+    - EVP_DecryptInit
+    - EVP_EncryptUpdate
+    - EVP_DecryptUpdate
+    - EVP_EncryptFinal
+    - EVP_DecryptFinal
+    
+  hashing:
+    - SHA1_Init
+    - SHA1_Update
+    - SHA1_Final
+    - SHA256_Init
+    - SHA256_Update
+    - SHA256_Final
+    - SHA512_Init
+    - SHA512_Update
+    - SHA512_Final
+    - MD5_Init
+    - MD5_Update
+    - MD5_Final
+    - HMAC_Init
+    - HMAC_Update
+    - HMAC_Final
+    
+  random_generation:
+    - RAND_bytes
+    - RAND_pseudo_bytes
+    - BN_rand
+    - BN_pseudo_rand
+    - random
+    - srandom
+    - rand
+    - srand
+
+# Network functions
+network_functions:
+  socket_operations:
+    - socket
+    - bind
+    - listen
+    - accept
+    - connect
+    - send
+    - recv
+    - sendto
+    - recvfrom
+    - select
+    - poll
+    - epoll
+    
+  http_operations:
+    - curl_easy_init
+    - curl_easy_setopt
+    - curl_easy_perform
+    - curl_easy_cleanup
+    - HttpOpenRequest
+    - HttpSendRequest
+    - InternetReadFile
+    - InternetWriteFile
+    
+  ssl_operations:
+    - SSL_connect
+    - SSL_read
+    - SSL_write
+    - SSL_shutdown
+    - SSL_free
+    - SSL_CTX_new
+    - SSL_CTX_free
+    - SSL_set_verify
+
+# File operations
+file_operations:
+  file_access:
+    - fopen
+    - fread
+    - fwrite
+    - fclose
+    - open
+    - read
+    - write
+    - close
+    - mmap
+    - munmap
+    
+  file_manipulation:
+    - rename
+    - remove
+    - unlink
+    - chmod
+    - chown
+    - stat
+    - lstat
+    - access
+    
+  directory_operations:
+    - opendir
+    - readdir
+    - closedir
+    - mkdir
+    - rmdir
+    - chdir
+    - getcwd
+
+# Registry operations (Windows)
+registry_operations:
+  registry_access:
+    - RegOpenKey
+    - RegOpenKeyEx
+    - RegCreateKey
+    - RegCreateKeyEx
+    - RegCloseKey
+    - RegDeleteKey
+    - RegDeleteValue
+    - RegQueryValue
+    - RegQueryValueEx
+    - RegSetValue
+    - RegSetValueEx
+    - RegEnumKey
+    - RegEnumValue
+
+# JNI vulnerability patterns
+jni_vulnerability_patterns:
+  reference_leaks:
+    - "NewGlobalRef.*without.*DeleteGlobalRef"
+    - "NewLocalRef.*without.*DeleteLocalRef"
+    - "GetStringChars.*without.*ReleaseStringChars"
+    - "GetStringUTFChars.*without.*ReleaseStringUTFChars"
+    - "GetByteArrayElements.*without.*ReleaseByteArrayElements"
+    - "GetPrimitiveArrayCritical.*without.*ReleasePrimitiveArrayCritical"
+    
+  exception_handling:
+    - "CallMethod.*without.*ExceptionCheck"
+    - "GetFieldID.*without.*ExceptionCheck"
+    - "GetMethodID.*without.*ExceptionCheck"
+    - "NewObject.*without.*ExceptionCheck"
+    - "FindClass.*without.*ExceptionCheck"
+    
+  buffer_overflow:
+    - "GetStringUTFChars.*strcpy"
+    - "GetStringChars.*wcscpy"
+    - "GetByteArrayElements.*memcpy.*without.*length.*check"
+    - "GetArrayLength.*buffer.*overflow"
+    
+  privilege_escalation:
+    - "AttachCurrentThread.*root"
+    - "AttachCurrentThread.*system"
+    - "JNI_OnLoad.*setuid"
+    - "JNI_OnLoad.*setgid"
+    
+  boundary_violations:
+    - "GetArrayLength.*index.*out.*of.*bounds"
+    - "GetObjectArrayElement.*index.*validation"
+    - "SetObjectArrayElement.*index.*validation"
+    - "GetByteArrayRegion.*bounds.*check"
+
+# Memory security patterns
+memory_security_patterns:
+  stack_protection:
+    - "__stack_chk_fail"
+    - "__stack_chk_guard"
+    - "stack_canary"
+    - "stack_protector"
+    
+  heap_protection:
+    - "heap_guard"
+    - "heap_canary"
+    - "malloc_guard"
+    - "free_guard"
+    
+  buffer_overflow:
+    - "buffer_overflow"
+    - "stack_overflow"
+    - "heap_overflow"
+    - "integer_overflow"
+    
+  use_after_free:
+    - "use_after_free"
+    - "dangling_pointer"
+    - "freed_memory_access"
+    
+  double_free:
+    - "double_free"
+    - "multiple_free"
+    - "free_after_free"
+    
+  control_flow_integrity:
+    - "__cfi_check"
+    - "__cfi_slowpath"
+    - "cfi_guard"
+    - "control_flow_integrity"
+    
+  address_sanitizer:
+    - "__asan_init"
+    - "__asan_report_error"
+    - "address_sanitizer"
+    - "asan_enabled"
+
+# Malware pattern detection
+malware_patterns:
+  suspicious_strings:
+    - "backdoor"
+    - "rootkit"
+    - "trojan"
+    - "keylogger"
+    - "botnet"
+    - "command_and_control"
+    - "c2_server"
+    - "remote_access"
+    - "credential_theft"
+    - "data_exfiltration"
+    - "privilege_escalation"
+    - "exploit_kit"
+    - "payload_delivery"
+    - "persistence_mechanism"
+    - "anti_analysis"
+    - "vm_detection"
+    - "debugger_detection"
+    - "sandbox_evasion"
+    
+  packer_signatures:
+    - "UPX"
+    - "Themida"
+    - "VMProtect"
+    - "Enigma"
+    - "ASProtect"
+    - "Armadillo"
+    - "WinLicense"
+    - "Obsidium"
+    - "PEtite"
+    - "ASPack"
+    - "FSG"
+    - "MEW"
+    - "Molebox"
+    - "Petite"
+    - "RLPack"
+    - "tElock"
+    - "Upack"
+    - "Y0da"
+    
+  anti_analysis:
+    - "IsDebuggerPresent"
+    - "CheckRemoteDebuggerPresent"
+    - "OutputDebugString"
+    - "GetTickCount"
+    - "QueryPerformanceCounter"
+    - "rdtsc"
+    - "cpuid"
+    - "int_2d"
+    - "int_3"
+    - "anti_vm"
+    - "anti_sandbox"
+    - "anti_emulation"
+    - "anti_debug"
+    - "anti_disasm"
+    - "anti_dump"
+    
+  obfuscation:
+    - "code_obfuscation"
+    - "string_obfuscation"
+    - "control_flow_obfuscation"
+    - "data_obfuscation"
+    - "api_obfuscation"
+    - "dynamic_loading"
+    - "runtime_decryption"
+    - "polymorphic_code"
+    - "metamorphic_code"
+    
+  persistence:
+    - "registry_modification"
+    - "startup_folder"
+    - "service_installation"
+    - "dll_injection"
+    - "process_hollowing"
+    - "code_injection"
+    - "hook_installation"
+    - "rootkit_installation"
+    
+  command_control:
+    - "http_beacon"
+    - "https_beacon"
+    - "dns_tunneling"
+    - "irc_communication"
+    - "p2p_communication"
+    - "tor_communication"
+    - "encrypted_communication"
+    - "steganography"
+
+# Binary hardening patterns
+hardening_patterns:
+  pie_patterns:
+    - "DYN.*EXEC"
+    - "Position.*Independent.*Executable"
+    - "PIE.*enabled"
+    
+  nx_patterns:
+    - "GNU_STACK.*NX"
+    - "NX.*bit.*enabled"
+    - "DEP.*enabled"
+    
+  relro_patterns:
+    - "GNU_RELRO"
+    - "BIND_NOW"
+    - "Partial.*RELRO"
+    - "Full.*RELRO"
+    
+  canary_patterns:
+    - "__stack_chk_fail"
+    - "__stack_chk_guard"
+    - "stack.*canary"
+    - "GCC.*stack.*protector"
+    
+  fortify_patterns:
+    - "_FORTIFY_SOURCE"
+    - "__.*_chk"
+    - "fortified.*functions"
+    
+  cfi_patterns:
+    - "__cfi_check"
+    - "__cfi_slowpath"
+    - "CFI.*enabled"
+    - "Control.*Flow.*Integrity"
+
+# Native crypto patterns
+native_crypto_patterns:
+  crypto_libraries:
+    - "OpenSSL"
+    - "BoringSSL"
+    - "LibreSSL"
+    - "mbedTLS"
+    - "wolfSSL"
+    - "Crypto++"
+    - "libgcrypt"
+    - "libsodium"
+    - "cryptlib"
+    - "Botan"
+    
+  weak_crypto:
+    - "DES_encrypt"
+    - "DES_decrypt"
+    - "MD5_Init"
+    - "MD5_Update"
+    - "MD5_Final"
+    - "SHA1_Init"
+    - "RC4_set_key"
+    - "RC4_encrypt"
+    - "ECB_mode"
+    - "NULL_cipher"
+    
+  strong_crypto:
+    - "AES_encrypt"
+    - "AES_decrypt"
+    - "SHA256_Init"
+    - "SHA256_Update"
+    - "SHA256_Final"
+    - "SHA512_Init"
+    - "RSA_encrypt"
+    - "RSA_decrypt"
+    - "ECDSA_sign"
+    - "ECDSA_verify"
+    
+  key_storage:
+    - "keystore"
+    - "key_management"
+    - "key_derivation"
+    - "key_exchange"
+    - "key_agreement"
+    - "key_wrapping"
+    - "hardware_key"
+    - "secure_enclave"
+    
+  random_generation:
+    - "RAND_bytes"
+    - "getrandom"
+    - "urandom"
+    - "dev_random"
+    - "entropy_source"
+    - "secure_random"
+    - "hardware_random"
+
+# Vulnerability severity scoring
+vulnerability_scoring:
+  critical_patterns:
+    weight: 10
+    patterns:
+      - "buffer_overflow"
+      - "code_injection"
+      - "privilege_escalation"
+      - "remote_code_execution"
+  
+  high_patterns:
+    weight: 8
+    patterns:
+      - "use_after_free"
+      - "double_free"
+      - "format_string"
+      - "integer_overflow"
+      - "weak_crypto"
+  
+  medium_patterns:
+    weight: 6
+    patterns:
+      - "info_disclosure"
+      - "denial_of_service"
+      - "weak_authentication"
+      - "insecure_storage"
+  
+  low_patterns:
+    weight: 4
+    patterns:
+      - "missing_validation"
+      - "weak_permissions"
+      - "information_leakage"
+
+# Pattern reliability scores
+pattern_reliability:
+  anti_debugging_detection:
+    reliability: 0.92
+    false_positive_rate: 0.08
+    confidence_weight: 0.92
+    
+  native_anti_debugging:
+    reliability: 0.95
+    false_positive_rate: 0.05
+    confidence_weight: 0.95
+    
+  debugger_tool_detection:
+    reliability: 0.88
+    false_positive_rate: 0.12
+    confidence_weight: 0.88
+    
+  timing_based_detection:
+    reliability: 0.85
+    false_positive_rate: 0.15
+    confidence_weight: 0.85
+    
+  vm_sandbox_detection:
+    reliability: 0.90
+    false_positive_rate: 0.10
+    confidence_weight: 0.90
+    
+  buffer_overflow_risks:
+    reliability: 0.85
+    false_positive_rate: 0.15
+    confidence_weight: 0.85
+    
+  jni_vulnerabilities:
+    reliability: 0.90
+    false_positive_rate: 0.10
+    confidence_weight: 0.90
+    
+  memory_security:
+    reliability: 0.88
+    false_positive_rate: 0.12
+    confidence_weight: 0.88
+    
+  crypto_weaknesses:
+    reliability: 0.92
+    false_positive_rate: 0.08
+    confidence_weight: 0.92
+    
+  malware_patterns:
+    reliability: 0.80
+    false_positive_rate: 0.20
+    confidence_weight: 0.80
+  
+  # Phase 2.5.2 Enhancement: Enhanced anti-debugging pattern reliability
+  symbol_analysis_detection:
+    reliability: 0.95
+    false_positive_rate: 0.05
+    confidence_weight: 0.95
+    
+  enhanced_native_patterns:
+    reliability: 0.90
+    false_positive_rate: 0.10
+    confidence_weight: 0.90
+    
+  system_call_monitoring:
+    reliability: 0.93
+    false_positive_rate: 0.07
+    confidence_weight: 0.93
+    
+  runtime_prevention_analysis:
+    reliability: 0.88
+    false_positive_rate: 0.12
+    confidence_weight: 0.88
+    
+  peb_analysis_patterns:
+    reliability: 0.92
+    false_positive_rate: 0.08
+    confidence_weight: 0.92
+    
+  memory_protection_patterns:
+    reliability: 0.87
+    false_positive_rate: 0.13
+    confidence_weight: 0.87
+    
+  debug_heap_detection:
+    reliability: 0.94
+    false_positive_rate: 0.06
+    confidence_weight: 0.94
+    
+  ptrace_monitoring:
+    reliability: 0.96
+    false_positive_rate: 0.04
+    confidence_weight: 0.96 

@@ -1,0 +1,343 @@
+# Token Replay Analysis Patterns Configuration
+# External configuration for token security vulnerability patterns
+
+# Token Discovery Patterns
+token_patterns:
+  jwt:
+    pattern: "eyJ[A-Za-z0-9_-]+\\.eyJ[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+"
+    description: "JSON Web Token (JWT) pattern"
+    reliability: 0.95
+    fp_rate: 0.05
+    severity: "HIGH"
+    cwe_id: "CWE-287"
+    masvs_refs: ["MSTG-AUTH-04"]
+  
+  bearer:
+    pattern: "Bearer\\s+([A-Za-z0-9_-]+)"
+    description: "Bearer token pattern"
+    reliability: 0.88
+    fp_rate: 0.12
+    severity: "MEDIUM"
+    cwe_id: "CWE-287"
+    masvs_refs: ["MSTG-AUTH-02", "MSTG-AUTH-04"]
+  
+  oauth:
+    pattern: "oauth_token=([A-Za-z0-9_-]+)"
+    description: "OAuth token pattern"
+    reliability: 0.90
+    fp_rate: 0.10
+    severity: "MEDIUM"
+    cwe_id: "CWE-287"
+    masvs_refs: ["MSTG-AUTH-02", "MSTG-AUTH-04"]
+  
+  session_id:
+    pattern: "JSESSIONID=([A-Za-z0-9_-]+)"
+    description: "Java session ID pattern"
+    reliability: 0.85
+    fp_rate: 0.15
+    severity: "MEDIUM"
+    cwe_id: "CWE-384"
+    masvs_refs: ["MSTG-AUTH-03"]
+  
+  api_key:
+    pattern: "api[_-]?key[\"']?\\s*[:=]\\s*[\"']?([A-Za-z0-9_-]+)"
+    description: "API key pattern"
+    reliability: 0.82
+    fp_rate: 0.18
+    severity: "HIGH"
+    cwe_id: "CWE-798"
+    masvs_refs: ["MSTG-AUTH-04"]
+  
+  access_token:
+    pattern: "access[_-]?token[\"']?\\s*[:=]\\s*[\"']?([A-Za-z0-9_-]+)"
+    description: "Access token pattern"
+    reliability: 0.87
+    fp_rate: 0.13
+    severity: "HIGH"
+    cwe_id: "CWE-287"
+    masvs_refs: ["MSTG-AUTH-04"]
+  
+  refresh_token:
+    pattern: "refresh[_-]?token[\"']?\\s*[:=]\\s*[\"']?([A-Za-z0-9_-]+)"
+    description: "Refresh token pattern"
+    reliability: 0.89
+    fp_rate: 0.11
+    severity: "HIGH"
+    cwe_id: "CWE-287"
+    masvs_refs: ["MSTG-AUTH-04"]
+
+# Weak Token Patterns
+weak_token_patterns:
+  sequential:
+    pattern: "^[0-9]+$"
+    description: "Sequential numeric token"
+    reliability: 0.95
+    fp_rate: 0.05
+    severity: "CRITICAL"
+    weakness_type: "predictable"
+    cwe_id: "CWE-340"
+  
+  timestamp:
+    pattern: "^[0-9]{10,13}$"
+    description: "Timestamp-based token"
+    reliability: 0.80
+    fp_rate: 0.20
+    severity: "HIGH"
+    weakness_type: "predictable"
+    cwe_id: "CWE-340"
+  
+  simple_hash:
+    pattern: "^[a-f0-9]{32}$"
+    description: "Simple MD5 hash token"
+    reliability: 0.75
+    fp_rate: 0.25
+    severity: "MEDIUM"
+    weakness_type: "weak_crypto"
+    cwe_id: "CWE-326"
+  
+  predictable:
+    pattern: "^(user|admin|test)[0-9]*$"
+    description: "Predictable token format"
+    reliability: 0.90
+    fp_rate: 0.10
+    severity: "HIGH"
+    weakness_type: "predictable"
+    cwe_id: "CWE-340"
+
+# JWT Security Patterns
+jwt_vulnerabilities:
+  none_algorithm:
+    pattern: "\"alg\"\\s*:\\s*\"none\""
+    description: "JWT with 'none' algorithm"
+    reliability: 0.98
+    fp_rate: 0.02
+    severity: "CRITICAL"
+    cwe_id: "CWE-326"
+    masvs_refs: ["MSTG-AUTH-04"]
+  
+  weak_algorithm:
+    pattern: "\"alg\"\\s*:\\s*\"(HS1|MD5|SHA1)\""
+    description: "JWT with weak algorithm"
+    reliability: 0.93
+    fp_rate: 0.07
+    severity: "HIGH"
+    cwe_id: "CWE-327"
+    masvs_refs: ["MSTG-AUTH-04"]
+  
+  missing_signature:
+    pattern: "eyJ[A-Za-z0-9_-]+\\.eyJ[A-Za-z0-9_-]+\\.$"
+    description: "JWT without signature"
+    reliability: 0.99
+    fp_rate: 0.01
+    severity: "CRITICAL"
+    cwe_id: "CWE-345"
+    masvs_refs: ["MSTG-AUTH-04"]
+  
+  weak_secret:
+    pattern: "\"secret\"\\s*:\\s*\"(test|secret|password|123|admin)\""
+    description: "JWT with weak secret"
+    reliability: 0.85
+    fp_rate: 0.15
+    severity: "HIGH"
+    cwe_id: "CWE-798"
+    masvs_refs: ["MSTG-AUTH-04"]
+
+# Session Management Patterns
+session_vulnerabilities:
+  no_expiry:
+    pattern: "setMaxInactiveInterval\\(-1\\)"
+    description: "Session without expiry"
+    reliability: 0.95
+    fp_rate: 0.05
+    severity: "MEDIUM"
+    cwe_id: "CWE-613"
+    masvs_refs: ["MSTG-AUTH-05"]
+  
+  excessive_expiry:
+    pattern: "setMaxInactiveInterval\\([0-9]{5,}\\)"
+    description: "Session with excessive expiry"
+    reliability: 0.80
+    fp_rate: 0.20
+    severity: "LOW"
+    cwe_id: "CWE-613"
+    masvs_refs: ["MSTG-AUTH-05"]
+  
+  session_fixation:
+    pattern: "(?i)session.*(?:new|create).*(?:before|prior).*login"
+    description: "Potential session fixation"
+    reliability: 0.70
+    fp_rate: 0.30
+    severity: "MEDIUM"
+    cwe_id: "CWE-384"
+    masvs_refs: ["MSTG-AUTH-03"]
+
+# Token Storage Patterns
+insecure_storage:
+  shared_preferences:
+    pattern: "SharedPreferences.*put.*token"
+    description: "Token stored in SharedPreferences"
+    reliability: 0.85
+    fp_rate: 0.15
+    severity: "MEDIUM"
+    cwe_id: "CWE-922"
+    masvs_refs: ["MSTG-AUTH-04"]
+  
+  plain_text:
+    pattern: "token.*=.*\"[^\"]+\""
+    description: "Hardcoded token in plain text"
+    reliability: 0.90
+    fp_rate: 0.10
+    severity: "HIGH"
+    cwe_id: "CWE-798"
+    masvs_refs: ["MSTG-AUTH-04"]
+  
+  log_exposure:
+    pattern: "Log.*(?:token|jwt|bearer|auth)"
+    description: "Token exposed in logs"
+    reliability: 0.75
+    fp_rate: 0.25
+    severity: "MEDIUM"
+    cwe_id: "CWE-532"
+    masvs_refs: ["MSTG-AUTH-04"]
+
+# Token Transmission Patterns
+insecure_transmission:
+  url_parameter:
+    pattern: "\\?.*token=([A-Za-z0-9_-]+)"
+    description: "Token in URL parameter"
+    reliability: 0.90
+    fp_rate: 0.10
+    severity: "HIGH"
+    cwe_id: "CWE-598"
+    masvs_refs: ["MSTG-NETWORK-01"]
+  
+  http_transmission:
+    pattern: "http://.*token"
+    description: "Token transmitted over HTTP"
+    reliability: 0.95
+    fp_rate: 0.05
+    severity: "HIGH"
+    cwe_id: "CWE-319"
+    masvs_refs: ["MSTG-NETWORK-01"]
+
+# Token Strength Configuration
+token_strength_thresholds:
+  entropy:
+    very_weak: 2.0
+    weak: 3.0
+    medium: 4.0
+    strong: 5.0
+    very_strong: 6.0
+  
+  length:
+    very_weak: 8
+    weak: 16
+    medium: 32
+    strong: 64
+    very_strong: 128
+  
+  character_set:
+    numeric_only: 0.2
+    alpha_only: 0.4
+    alphanumeric: 0.6
+    special_chars: 0.8
+    full_set: 1.0
+
+# JWT Algorithm Security Levels
+jwt_algorithm_security:
+  none: "CRITICAL"
+  HS1: "HIGH"
+  HS256: "MEDIUM"
+  HS384: "LOW"
+  HS512: "LOW"
+  RS256: "LOW"
+  RS384: "LOW"
+  RS512: "LOW"
+  ES256: "LOW"
+  ES384: "LOW"
+  ES512: "LOW"
+
+# Session Security Configuration
+session_security_config:
+  max_idle_time:
+    secure: 1800  # 30 minutes
+    acceptable: 3600  # 1 hour
+    warning: 7200  # 2 hours
+    critical: 86400  # 24 hours
+  
+  secure_flags:
+    required: ["HttpOnly", "Secure"]
+    recommended: ["SameSite"]
+    optional: ["Domain", "Path"]
+
+# Pattern reliability tracking for continuous improvement
+pattern_reliability_tracking:
+  enabled: true
+  learning_rate: 0.1
+  min_samples: 10
+  confidence_threshold: 0.7
+
+# Context factors for different analysis sources
+analysis_context_weights:
+  production_app: 0.9
+  development_app: 0.7
+  test_app: 0.4
+  jwt_token: 0.9
+  session_token: 0.85
+  api_key: 0.8
+  oauth_token: 0.85
+  bearer_token: 0.8
+  custom_token: 0.6
+  network_traffic: 0.8
+  static_analysis: 0.7
+  dynamic_analysis: 0.9
+  unknown_context: 0.6
+
+# Evidence weight distribution
+evidence_weights:
+  pattern_reliability: 0.3
+  evidence_strength: 0.25
+  context_awareness: 0.2
+  cross_validation: 0.15
+  analysis_depth: 0.1
+
+# Vulnerability severity mapping
+severity_mapping:
+  jwt_none_algorithm: "CRITICAL"
+  missing_jwt_signature: "CRITICAL"
+  predictable_token: "HIGH"
+  hardcoded_token_secret: "HIGH"
+  token_in_url: "HIGH"
+  weak_token_entropy: "MEDIUM"
+  excessive_token_expiry: "MEDIUM"
+  session_fixation: "MEDIUM"
+  insecure_token_storage: "MEDIUM"
+  no_token_expiry: "MEDIUM"
+  weak_jwt_algorithm: "HIGH"
+  token_replay_vulnerable: "HIGH"
+
+# MASVS compliance mapping
+masvs_mapping:
+  MSTG-AUTH-01:
+    description: "Authentication architecture"
+    patterns: ["api_key", "bearer", "oauth"]
+  
+  MSTG-AUTH-02:
+    description: "Remote authentication"
+    patterns: ["bearer", "oauth", "access_token"]
+  
+  MSTG-AUTH-03:
+    description: "Session management"
+    patterns: ["session_id", "session_fixation", "no_expiry"]
+  
+  MSTG-AUTH-04:
+    description: "Token-based authentication"
+    patterns: ["jwt", "api_key", "access_token", "refresh_token"]
+  
+  MSTG-AUTH-05:
+    description: "Session timeout"
+    patterns: ["no_expiry", "excessive_expiry"]
+  
+  MSTG-NETWORK-01:
+    description: "Secure network communication"
+    patterns: ["token_in_url", "http_transmission"] 

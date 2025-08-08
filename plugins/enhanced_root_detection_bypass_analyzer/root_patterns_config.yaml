@@ -1,0 +1,290 @@
+# Enhanced Root Detection Bypass Analyzer Patterns Configuration
+# Contains patterns for detecting root detection mechanisms and bypass techniques
+
+native_binary_patterns:
+  - pattern: 'su\s*\('
+    description: "Su binary execution call"
+    severity: "high"
+    confidence_base: 0.90
+    cwe: "CWE-693"
+    bypass_resistance: 0.7
+    
+  - pattern: '\/system\/bin\/su'
+    description: "Direct su binary path reference"
+    severity: "high"
+    confidence_base: 0.88
+    cwe: "CWE-693"
+    bypass_resistance: 0.6
+    
+  - pattern: '\/system\/xbin\/su'
+    description: "Alternative su binary path"
+    severity: "high"
+    confidence_base: 0.85
+    cwe: "CWE-693"
+    bypass_resistance: 0.6
+    
+  - pattern: 'busybox'
+    description: "BusyBox utility detection"
+    severity: "medium"
+    confidence_base: 0.75
+    cwe: "CWE-693"
+    bypass_resistance: 0.5
+
+file_system_patterns:
+  - pattern: '\/system\/app\/Superuser\.apk'
+    description: "Superuser APK file detection"
+    severity: "high"
+    confidence_base: 0.85
+    cwe: "CWE-693"
+    bypass_resistance: 0.4
+    
+  - pattern: '\/system\/etc\/init\.d\/'
+    description: "Init.d directory check"
+    severity: "medium"
+    confidence_base: 0.70
+    cwe: "CWE-693"
+    bypass_resistance: 0.3
+    
+  - pattern: '\/dev\/block\/platform'
+    description: "Platform block device access"
+    severity: "medium"
+    confidence_base: 0.65
+    cwe: "CWE-693"
+    bypass_resistance: 0.5
+    
+  - pattern: '\/proc\/mounts'
+    description: "Mount point enumeration"
+    severity: "low"
+    confidence_base: 0.60
+    cwe: "CWE-693"
+    bypass_resistance: 0.8
+
+process_execution_patterns:
+  - pattern: 'which\s+su'
+    description: "Su binary location check"
+    severity: "high"
+    confidence_base: 0.82
+    cwe: "CWE-693"
+    bypass_resistance: 0.6
+    
+  - pattern: 'id\s*\(\s*\)'
+    description: "User ID check for root"
+    severity: "medium"
+    confidence_base: 0.75
+    cwe: "CWE-693"
+    bypass_resistance: 0.7
+    
+  - pattern: 'getuid\s*\(\s*\)'
+    description: "Native user ID check"
+    severity: "high"
+    confidence_base: 0.85
+    cwe: "CWE-693"
+    bypass_resistance: 0.8
+    
+  - pattern: "system\\s*\\(\\s*[\"'].*su.*[\"']"
+    description: "System call with su command"
+    severity: "high"
+    confidence_base: 0.90
+    cwe: "CWE-693"
+    bypass_resistance: 0.5
+
+system_property_patterns:
+  - pattern: 'ro\.debuggable'
+    description: "Debuggable property check"
+    severity: "medium"
+    confidence_base: 0.78
+    cwe: "CWE-693"
+    bypass_resistance: 0.6
+    
+  - pattern: 'ro\.secure'
+    description: "Secure property check"
+    severity: "medium"
+    confidence_base: 0.80
+    cwe: "CWE-693"
+    bypass_resistance: 0.7
+    
+  - pattern: 'service\.adb\.root'
+    description: "ADB root service property"
+    severity: "high"
+    confidence_base: 0.85
+    cwe: "CWE-693"
+    bypass_resistance: 0.5
+    
+  - pattern: 'ro\.build\.tags'
+    description: "Build tags property"
+    severity: "low"
+    confidence_base: 0.65
+    cwe: "CWE-693"
+    bypass_resistance: 0.8
+
+package_manager_patterns:
+  - pattern: 'com\.noshufou\.android\.su'
+    description: "Superuser package detection"
+    severity: "high"
+    confidence_base: 0.88
+    cwe: "CWE-693"
+    bypass_resistance: 0.3
+    
+  - pattern: 'eu\.chainfire\.supersu'
+    description: "SuperSU package detection"
+    severity: "high"
+    confidence_base: 0.90
+    cwe: "CWE-693"
+    bypass_resistance: 0.3
+    
+  - pattern: 'com\.koushikdutta\.superuser'
+    description: "Koushik Superuser detection"
+    severity: "high"
+    confidence_base: 0.85
+    cwe: "CWE-693"
+    bypass_resistance: 0.3
+    
+  - pattern: 'com\.thirdparty\.superuser'
+    description: "Third-party superuser detection"
+    severity: "medium"
+    confidence_base: 0.75
+    cwe: "CWE-693"
+    bypass_resistance: 0.4
+
+runtime_detection_patterns:
+  - pattern: 'RootTools'
+    description: "RootTools library usage"
+    severity: "high"
+    confidence_base: 0.92
+    cwe: "CWE-693"
+    bypass_resistance: 0.4
+    
+  - pattern: 'isDeviceRooted'
+    description: "Device root check method"
+    severity: "high"
+    confidence_base: 0.88
+    cwe: "CWE-693"
+    bypass_resistance: 0.6
+    
+  - pattern: 'checkRootMethod'
+    description: "Root check method call"
+    severity: "high"
+    confidence_base: 0.85
+    cwe: "CWE-693"
+    bypass_resistance: 0.7
+    
+  - pattern: 'SafetyNet'
+    description: "Google SafetyNet attestation"
+    severity: "high"
+    confidence_base: 0.95
+    cwe: "CWE-693"
+    bypass_resistance: 0.9
+
+device_attestation_patterns:
+  - pattern: 'DeviceIntegrity'
+    description: "Device integrity check"
+    severity: "high"
+    confidence_base: 0.93
+    cwe: "CWE-693"
+    bypass_resistance: 0.85
+    
+  - pattern: 'HardwareAttestation'
+    description: "Hardware attestation check"
+    severity: "high"
+    confidence_base: 0.95
+    cwe: "CWE-693"
+    bypass_resistance: 0.9
+    
+  - pattern: 'KeyAttestation'
+    description: "Key attestation verification"
+    severity: "high"
+    confidence_base: 0.94
+    cwe: "CWE-693"
+    bypass_resistance: 0.88
+
+bypass_technique_patterns:
+  - pattern: 'Xposed'
+    description: "Xposed framework detection"
+    severity: "high"
+    confidence_base: 0.90
+    cwe: "CWE-807"
+    
+  - pattern: 'Frida'
+    description: "Frida hooking framework"
+    severity: "high"
+    confidence_base: 0.92
+    cwe: "CWE-807"
+    
+  - pattern: 'Substrate'
+    description: "Substrate hooking framework"
+    severity: "high"
+    confidence_base: 0.88
+    cwe: "CWE-807"
+    
+  - pattern: 'ptrace'
+    description: "Process tracing for patching"
+    severity: "medium"
+    confidence_base: 0.75
+    cwe: "CWE-807"
+    
+  - pattern: 'mprotect'
+    description: "Memory protection modification"
+    severity: "high"
+    confidence_base: 0.85
+    cwe: "CWE-807"
+    
+  - pattern: 'LD_PRELOAD'
+    description: "Library preloading"
+    severity: "high"
+    confidence_base: 0.88
+    cwe: "CWE-807"
+    
+  - pattern: 'setenv'
+    description: "Environment variable manipulation"
+    severity: "medium"
+    confidence_base: 0.70
+    cwe: "CWE-807"
+
+security_control_patterns:
+  - pattern: 'anti.*hook'
+    description: "Anti-hooking protection"
+    severity: "medium"
+    confidence_base: 0.80
+    cwe: "CWE-693"
+    
+  - pattern: 'hook.*detection'
+    description: "Hook detection mechanism"
+    severity: "medium"
+    confidence_base: 0.78
+    cwe: "CWE-693"
+    
+  - pattern: 'checksum'
+    description: "Integrity checksum verification"
+    severity: "medium"
+    confidence_base: 0.75
+    cwe: "CWE-693"
+    
+  - pattern: 'signature.*verify'
+    description: "Signature verification"
+    severity: "high"
+    confidence_base: 0.85
+    cwe: "CWE-693"
+    
+  - pattern: 'RASP'
+    description: "Runtime Application Self-Protection"
+    severity: "high"
+    confidence_base: 0.90
+    cwe: "CWE-693"
+
+masvs_mappings:
+  resilience_controls:
+    - "MSTG-RESILIENCE-1"
+    - "MSTG-RESILIENCE-2"
+    - "MSTG-RESILIENCE-3"
+  
+  platform_controls:
+    - "MSTG-PLATFORM-11"
+  
+  auth_controls:
+    - "MSTG-AUTH-10"
+
+cwe_mappings:
+  insufficient_protection: "CWE-693"
+  missing_authentication: "CWE-306"
+  bypass_protection: "CWE-807"
+  weak_protection: "CWE-330" 

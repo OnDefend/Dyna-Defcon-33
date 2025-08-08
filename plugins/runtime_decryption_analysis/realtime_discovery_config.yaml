@@ -1,0 +1,935 @@
+# Real-time Vulnerability Discovery Configuration
+# Advanced real-time monitoring, zero-day detection, and intelligent alerting
+
+# General configuration
+enabled: true
+package_name: null  # Will be set dynamically
+log_level: INFO
+debug_mode: false
+
+# Continuous Monitoring Engine Configuration
+monitoring:
+  enabled: true
+  monitoring_interval: 5.0  # seconds between monitoring cycles
+  pattern_buffer_size: 1000  # maximum patterns to keep in memory
+  analysis_window_size: 60   # seconds for analysis window
+  
+  # Frida Integration
+  frida_integration:
+    enabled: true
+    auto_attach: true
+    attachment_timeout: 30
+    script_generation_timeout: 10
+    
+  # Performance Settings
+  performance:
+    max_cpu_usage: 80  # percentage
+    max_memory_usage: 512  # MB
+    monitoring_threads: 2
+
+# Zero-Day Detection Engine Configuration
+zero_day:
+  enabled: true
+  
+  # Detection Thresholds
+  thresholds:
+    anomaly_threshold: 0.8
+    pattern_correlation_threshold: 0.7
+    behavioral_deviation_threshold: 0.75
+    confidence_minimum: 0.6
+    
+  # ML Models Configuration
+  ml_models:
+    anomaly_detector:
+      model_type: "isolation_forest"
+      contamination: 0.1
+      features:
+        - "api_call_frequency"
+        - "timing_patterns"
+        - "parameter_entropy"
+        - "resource_usage"
+    
+    pattern_classifier:
+      model_type: "random_forest"
+      n_estimators: 100
+      max_depth: 10
+      features:
+        - "api_sequences"
+        - "call_patterns"
+        - "data_flow"
+        - "timing_correlation"
+    
+    behavioral_model:
+      model_type: "lstm_autoencoder"
+      sequence_length: 50
+      latent_dim: 64
+      features:
+        - "sequential_patterns"
+        - "timing_variance"
+        - "resource_usage"
+        - "api_dependencies"
+  
+  # Behavioral Analysis
+  behavioral_analysis:
+    baseline_establishment:
+      minimum_samples: 10
+      learning_window: 3600  # seconds
+      confidence_threshold: 0.8
+    
+    pattern_correlation:
+      max_correlation_distance: 100  # seconds
+      minimum_shared_apis: 3
+      correlation_weight_factors:
+        api_overlap: 0.5
+        timing_similarity: 0.2
+        risk_score_alignment: 0.3
+    
+    anomaly_detection:
+      statistical_methods:
+        - "z_score"
+        - "isolation_forest" 
+        - "local_outlier_factor"
+      ensemble_voting: "majority"
+      outlier_fraction: 0.05
+
+# Intelligent Alerting System Configuration
+alerting:
+  enabled: true
+  
+  # Alert Thresholds by Threat Level
+  alert_thresholds:
+    CRITICAL: 0.9
+    HIGH: 0.8
+    MEDIUM: 0.6
+    LOW: 0.4
+    INFO: 0.2
+  
+  # Alert Aggregation
+  aggregation:
+    aggregation_window: 300  # seconds (5 minutes)
+    max_alerts_per_window: 50
+    correlation_distance: 0.8
+    enable_smart_grouping: true
+    
+    # Suppression Rules
+    suppression:
+      enable_rate_limiting: true
+      duplicate_suppression_window: 600  # seconds (10 minutes)
+      low_priority_suppression_limit: 10  # per window
+      
+  # Notification Configuration
+  notifications:
+    # Console/Log Notifications
+    console:
+      enabled: true
+      format: "structured"  # structured, simple, json
+      include_evidence: true
+      max_evidence_items: 5
+    
+    # File-based Notifications
+    file:
+      enabled: true
+      alert_log_path: "logs/realtime_alerts.log"
+      rotation_size: "100MB"
+      rotation_count: 5
+      format: "json"
+    
+    # Real-time Dashboard
+    dashboard:
+      enabled: false  # Enable when dashboard available
+      websocket_port: 8765
+      update_interval: 2.0
+    
+    # External Integrations (placeholder for future)
+    external:
+      webhook:
+        enabled: false
+        url: null
+        timeout: 10
+        retry_count: 3
+      
+      email:
+        enabled: false
+        smtp_server: null
+        port: 587
+        username: null
+        password: null
+        recipients: []
+      
+      slack:
+        enabled: false
+        webhook_url: null
+        channel: "#security-alerts"
+        
+  # Escalation Configuration  
+  escalation:
+    enabled: true
+    auto_escalate_critical: true
+    escalation_delay: 300  # seconds before auto-escalation
+    
+    # Escalation Rules
+    rules:
+      - name: "zero_day_immediate"
+        condition: "alert_type == 'zero_day_detection' and threat_level == 'CRITICAL'"
+        action: "immediate_escalation"
+        
+      - name: "high_confidence_critical"
+        condition: "confidence_score > 0.95 and threat_level == 'CRITICAL'"
+        action: "immediate_escalation"
+        
+      - name: "pattern_correlation_high"
+        condition: "alert_type == 'pattern_correlation' and confidence_score > 0.9"
+        action: "delayed_escalation"
+        delay: 180
+
+# Threat Intelligence Pipeline Configuration  
+threat_intel:
+  enabled: true
+  
+  # Intelligence Sources
+  sources:
+    # Built-in Sources
+    local_patterns:
+      enabled: true
+      pattern_database: "data/threat_patterns.json"
+      update_interval: 3600
+      
+    # External Sources (placeholder for future integration)
+    virustotal:
+      enabled: false
+      api_key: null
+      rate_limit: 4  # requests per minute
+      
+    alienvault_otx:
+      enabled: false
+      api_key: null
+      rate_limit: 10
+      
+    misp:
+      enabled: false
+      url: null
+      auth_key: null
+      verify_ssl: true
+      
+    custom_feeds:
+      enabled: false
+      feeds: []
+  
+  # Correlation Configuration
+  correlation:
+    indicator_types:
+      - "file_hashes"
+      - "ip_addresses"
+      - "domain_names"
+      - "api_patterns"
+      - "behavioral_signatures"
+      
+    confidence_weighting:
+      multiple_source_bonus: 0.2
+      recency_factor: 0.1
+      source_reliability: 0.3
+      
+    caching:
+      enabled: true
+      cache_duration: 1800  # seconds (30 minutes)
+      max_cache_entries: 10000
+      
+  # Intelligence Processing
+  processing:
+    auto_correlation: true
+    correlation_threshold: 0.7
+    max_correlations_per_alert: 10
+    
+    # Indicator Extraction
+    extraction:
+      enable_regex_patterns: true
+      enable_ml_extraction: false  # Future capability
+      custom_extractors: []
+
+# Discovery Analysis Configuration
+discovery:
+  enabled: true
+  
+  # Analysis Timing
+  analysis_interval: 30.0  # seconds between analysis cycles
+  batch_size: 10  # patterns to analyze per cycle
+  max_analysis_time: 120   # seconds maximum per cycle
+  
+  # Pattern Analysis
+  pattern_analysis:
+    enable_statistical_analysis: true
+    enable_ml_analysis: true
+    enable_correlation_analysis: true
+    
+    # Statistical Analysis
+    statistical:
+      significance_threshold: 0.05
+      confidence_interval: 0.95
+      sample_size_minimum: 30
+      
+    # Machine Learning Analysis  
+    ml_analysis:
+      model_update_frequency: 3600  # seconds
+      feature_importance_threshold: 0.1
+      ensemble_models: true
+      
+  # Performance Optimization
+  performance:
+    parallel_analysis: true
+    max_worker_threads: 4
+    analysis_timeout: 60
+    memory_limit: 256  # MB per analysis
+    
+  # Result Processing
+  results:
+    save_intermediate_results: true
+    result_retention_days: 7
+    compress_old_results: true
+
+# Integration Configuration
+integration:
+  # AODS Framework Integration
+  aods:
+    plugin_integration: true
+    result_sharing: true
+    configuration_sync: true
+    
+  # AI/ML Enhanced Generator Integration
+  ai_ml_generator:
+    enabled: true
+    script_enhancement: true
+    pattern_feedback: true
+    learning_integration: true
+    
+  # Frida Framework Integration
+  frida_framework:
+    script_manager: true
+    analysis_orchestrator: true
+    unified_manager: true
+    custom_message_handling: true
+
+# Validation and Testing Configuration
+validation:
+  enabled: true
+  
+  # Self-Testing
+  self_test:
+    enabled: true
+    test_interval: 3600  # seconds
+    test_patterns: "data/test_patterns.json"
+    
+  # Performance Validation
+  performance:
+    enable_benchmarks: true
+    benchmark_interval: 1800
+    performance_thresholds:
+      max_cpu_usage: 70
+      max_memory_usage: 400
+      max_response_time: 5.0
+      
+  # Accuracy Validation
+  accuracy:
+    enable_accuracy_tracking: true
+    feedback_collection: true
+    false_positive_tracking: true
+    
+# Logging Configuration
+logging:
+  level: INFO
+  structured_logging: true
+  
+  # Log Destinations
+  destinations:
+    console:
+      enabled: true
+      level: INFO
+      format: "structured"
+      
+    file:
+      enabled: true
+      level: DEBUG
+      path: "logs/realtime_discovery.log"
+      rotation_size: "50MB"
+      rotation_count: 10
+      
+    system:
+      enabled: false
+      syslog_facility: "local0"
+      
+  # Component-specific Logging
+  components:
+    monitoring_engine: INFO
+    zero_day_engine: INFO
+    alerting_system: INFO
+    threat_intel_pipeline: INFO
+    discovery_orchestrator: INFO
+    
+  # Security and Privacy
+  security:
+    mask_sensitive_data: true
+    log_encryption: false
+    audit_trail: true
+
+# Error Handling and Recovery
+error_handling:
+  # Recovery Strategies
+  recovery:
+    auto_restart_components: true
+    max_restart_attempts: 3
+    restart_delay: 60  # seconds
+    
+    # Graceful Degradation
+    degradation:
+      disable_failing_components: true
+      fallback_to_basic_monitoring: true
+      maintain_core_functionality: true
+      
+  # Error Reporting
+  reporting:
+    log_all_errors: true
+    error_aggregation: true
+    error_correlation: true
+    
+    # Critical Error Handling
+    critical_errors:
+      immediate_notification: true
+      escalation_required: true
+      auto_recovery_disabled: false
+
+# Resource Management
+resources:
+  # Memory Management
+  memory:
+    max_total_usage: 512  # MB
+    cleanup_interval: 300
+    cleanup_threshold: 80  # percentage
+    
+    # Component Limits
+    component_limits:
+      monitoring_engine: 128  # MB
+      zero_day_engine: 128
+      alerting_system: 64
+      threat_intel_pipeline: 64
+      
+  # CPU Management  
+  cpu:
+    max_usage_percentage: 70
+    throttling_enabled: true
+    priority_scheduling: true
+    
+  # Storage Management
+  storage:
+    max_log_size: "1GB"
+    max_cache_size: "100MB"
+    cleanup_old_data: true
+    retention_days: 30
+
+# Development and Debug Configuration
+development:
+  debug_mode: false
+  profiling_enabled: false
+  
+  # Test Data Generation
+  test_data:
+    generate_synthetic_patterns: false
+    synthetic_pattern_count: 100
+    pattern_variety: "high"
+    
+  # Performance Profiling
+  profiling:
+    enabled: false
+    profile_output: "profiles/"
+    profile_components: []
+    
+  # Mock Integrations
+  mocking:
+    mock_frida_integration: false
+    mock_threat_intelligence: false
+    mock_ml_models: false
+
+# Experimental Features
+experimental:
+  # Advanced ML Features
+  advanced_ml:
+    federated_learning: false
+    transfer_learning: false
+    adversarial_detection: false
+    
+  # Advanced Analytics
+  analytics:
+    predictive_modeling: false
+    trend_analysis: false
+    correlation_mining: false
+    
+  # Integration Experiments
+  integrations:
+    cloud_threat_intel: false
+    distributed_monitoring: false
+    multi_app_correlation: false 
+# Advanced real-time monitoring, zero-day detection, and intelligent alerting
+
+# General configuration
+enabled: true
+package_name: null  # Will be set dynamically
+log_level: INFO
+debug_mode: false
+
+# Continuous Monitoring Engine Configuration
+monitoring:
+  enabled: true
+  monitoring_interval: 5.0  # seconds between monitoring cycles
+  pattern_buffer_size: 1000  # maximum patterns to keep in memory
+  analysis_window_size: 60   # seconds for analysis window
+  
+  # Frida Integration
+  frida_integration:
+    enabled: true
+    auto_attach: true
+    attachment_timeout: 30
+    script_generation_timeout: 10
+    
+  # Performance Settings
+  performance:
+    max_cpu_usage: 80  # percentage
+    max_memory_usage: 512  # MB
+    monitoring_threads: 2
+
+# Zero-Day Detection Engine Configuration
+zero_day:
+  enabled: true
+  
+  # Detection Thresholds
+  thresholds:
+    anomaly_threshold: 0.8
+    pattern_correlation_threshold: 0.7
+    behavioral_deviation_threshold: 0.75
+    confidence_minimum: 0.6
+    
+  # ML Models Configuration
+  ml_models:
+    anomaly_detector:
+      model_type: "isolation_forest"
+      contamination: 0.1
+      features:
+        - "api_call_frequency"
+        - "timing_patterns"
+        - "parameter_entropy"
+        - "resource_usage"
+    
+    pattern_classifier:
+      model_type: "random_forest"
+      n_estimators: 100
+      max_depth: 10
+      features:
+        - "api_sequences"
+        - "call_patterns"
+        - "data_flow"
+        - "timing_correlation"
+    
+    behavioral_model:
+      model_type: "lstm_autoencoder"
+      sequence_length: 50
+      latent_dim: 64
+      features:
+        - "sequential_patterns"
+        - "timing_variance"
+        - "resource_usage"
+        - "api_dependencies"
+  
+  # Behavioral Analysis
+  behavioral_analysis:
+    baseline_establishment:
+      minimum_samples: 10
+      learning_window: 3600  # seconds
+      confidence_threshold: 0.8
+    
+    pattern_correlation:
+      max_correlation_distance: 100  # seconds
+      minimum_shared_apis: 3
+      correlation_weight_factors:
+        api_overlap: 0.5
+        timing_similarity: 0.2
+        risk_score_alignment: 0.3
+    
+    anomaly_detection:
+      statistical_methods:
+        - "z_score"
+        - "isolation_forest" 
+        - "local_outlier_factor"
+      ensemble_voting: "majority"
+      outlier_fraction: 0.05
+
+# Intelligent Alerting System Configuration
+alerting:
+  enabled: true
+  
+  # Alert Thresholds by Threat Level
+  alert_thresholds:
+    CRITICAL: 0.9
+    HIGH: 0.8
+    MEDIUM: 0.6
+    LOW: 0.4
+    INFO: 0.2
+  
+  # Alert Aggregation
+  aggregation:
+    aggregation_window: 300  # seconds (5 minutes)
+    max_alerts_per_window: 50
+    correlation_distance: 0.8
+    enable_smart_grouping: true
+    
+    # Suppression Rules
+    suppression:
+      enable_rate_limiting: true
+      duplicate_suppression_window: 600  # seconds (10 minutes)
+      low_priority_suppression_limit: 10  # per window
+      
+  # Notification Configuration
+  notifications:
+    # Console/Log Notifications
+    console:
+      enabled: true
+      format: "structured"  # structured, simple, json
+      include_evidence: true
+      max_evidence_items: 5
+    
+    # File-based Notifications
+    file:
+      enabled: true
+      alert_log_path: "logs/realtime_alerts.log"
+      rotation_size: "100MB"
+      rotation_count: 5
+      format: "json"
+    
+    # Real-time Dashboard
+    dashboard:
+      enabled: false  # Enable when dashboard available
+      websocket_port: 8765
+      update_interval: 2.0
+    
+    # External Integrations (placeholder for future)
+    external:
+      webhook:
+        enabled: false
+        url: null
+        timeout: 10
+        retry_count: 3
+      
+      email:
+        enabled: false
+        smtp_server: null
+        port: 587
+        username: null
+        password: null
+        recipients: []
+      
+      slack:
+        enabled: false
+        webhook_url: null
+        channel: "#security-alerts"
+        
+  # Escalation Configuration  
+  escalation:
+    enabled: true
+    auto_escalate_critical: true
+    escalation_delay: 300  # seconds before auto-escalation
+    
+    # Escalation Rules
+    rules:
+      - name: "zero_day_immediate"
+        condition: "alert_type == 'zero_day_detection' and threat_level == 'CRITICAL'"
+        action: "immediate_escalation"
+        
+      - name: "high_confidence_critical"
+        condition: "confidence_score > 0.95 and threat_level == 'CRITICAL'"
+        action: "immediate_escalation"
+        
+      - name: "pattern_correlation_high"
+        condition: "alert_type == 'pattern_correlation' and confidence_score > 0.9"
+        action: "delayed_escalation"
+        delay: 180
+
+# Threat Intelligence Pipeline Configuration  
+threat_intel:
+  enabled: true
+  
+  # Intelligence Sources
+  sources:
+    # Built-in Sources
+    local_patterns:
+      enabled: true
+      pattern_database: "data/threat_patterns.json"
+      update_interval: 3600
+      
+    # External Sources (placeholder for future integration)
+    virustotal:
+      enabled: false
+      api_key: null
+      rate_limit: 4  # requests per minute
+      
+    alienvault_otx:
+      enabled: false
+      api_key: null
+      rate_limit: 10
+      
+    misp:
+      enabled: false
+      url: null
+      auth_key: null
+      verify_ssl: true
+      
+    custom_feeds:
+      enabled: false
+      feeds: []
+  
+  # Correlation Configuration
+  correlation:
+    indicator_types:
+      - "file_hashes"
+      - "ip_addresses"
+      - "domain_names"
+      - "api_patterns"
+      - "behavioral_signatures"
+      
+    confidence_weighting:
+      multiple_source_bonus: 0.2
+      recency_factor: 0.1
+      source_reliability: 0.3
+      
+    caching:
+      enabled: true
+      cache_duration: 1800  # seconds (30 minutes)
+      max_cache_entries: 10000
+      
+  # Intelligence Processing
+  processing:
+    auto_correlation: true
+    correlation_threshold: 0.7
+    max_correlations_per_alert: 10
+    
+    # Indicator Extraction
+    extraction:
+      enable_regex_patterns: true
+      enable_ml_extraction: false  # Future capability
+      custom_extractors: []
+
+# Discovery Analysis Configuration
+discovery:
+  enabled: true
+  
+  # Analysis Timing
+  analysis_interval: 30.0  # seconds between analysis cycles
+  batch_size: 10  # patterns to analyze per cycle
+  max_analysis_time: 120   # seconds maximum per cycle
+  
+  # Pattern Analysis
+  pattern_analysis:
+    enable_statistical_analysis: true
+    enable_ml_analysis: true
+    enable_correlation_analysis: true
+    
+    # Statistical Analysis
+    statistical:
+      significance_threshold: 0.05
+      confidence_interval: 0.95
+      sample_size_minimum: 30
+      
+    # Machine Learning Analysis  
+    ml_analysis:
+      model_update_frequency: 3600  # seconds
+      feature_importance_threshold: 0.1
+      ensemble_models: true
+      
+  # Performance Optimization
+  performance:
+    parallel_analysis: true
+    max_worker_threads: 4
+    analysis_timeout: 60
+    memory_limit: 256  # MB per analysis
+    
+  # Result Processing
+  results:
+    save_intermediate_results: true
+    result_retention_days: 7
+    compress_old_results: true
+
+# Integration Configuration
+integration:
+  # AODS Framework Integration
+  aods:
+    plugin_integration: true
+    result_sharing: true
+    configuration_sync: true
+    
+  # AI/ML Enhanced Generator Integration
+  ai_ml_generator:
+    enabled: true
+    script_enhancement: true
+    pattern_feedback: true
+    learning_integration: true
+    
+  # Frida Framework Integration
+  frida_framework:
+    script_manager: true
+    analysis_orchestrator: true
+    unified_manager: true
+    custom_message_handling: true
+
+# Validation and Testing Configuration
+validation:
+  enabled: true
+  
+  # Self-Testing
+  self_test:
+    enabled: true
+    test_interval: 3600  # seconds
+    test_patterns: "data/test_patterns.json"
+    
+  # Performance Validation
+  performance:
+    enable_benchmarks: true
+    benchmark_interval: 1800
+    performance_thresholds:
+      max_cpu_usage: 70
+      max_memory_usage: 400
+      max_response_time: 5.0
+      
+  # Accuracy Validation
+  accuracy:
+    enable_accuracy_tracking: true
+    feedback_collection: true
+    false_positive_tracking: true
+    
+# Logging Configuration
+logging:
+  level: INFO
+  structured_logging: true
+  
+  # Log Destinations
+  destinations:
+    console:
+      enabled: true
+      level: INFO
+      format: "structured"
+      
+    file:
+      enabled: true
+      level: DEBUG
+      path: "logs/realtime_discovery.log"
+      rotation_size: "50MB"
+      rotation_count: 10
+      
+    system:
+      enabled: false
+      syslog_facility: "local0"
+      
+  # Component-specific Logging
+  components:
+    monitoring_engine: INFO
+    zero_day_engine: INFO
+    alerting_system: INFO
+    threat_intel_pipeline: INFO
+    discovery_orchestrator: INFO
+    
+  # Security and Privacy
+  security:
+    mask_sensitive_data: true
+    log_encryption: false
+    audit_trail: true
+
+# Error Handling and Recovery
+error_handling:
+  # Recovery Strategies
+  recovery:
+    auto_restart_components: true
+    max_restart_attempts: 3
+    restart_delay: 60  # seconds
+    
+    # Graceful Degradation
+    degradation:
+      disable_failing_components: true
+      fallback_to_basic_monitoring: true
+      maintain_core_functionality: true
+      
+  # Error Reporting
+  reporting:
+    log_all_errors: true
+    error_aggregation: true
+    error_correlation: true
+    
+    # Critical Error Handling
+    critical_errors:
+      immediate_notification: true
+      escalation_required: true
+      auto_recovery_disabled: false
+
+# Resource Management
+resources:
+  # Memory Management
+  memory:
+    max_total_usage: 512  # MB
+    cleanup_interval: 300
+    cleanup_threshold: 80  # percentage
+    
+    # Component Limits
+    component_limits:
+      monitoring_engine: 128  # MB
+      zero_day_engine: 128
+      alerting_system: 64
+      threat_intel_pipeline: 64
+      
+  # CPU Management  
+  cpu:
+    max_usage_percentage: 70
+    throttling_enabled: true
+    priority_scheduling: true
+    
+  # Storage Management
+  storage:
+    max_log_size: "1GB"
+    max_cache_size: "100MB"
+    cleanup_old_data: true
+    retention_days: 30
+
+# Development and Debug Configuration
+development:
+  debug_mode: false
+  profiling_enabled: false
+  
+  # Test Data Generation
+  test_data:
+    generate_synthetic_patterns: false
+    synthetic_pattern_count: 100
+    pattern_variety: "high"
+    
+  # Performance Profiling
+  profiling:
+    enabled: false
+    profile_output: "profiles/"
+    profile_components: []
+    
+  # Mock Integrations
+  mocking:
+    mock_frida_integration: false
+    mock_threat_intelligence: false
+    mock_ml_models: false
+
+# Experimental Features
+experimental:
+  # Advanced ML Features
+  advanced_ml:
+    federated_learning: false
+    transfer_learning: false
+    adversarial_detection: false
+    
+  # Advanced Analytics
+  analytics:
+    predictive_modeling: false
+    trend_analysis: false
+    correlation_mining: false
+    
+  # Integration Experiments
+  integrations:
+    cloud_threat_intel: false
+    distributed_monitoring: false
+    multi_app_correlation: false 

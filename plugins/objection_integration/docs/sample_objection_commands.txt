@@ -1,0 +1,12 @@
+# Sample Objection Commands Script
+# Save this to objection_commands.txt and use:
+# ./aods_venv/bin/objection -g owasp.sat.agoat explore -c objection_commands.txt
+
+env
+android info
+android keystore list
+android sslpinning disable
+android root detection disable  
+memory list modules
+android hooking list classes --include-parents
+android clipboard monitor --verbose

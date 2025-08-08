@@ -1,0 +1,87 @@
+# Crypto Patterns Configuration
+# External configuration for cryptographic vulnerability detection
+
+weak_algorithms:
+  patterns:
+    - "(?i)\\bDES\\b(?!cendant|ign|k)"
+    - "(?i)\\bRC4\\b|\\bARC4\\b"
+    - "(?i)\\bMD5\\b(?!.*(?:HMAC|sum))"
+    - "(?i)\\bSHA-?1\\b(?!.*(?:6|28|60|HMAC))"
+    - "(?i)Cipher\\.getInstance\\s*\\(\\s*[\"'](?:DES|RC4|RC2|Blowfish)[\"']"
+  severity: "HIGH"
+  cwe:
+    - "CWE-327"
+    - "CWE-326"
+  recommendations:
+    - "Use AES-256"
+    - "Use SHA-256"
+    - "Use modern cryptographic algorithms"
+
+deprecated_hashing:
+  patterns:
+    - "(?i)\\bMD2\\b|\\bMD4\\b|\\bMD5\\b(?!.*(?:HMAC|sum|hash))"
+    - "(?i)\\bSHA-?0\\b|\\bSHA-?1\\b(?!.*(?:6|28|60|HMAC))"
+    - "(?i)MessageDigest\\.getInstance\\s*\\(\\s*[\"'](?:MD[245]|SHA-?[01])[\"']"
+  severity: "HIGH"
+  cwe:
+    - "CWE-327"
+    - "CWE-328"
+  recommendations:
+    - "Use SHA-256"
+    - "Use SHA-3"
+    - "Use BLAKE2"
+
+hardcoded_secrets:
+  patterns:
+    - "(?i)(?:key|secret|password)\\s*[:=]\\s*[\"'][A-Za-z0-9+/=]{16,}[\"']"
+    - "(?i)SecretKeySpec\\s*\\([^)]*[\"'][A-Za-z0-9+/=]{8,}[\"']"
+    - "(?i)(?:private|public).*key.*[\"'][A-Za-z0-9+/=]{32,}[\"']"
+  severity: "CRITICAL"
+  cwe:
+    - "CWE-798"
+    - "CWE-321"
+  recommendations:
+    - "Generate keys at runtime"
+    - "Use secure key storage"
+    - "Use Android Keystore"
+
+insecure_crypto_modes:
+  patterns:
+    - "(?i)(?:AES|DES).*ECB"
+    - "(?i)Cipher\\.getInstance\\s*\\(\\s*[\"'][^\"']*ECB[^\"']*[\"']"
+    - "(?i)NoPadding(?!.*(?:GCM|CCM))"
+  severity: "HIGH"
+  cwe:
+    - "CWE-327"
+    - "CWE-326"
+  recommendations:
+    - "Use AES-GCM"
+    - "Use CBC with random IV"
+    - "Use OAEP padding"
+
+insecure_random:
+  patterns:
+    - "(?i)Math\\.random\\(\\)"
+    - "(?i)Random\\(\\)(?!.*Secure)"
+    - "(?i)System\\.currentTimeMillis\\(\\).*seed"
+  severity: "MEDIUM"
+  cwe:
+    - "CWE-338"
+    - "CWE-330"
+  recommendations:
+    - "Use SecureRandom"
+    - "Use proper entropy sources"
+
+weak_key_sizes:
+  patterns:
+    - "(?i)RSA.*512"
+    - "(?i)RSA.*1024"
+    - "(?i)DSA.*512"
+    - "(?i)DSA.*1024"
+  severity: "HIGH"
+  cwe:
+    - "CWE-327"
+    - "CWE-326"
+  recommendations:
+    - "Use RSA-2048 or higher"
+    - "Use ECDSA-256 or higher" 

@@ -1,0 +1,291 @@
+# Enhanced Network Security Analysis Patterns Configuration
+# External configuration for network security vulnerability patterns
+
+insecure_http:
+  patterns:
+    - "http://"
+    - "HttpURLConnection.*http://"
+    - "URL.*http://"
+    - "OkHttpClient.*http://"
+    - "Retrofit.*http://"
+    - "Volley.*http://"
+    - "AsyncHttpClient.*http://"
+    - "HttpClient.*http://"
+  reliability: 0.95
+  fp_rate: 0.05
+  description: "Insecure HTTP usage instead of HTTPS"
+  severity: "HIGH"
+  cwe_id: "CWE-319"
+  masvs_refs: ["MSTG-NETWORK-01"]
+
+weak_ssl_context:
+  patterns:
+    - "SSLContext\\.getInstance\\(\"SSL\"\\)"
+    - "SSLContext\\.getInstance\\(\"SSLv2\"\\)"
+    - "SSLContext\\.getInstance\\(\"SSLv3\"\\)"
+    - "SSLContext\\.getInstance\\(\"TLS\"\\)"
+    - "SSLContext\\.getInstance\\(\"TLSv1\"\\)"
+    - "getInsecure.*SSLSocketFactory"
+    - "NoOpTrustManager"
+    - "TrustAllX509TrustManager"
+  reliability: 0.90
+  fp_rate: 0.10
+  description: "Weak SSL context configuration"
+  severity: "HIGH"
+  cwe_id: "CWE-327"
+  masvs_refs: ["MSTG-NETWORK-02"]
+
+trust_all_certs:
+  patterns:
+    - "checkClientTrusted.*return"
+    - "checkServerTrusted.*return"
+    - "getAcceptedIssuers.*return\\s*null"
+    - "getAcceptedIssuers.*new\\s*X509Certificate\\[0\\]"
+    - "TrustManager.*\\{[^}]*return[^}]*\\}"
+    - "X509TrustManager.*checkServerTrusted.*\\{\\s*\\}"
+    - "X509TrustManager.*checkClientTrusted.*\\{\\s*\\}"
+  reliability: 0.98
+  fp_rate: 0.02
+  description: "Trust manager that accepts all certificates"
+  severity: "CRITICAL"
+  cwe_id: "CWE-295"
+  masvs_refs: ["MSTG-NETWORK-03"]
+
+hostname_verification_disabled:
+  patterns:
+    - "setHostnameVerifier.*ALLOW_ALL_HOSTNAME_VERIFIER"
+    - "setHostnameVerifier.*HostnameVerifier.*return\\s*true"
+    - "HostnameVerifier.*verify.*return\\s*true"
+    - "setDefaultHostnameVerifier.*return\\s*true"
+    - "HttpsURLConnection.*setHostnameVerifier"
+    - "OkHttpClient.*hostnameVerifier.*return\\s*true"
+  reliability: 0.92
+  fp_rate: 0.08
+  description: "Hostname verification disabled"
+  severity: "HIGH"
+  cwe_id: "CWE-295"
+  masvs_refs: ["MSTG-NETWORK-03"]
+
+plaintext_credentials:
+  patterns:
+    - "password.*=.*\"[^\"]+\""
+    - "username.*=.*\"[^\"]+\""
+    - "setCredentials.*\"[^\"]+\".*\"[^\"]+\""
+    - "BasicAuth.*\"[^\"]+\""
+    - "Authorization.*Basic.*[A-Za-z0-9+/]+=*"
+    - "setRequestProperty.*Authorization.*Basic"
+    - "addHeader.*Authorization.*Basic"
+  reliability: 0.85
+  fp_rate: 0.15
+  description: "Plaintext credentials in network requests"
+  severity: "HIGH"
+  cwe_id: "CWE-319"
+  masvs_refs: ["MSTG-NETWORK-01"]
+
+ssl_config_issues:
+  patterns:
+    - "setEnabledProtocols.*SSLv"
+    - "setEnabledProtocols.*TLSv1\""
+    - "setEnabledCipherSuites.*NULL"
+    - "setEnabledCipherSuites.*ANON"
+    - "setEnabledCipherSuites.*EXPORT"
+    - "setEnabledCipherSuites.*DES"
+    - "setEnabledCipherSuites.*MD5"
+    - "setEnabledCipherSuites.*RC4"
+  reliability: 0.88
+  fp_rate: 0.12
+  description: "Insecure SSL/TLS configuration"
+  severity: "MEDIUM"
+  cwe_id: "CWE-326"
+  masvs_refs: ["MSTG-NETWORK-02"]
+
+certificate_validation_bypass:
+  patterns:
+    - "onReceivedSslError.*proceed"
+    - "SslErrorHandler.*proceed"
+    - "WebViewClient.*onReceivedSslError.*handler\\.proceed"
+    - "CertificateException.*catch.*\\{\\s*\\}"
+    - "SSLHandshakeException.*catch.*\\{\\s*\\}"
+    - "CertPathValidatorException.*catch.*\\{\\s*\\}"
+  reliability: 0.93
+  fp_rate: 0.07
+  description: "SSL certificate validation bypass"
+  severity: "CRITICAL"
+  cwe_id: "CWE-295"
+  masvs_refs: ["MSTG-NETWORK-03"]
+
+network_config_issues:
+  patterns:
+    - "setConnectTimeout\\(0\\)"
+    - "setReadTimeout\\(0\\)"
+    - "setDoInput\\(false\\)"
+    - "setDoOutput\\(false\\)"
+    - "setUseCaches\\(true\\)"
+    - "setAllowUserInteraction\\(true\\)"
+    - "setInstanceFollowRedirects\\(false\\)"
+  reliability: 0.87
+  fp_rate: 0.13
+  description: "Insecure network configuration"
+  severity: "MEDIUM"
+  cwe_id: "CWE-20"
+  masvs_refs: ["MSTG-NETWORK-01"]
+
+credential_handling_issues:
+  patterns:
+    - "SharedPreferences.*password"
+    - "SharedPreferences.*credential"
+    - "SharedPreferences.*token"
+    - "putString.*password.*[^encrypt]"
+    - "putString.*credential.*[^encrypt]"
+    - "Properties.*password"
+    - "System\\.getProperty.*password"
+  reliability: 0.80
+  fp_rate: 0.20
+  description: "Insecure credential handling"
+  severity: "MEDIUM"
+  cwe_id: "CWE-522"
+  masvs_refs: ["MSTG-NETWORK-01"]
+
+tls_version_issues:
+  patterns:
+    - "TLSv1\\.0"
+    - "TLSv1\\.1"
+    - "SSLv2"
+    - "SSLv3"
+    - "setEnabledProtocols.*TLSv1\\.0"
+    - "setEnabledProtocols.*TLSv1\\.1"
+    - "getSupportedProtocols.*TLSv1\\."
+  reliability: 0.94
+  fp_rate: 0.06
+  description: "Deprecated TLS/SSL version usage"
+  severity: "MEDIUM"
+  cwe_id: "CWE-327"
+  masvs_refs: ["MSTG-NETWORK-02"]
+
+cipher_suite_issues:
+  patterns:
+    - "SSL_RSA_WITH_NULL"
+    - "SSL_DH_anon"
+    - "SSL_ECDH_anon"
+    - "TLS_DH_anon"
+    - "TLS_ECDH_anon"
+    - "_WITH_NULL_"
+    - "_WITH_DES_"
+    - "_WITH_3DES_"
+    - "_WITH_RC4_"
+    - "_WITH_MD5"
+  reliability: 0.89
+  fp_rate: 0.11
+  description: "Weak cipher suite configuration"
+  severity: "MEDIUM"
+  cwe_id: "CWE-326"
+  masvs_refs: ["MSTG-NETWORK-02"]
+
+# SSL/TLS Security Configuration Checks
+secure_ssl_settings:
+  min_tls_version:
+    setting: "TLS version"
+    secure_value: "TLSv1.2+"
+    description: "Use TLS 1.2 or higher"
+  
+  strong_cipher_suites:
+    setting: "Cipher suites"
+    secure_value: "AES-GCM, ChaCha20-Poly1305"
+    description: "Use authenticated encryption cipher suites"
+  
+  certificate_validation:
+    setting: "Certificate validation"
+    secure_value: "enabled"
+    description: "Always validate SSL certificates"
+  
+  hostname_verification:
+    setting: "Hostname verification"
+    secure_value: "enabled"
+    description: "Always verify hostname matches certificate"
+  
+  certificate_pinning:
+    setting: "Certificate pinning"
+    secure_value: "enabled"
+    description: "Pin certificates for critical connections"
+
+# Network Communication Security Checks
+secure_network_practices:
+  https_only:
+    practice: "Use HTTPS only"
+    description: "Never use HTTP for sensitive data"
+  
+  no_plaintext_credentials:
+    practice: "Encrypt credentials"
+    description: "Never transmit credentials in plaintext"
+  
+  proper_error_handling:
+    practice: "Secure error handling"
+    description: "Don't ignore SSL/TLS errors"
+  
+  certificate_validation:
+    practice: "Validate certificates"
+    description: "Always validate server certificates"
+  
+  timeout_configuration:
+    practice: "Configure timeouts"
+    description: "Set appropriate connection timeouts"
+
+# Pattern reliability tracking for continuous improvement
+pattern_reliability_tracking:
+  enabled: true
+  learning_rate: 0.1
+  min_samples: 10
+  confidence_threshold: 0.7
+
+# Context factors for different analysis sources
+analysis_context_weights:
+  production_app: 0.9
+  development_app: 0.7
+  framework_code: 0.6
+  test_code: 0.4
+  configuration_file: 0.8
+  manifest_file: 0.85
+  native_code: 0.75
+  third_party_lib: 0.65
+  generated_code: 0.5
+  unknown_context: 0.6
+
+# Evidence weight distribution
+evidence_weights:
+  pattern_reliability: 0.3
+  evidence_strength: 0.25
+  context_awareness: 0.2
+  cross_validation: 0.15
+  analysis_depth: 0.1
+
+# Vulnerability severity mapping
+severity_mapping:
+  trust_all_certs: "CRITICAL"
+  certificate_validation_bypass: "CRITICAL"
+  weak_ssl_context: "HIGH"
+  hostname_verification_disabled: "HIGH"
+  insecure_http: "HIGH"
+  plaintext_credentials: "HIGH"
+  tls_version_issues: "MEDIUM"
+  cipher_suite_issues: "MEDIUM"
+  ssl_config_issues: "MEDIUM"
+  network_config_issues: "MEDIUM"
+  credential_handling_issues: "MEDIUM"
+
+# MASVS compliance mapping
+masvs_mapping:
+  MSTG-NETWORK-01:
+    description: "Secure network communication"
+    patterns: ["insecure_http", "plaintext_credentials", "network_config_issues", "credential_handling_issues"]
+  
+  MSTG-NETWORK-02:
+    description: "TLS settings verification"
+    patterns: ["weak_ssl_context", "ssl_config_issues", "tls_version_issues", "cipher_suite_issues"]
+  
+  MSTG-NETWORK-03:
+    description: "Certificate validation"
+    patterns: ["trust_all_certs", "hostname_verification_disabled", "certificate_validation_bypass"]
+  
+  MSTG-NETWORK-04:
+    description: "Certificate pinning"
+    patterns: ["certificate_validation_bypass"] 

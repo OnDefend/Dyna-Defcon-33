@@ -1,0 +1,1100 @@
+# Runtime Decryption Analysis Patterns Configuration
+# External pattern configuration for AODS Runtime Decryption Analysis Plugin
+#
+# This file contains security patterns, confidence scoring parameters,
+# and analysis configuration for detecting runtime decryption vulnerabilities.
+#
+# Author: AODS Development Team
+# Version: 2.0.0
+
+# Pattern Categories
+patterns:
+  
+  # High-Confidence Cryptographic API Patterns
+  crypto_api_patterns:
+    javax_crypto_cipher:
+      pattern: 'javax\.crypto\.Cipher'
+      type: 'crypto_implementation'
+      severity: 'HIGH'
+      confidence_base: 0.9
+      description: 'Standard Java cryptographic cipher usage'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-327'
+      
+    cipher_decrypt:
+      pattern: '\.decrypt\s*\('
+      type: 'runtime_decryption'
+      severity: 'CRITICAL'
+      confidence_base: 0.85
+      description: 'Direct decryption method invocation'
+      masvs_control: 'MSTG-CRYPTO-01'
+      cwe_id: 'CWE-311'
+      
+    cipher_dofinal:
+      pattern: 'cipher\.doFinal\s*\('
+      type: 'runtime_decryption'
+      severity: 'HIGH'
+      confidence_base: 0.8
+      description: 'Cipher finalization operation'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-311'
+      
+    aes_decrypt:
+      pattern: 'AES.*decrypt'
+      type: 'crypto_implementation'
+      severity: 'HIGH'
+      confidence_base: 0.9
+      description: 'AES decryption implementation'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-327'
+      
+    des_decrypt:
+      pattern: 'DES.*decrypt'
+      type: 'weak_crypto'
+      severity: 'CRITICAL'
+      confidence_base: 0.95
+      description: 'Weak DES algorithm usage'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-327'
+      
+    rsa_decrypt:
+      pattern: 'RSA.*decrypt'
+      type: 'crypto_implementation'
+      severity: 'MEDIUM'
+      confidence_base: 0.85
+      description: 'RSA decryption implementation'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-327'
+
+  # Key Management Patterns
+  key_management_patterns:
+    keystore_access:
+      pattern: 'KeyStore\.|keystore\.'
+      type: 'key_management'
+      severity: 'MEDIUM'
+      confidence_base: 0.75
+      description: 'KeyStore access detected'
+      masvs_control: 'MSTG-CRYPTO-01'
+      cwe_id: 'CWE-320'
+      
+    hardcoded_key:
+      pattern: '(private|secret).*key.*=.*"[A-Za-z0-9+/=]{16,}"'
+      type: 'hardcoded_crypto'
+      severity: 'CRITICAL'
+      confidence_base: 0.95
+      description: 'Hardcoded cryptographic key detected'
+      masvs_control: 'MSTG-CRYPTO-01'
+      cwe_id: 'CWE-798'
+      
+    key_derivation:
+      pattern: 'deriveKey|generateKey|KeyGenerator'
+      type: 'key_management'
+      severity: 'MEDIUM'
+      confidence_base: 0.7
+      description: 'Key derivation or generation'
+      masvs_control: 'MSTG-CRYPTO-01'
+      cwe_id: 'CWE-320'
+      
+    android_keystore:
+      pattern: 'android\.security\.keystore'
+      type: 'key_management'
+      severity: 'LOW'
+      confidence_base: 0.6
+      description: 'Android KeyStore usage'
+      masvs_control: 'MSTG-CRYPTO-01'
+      cwe_id: 'CWE-320'
+
+  # Weak Cryptography Patterns
+  weak_crypto_patterns:
+    md5_usage:
+      pattern: "MessageDigest\\.getInstance\\s*\\(\\s*[\"']MD5[\"']"
+      type: 'weak_crypto'
+      severity: 'HIGH'
+      confidence_base: 0.9
+      description: 'Weak MD5 hash algorithm usage'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-327'
+      
+    sha1_usage:
+      pattern: "MessageDigest\\.getInstance\\s*\\(\\s*[\"']SHA-?1[\"']"
+      type: 'weak_crypto'
+      severity: 'MEDIUM'
+      confidence_base: 0.8
+      description: 'Weak SHA-1 hash algorithm usage'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-327'
+      
+    des_algorithm:
+      pattern: "Cipher\\.getInstance\\s*\\(\\s*[\"']DES"
+      type: 'weak_crypto'
+      severity: 'CRITICAL'
+      confidence_base: 0.95
+      description: 'Weak DES encryption algorithm'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-327'
+      
+    ecb_mode:
+      pattern: 'AES/ECB'
+      type: 'weak_crypto'
+      severity: 'HIGH'
+      confidence_base: 0.85
+      description: 'Insecure ECB cipher mode'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-327'
+
+  # Custom Cryptography Patterns
+  custom_crypto_patterns:
+    custom_encrypt_method:
+      pattern: '(private|public).*encrypt\s*\([^)]*\)'
+      type: 'custom_crypto'
+      severity: 'HIGH'
+      confidence_base: 0.7
+      description: 'Custom encryption method implementation'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-327'
+      
+    custom_decrypt_method:
+      pattern: '(private|public).*decrypt\s*\([^)]*\)'
+      type: 'custom_crypto'
+      severity: 'HIGH'
+      confidence_base: 0.75
+      description: 'Custom decryption method implementation'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-327'
+      
+    xor_operations:
+      pattern: '[\s\w\d]\s*\^\s*[\s\w\d].*='
+      type: 'custom_crypto'
+      severity: 'MEDIUM'
+      confidence_base: 0.6
+      description: 'XOR-based custom encryption'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-327'
+      
+    bit_shifting:
+      pattern: '<<|>>.*='
+      type: 'custom_crypto'
+      severity: 'LOW'
+      confidence_base: 0.4
+      description: 'Bit shifting operations (potential crypto)'
+      masvs_control: 'MSTG-CRYPTO-02'
+      cwe_id: 'CWE-327'
+
+  # Smali Bytecode Patterns
+  smali_patterns:
+    smali_cipher_invoke:
+      pattern: 'invoke-.*Cipher;->.*decrypt'
+      type: 'runtime_decryption'
+      severity: 'HIGH'
+      confidence_base: 0.85
+      description: 'Smali cipher decryption invocation'
+      masvs_control: 'MSTG-CRYPTO-01'
+      cwe_id: 'CWE-311'
+      
+    smali_keystore:
+      pattern: 'invoke-.*KeyStore;'
+      type: 'key_management'
+      severity: 'MEDIUM'
+      confidence_base: 0.7
+      description: 'Smali KeyStore access'
+      masvs_control: 'MSTG-CRYPTO-01'
+      cwe_id: 'CWE-320'
+      
+    smali_base64:
+      pattern: 'invoke-.*Base64;->decode'
+      type: 'resource_decryption'
+      severity: 'LOW'
+      confidence_base: 0.6
+      description: 'Base64 decoding in Smali'
+      masvs_control: 'MSTG-STORAGE-01'
+      cwe_id: 'CWE-312'
+
+  # Resource Patterns
+  resource_patterns:
+    encrypted_string:
+      pattern: '(encrypted|cipher|secret).*>[A-Za-z0-9+/=]{20,}<'
+      type: 'resource_decryption'
+      severity: 'MEDIUM'
+      confidence_base: 0.7
+      description: 'Encrypted content in resources'
+      masvs_control: 'MSTG-STORAGE-01'
+      cwe_id: 'CWE-312'
+      
+    base64_content:
+      pattern: '>[A-Za-z0-9+/=]{40,}<'
+      type: 'resource_decryption'
+      severity: 'LOW'
+      confidence_base: 0.5
+      description: 'Base64 encoded content'
+      masvs_control: 'MSTG-STORAGE-01'
+      cwe_id: 'CWE-312'
+
+# Confidence Calculation Configuration
+confidence_config:
+  # Evidence weights for confidence calculation
+  evidence_weights:
+    pattern_reliability: 0.25
+    context_validation: 0.20
+    cross_validation: 0.15
+    implementation_depth: 0.15
+    risk_assessment: 0.10
+    semantic_analysis: 0.10
+    dynamic_testability: 0.05
+  
+  # Pattern reliability database
+  pattern_reliability:
+    'javax.crypto.Cipher': 0.95
+    'decrypt': 0.90
+    'AES.decrypt': 0.95
+    'DES.decrypt': 0.92
+    'RSA.decrypt': 0.94
+    'cipher.doFinal': 0.85
+    'android.security': 0.80
+    'keystore': 0.82
+    'base64': 0.75
+    'encode': 0.70
+    'decode': 0.72
+    'encrypt': 0.65
+    'secret': 0.60
+    'password': 0.55
+    'token': 0.58
+  
+  # Detection method reliability
+  detection_method_reliability:
+    semantic_analysis: 0.90
+    flow_analysis: 0.85
+    cross_reference: 0.80
+    pattern_matching: 0.75
+    resource_analysis: 0.70
+  
+  # Confidence bounds
+  confidence_floor: 0.1
+  confidence_ceiling: 0.95
+
+# Analysis Configuration
+analysis_config:
+  # File processing limits
+  max_file_size_mb: 10
+  max_files_per_type: 1000
+  timeout_per_file_seconds: 30
+  
+  # Processing options
+  enable_parallel_processing: true
+  max_worker_threads: 4
+  enable_caching: true
+  
+  # Pattern matching options
+  case_sensitive: false
+  multiline_patterns: true
+  enable_regex_optimization: true
+  
+  # Quality thresholds
+  min_confidence_threshold: 0.3
+  min_evidence_count: 1
+  enable_cross_validation: true
+
+# Dynamic Analysis Configuration
+dynamic_analysis:
+  # Frida script generation
+  generate_frida_scripts: true
+  frida_output_directory: 'frida_scripts'
+  include_usage_instructions: true
+  
+  # Enhanced Frida Script Templates with Error Handling and Parameterization
+  frida_templates:
+    # Base template with error handling and helper functions
+    base_template: |
+      // Auto-generated Frida script for runtime decryption analysis
+      // Generated by AODS FridaScriptGenerator v2.0
+      console.log('[+] AODS Frida script loaded for decryption analysis');
+      
+      // Helper functions
+      function hexDump(buffer, length) {
+          try {
+              var result = "";
+              var view = new Uint8Array(buffer.slice(0, Math.min(length || 64, buffer.byteLength)));
+              for (var i = 0; i < view.length; i++) {
+                  result += ('0' + view[i].toString(16)).slice(-2) + ' ';
+                  if ((i + 1) % 16 === 0) result += '\n';
+              }
+              return result;
+          } catch (e) {
+              return 'Error dumping hex: ' + e.message;
+          }
+      }
+      
+      function safeStringify(obj) {
+          try {
+              return JSON.stringify(obj, null, 2);
+          } catch (e) {
+              return String(obj);
+          }
+      }
+      
+      function logWithTimestamp(message) {
+          console.log('[' + new Date().toISOString() + '] ' + message);
+      }
+      
+      // Main hook installation
+      Java.perform(function() {
+          try {
+              {% for hook in hooks %}
+              {{ hook }}
+              {% endfor %}
+              logWithTimestamp('[+] All hooks installed successfully');
+          } catch (e) {
+              console.error('[!] Failed to install hooks: ' + e.message);
+              console.error('[!] Stack trace: ' + e.stack);
+          }
+      });
+
+    # Comprehensive Cipher hooks with all overloads
+    cipher_hooks: |
+      // Comprehensive javax.crypto.Cipher hooks
+      try {
+          var Cipher = Java.use("javax.crypto.Cipher");
+          logWithTimestamp('[+] Installing Cipher hooks...');
+          
+          // Hook all doFinal overloads
+          {% if hook_all_overloads %}
+          Cipher.doFinal.overloads.forEach(function(overload) {
+              overload.implementation = function() {
+                  logWithTimestamp('[+] Cipher.doFinal called (overload: ' + overload.methodName + ')');
+                  try {
+                      if (arguments.length > 0 && arguments[0]) {
+                          console.log('    Input length: ' + arguments[0].length);
+                          {% if log_hex_dump %}
+                          console.log('    Input hex: ' + hexDump(arguments[0]));
+                          {% endif %}
+                      }
+                      var result = this.doFinal(input);
+                      console.log("    Output: " + Java.use("android.util.Base64").encodeToString(result, 0));
+                      return result;
+                  } catch (e) {
+                      console.error('[!] Error in Cipher.doFinal hook: ' + e.message);
+                      return this.doFinal.apply(this, arguments);
+                  }
+              };
+          });
+          {% else %}
+          // Standard doFinal([B) hook
+          Cipher.doFinal.overload('[B').implementation = function(input) {
+              logWithTimestamp('[+] Cipher.doFinal called');
+              try {
+                  console.log('    Input length: ' + input.length);
+                  {% if log_base64 %}
+                  var Base64 = Java.use('android.util.Base64');
+                  console.log('    Input (Base64): ' + Base64.encodeToString(input, 0));
+                  {% endif %}
+                  var result = this.doFinal(input);
+                  console.log('    Output length: ' + result.length);
+                  {% if log_base64 %}
+                  console.log('    Output (Base64): ' + Base64.encodeToString(result, 0));
+                  {% endif %}
+                  return result;
+              } catch (e) {
+                  console.error('[!] Error in Cipher.doFinal hook: ' + e.message);
+                  return this.doFinal(input);
+              }
+          };
+          {% endif %}
+          
+          logWithTimestamp('[+] Cipher hooks installed');
+      } catch (e) {
+          console.error('[!] Failed to hook Cipher class: ' + e.message);
+      }
+
+    # Base64 hooks with error handling
+    base64_hooks: |
+      // Android Base64 decode/encode hooks
+      try {
+          var Base64 = Java.use('android.util.Base64');
+          logWithTimestamp('[+] Installing Base64 hooks...');
+          
+          // Hook decode methods
+          Base64.decode.overload('java.lang.String', 'int').implementation = function(str, flags) {
+              logWithTimestamp('[+] Base64.decode called');
+              try {
+                  console.log('    Input: ' + str.substring(0, Math.min(str.length, {{ max_log_length | default(100) }})) + 
+                             (str.length > {{ max_log_length | default(100) }} ? '...' : ''));
+                  console.log('    Flags: ' + flags);
+                  var result = this.decode(str, flags);
+                  console.log('    Output length: ' + result.length);
+                  return result;
+              } catch (e) {
+                  console.error('[!] Error in Base64.decode hook: ' + e.message);
+                  return this.decode(str, flags);
+              }
+          };
+          
+          // Hook encode methods if requested
+          {% if hook_encode %}
+          Base64.encodeToString.overload('[B', 'int').implementation = function(input, flags) {
+              logWithTimestamp('[+] Base64.encodeToString called');
+              try {
+                  console.log('    Input length: ' + input.length);
+                  console.log('    Flags: ' + flags);
+                  var result = this.encodeToString(input, flags);
+                  console.log('    Output: ' + result.substring(0, Math.min(result.length, {{ max_log_length | default(100) }})) + 
+                             (result.length > {{ max_log_length | default(100) }} ? '...' : ''));
+                  return result;
+              } catch (e) {
+                  console.error('[!] Error in Base64.encodeToString hook: ' + e.message);
+                  return this.encodeToString(input, flags);
+              }
+          };
+          {% endif %}
+          
+          logWithTimestamp('[+] Base64 hooks installed');
+      } catch (e) {
+          console.error('[!] Failed to hook Base64 class: ' + e.message);
+
+    # ⌨️ Keyboard Cache Vulnerability Analysis Hooks
+    keyboard_hooks: |
+      // Android Keyboard Cache Analysis hooks
+      try {
+          var EditText = Java.use('android.widget.EditText');
+          var InputType = Java.use('android.text.InputType');
+          logWithTimestamp('[+] Installing Keyboard Cache Analysis hooks...');
+          
+          // Hook setInputType to monitor cache configuration
+          EditText.setInputType.implementation = function(type) {
+              logWithTimestamp('[+] EditText.setInputType called');
+              try {
+                  var context = this.getContext();
+                  var activityName = 'unknown';
+                  var fieldId = 'unknown';
+                  
+                  try {
+                      if (context.$className.indexOf('Activity') !== -1) {
+                          activityName = context.$className;
+                      }
+                      fieldId = this.getId().toString();
+                  } catch (e) {}
+                  
+                  // Check if input type disables caching
+                  var cacheDisabled = false;
+                  if ((type & InputType.TYPE_TEXT_VARIATION_PASSWORD.value) != 0 ||
+                      (type & InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD.value) != 0 ||
+                      (type & InputType.TYPE_NUMBER_VARIATION_PASSWORD.value) != 0 ||
+                      (type & InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD.value) != 0 ||
+                      (type & InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS.value) != 0) {
+                      cacheDisabled = true;
+                  }
+                  
+                  console.log('    Activity: ' + activityName);
+                  console.log('    Field ID: ' + fieldId);
+                  console.log('    Input Type: ' + type);
+                  console.log('    Cache Disabled: ' + cacheDisabled);
+                  
+                  {% if report_vulnerabilities %}
+                  if (!cacheDisabled) {
+                      console.log('    [KEYBOARD-VULN] Input field without cache protection detected');
+                  }
+                  {% endif %}
+                  
+                  return this.setInputType(type);
+              } catch (e) {
+                  console.error('[!] Error in setInputType hook: ' + e.message);
+                  return this.setInputType(type);
+              }
+          };
+          
+          // Hook text input events for sensitive data detection
+          {% if monitor_text_input %}
+          EditText.onTextChanged.implementation = function(text, start, lengthBefore, lengthAfter) {
+              try {
+                  var textContent = text ? text.toString() : '';
+                  if (textContent.length >= {{ min_text_length | default(3) }}) {
+                      var context = this.getContext();
+                      var activityName = 'unknown';
+                      var fieldId = 'unknown';
+                      var inputType = 'unknown';
+                      
+                      try {
+                          if (context.$className.indexOf('Activity') !== -1) {
+                              activityName = context.$className;
+                          }
+                          fieldId = this.getId().toString();
+                          inputType = this.getInputType().toString();
+                      } catch (e) {}
+                      
+                      {% if detect_sensitive_patterns %}
+                      // Basic sensitive data pattern detection
+                      var sensitivePatterns = [
+                          {name: 'email', pattern: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/},
+                          {name: 'credit_card', pattern: /\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13})\b/},
+                          {name: 'phone', pattern: /\b\d{3}-\d{3}-\d{4}\b/},
+                          {name: 'api_key', pattern: /sk_[a-zA-Z0-9]{20,}/}
+                      ];
+                      
+                      for (var i = 0; i < sensitivePatterns.length; i++) {
+                          if (sensitivePatterns[i].pattern.test(textContent)) {
+                              console.log('    [SENSITIVE-DATA] ' + sensitivePatterns[i].name + ' detected in field ' + fieldId);
+                              break;
+                          }
+                      }
+                      {% endif %}
+                      
+                      logWithTimestamp('[+] Text input: Activity=' + activityName + ', Field=' + fieldId + ', Length=' + textContent.length);
+                  }
+              } catch (e) {
+                  console.error('[!] Error in onTextChanged hook: ' + e.message);
+              }
+              
+              return this.onTextChanged(text, start, lengthBefore, lengthAfter);
+          };
+          {% endif %}
+          
+          // Hook InputMethodService for keyboard analysis
+          {% if monitor_input_method %}
+          try {
+              var InputMethodService = Java.use('android.inputmethodservice.InputMethodService');
+              InputMethodService.onStartInputView.implementation = function(info, restarting) {
+                  logWithTimestamp('[+] InputMethodService.onStartInputView called');
+                  try {
+                      var inputType = info.inputType;
+                      var packageName = info.packageName;
+                      console.log('    Target Package: ' + packageName);
+                      console.log('    Input Type: ' + inputType);
+                      console.log('    Restarting: ' + restarting);
+                  } catch (e) {
+                      console.error('[!] Error in InputMethodService hook: ' + e.message);
+                  }
+                  
+                  return this.onStartInputView(info, restarting);
+              };
+          } catch (e) {
+              console.log('[-] Could not hook InputMethodService: ' + e.message);
+          }
+          {% endif %}
+          
+          logWithTimestamp('[+] Keyboard Cache Analysis hooks installed');
+      } catch (e) {
+          console.error('[!] Failed to install Keyboard Cache Analysis hooks: ' + e.message);
+      }
+
+    # Key derivation and generation hooks
+    key_derivation_hooks: |
+      // Key derivation and generation hooks
+      try {
+          logWithTimestamp('[+] Installing key derivation hooks...');
+          
+          // PBKDF2 hooks
+          var SecretKeyFactory = Java.use('javax.crypto.spec.SecretKeyFactory');
+          SecretKeyFactory.generateSecret.implementation = function(keySpec) {
+              logWithTimestamp('[+] SecretKeyFactory.generateSecret called');
+              try {
+                  console.log('    KeySpec type: ' + keySpec.$className);
+                  if (keySpec.$className.includes('PBEKeySpec')) {
+                      console.log('    PBKDF2 key generation detected');
+                  }
+                  var result = this.generateSecret(keySpec);
+                  console.log('    Generated key algorithm: ' + result.getAlgorithm());
+                  return result;
+              } catch (e) {
+                  console.error('[!] Error in SecretKeyFactory.generateSecret hook: ' + e.message);
+                  return this.generateSecret(keySpec);
+              }
+          };
+          
+          // Key generator hooks
+          var KeyGenerator = Java.use('javax.crypto.KeyGenerator');
+          KeyGenerator.generateKey.implementation = function() {
+              logWithTimestamp('[+] KeyGenerator.generateKey called');
+              try {
+                  var result = this.generateKey();
+                  console.log('    Generated key algorithm: ' + result.getAlgorithm());
+                  console.log('    Key format: ' + result.getFormat());
+                  return result;
+              } catch (e) {
+                  console.error('[!] Error in KeyGenerator.generateKey hook: ' + e.message);
+                  return this.generateKey();
+              }
+          };
+          
+          logWithTimestamp('[+] Key derivation hooks installed');
+      } catch (e) {
+          console.error('[!] Failed to hook key derivation classes: ' + e.message);
+      }
+
+    # Custom method hooks (dynamic generation)
+    custom_method_hook: |
+      // Custom method hook for {{ class_name }}.{{ method_name }}
+      try {
+          var {{ class_short_name }} = Java.use('{{ class_name }}');
+          logWithTimestamp('[+] Installing hook for {{ class_name }}.{{ method_name }}...');
+          
+          {% if hook_all_overloads %}
+          {{ class_short_name }}.{{ method_name }}.overloads.forEach(function(overload) {
+              overload.implementation = function() {
+                  logWithTimestamp('[+] {{ class_name }}.{{ method_name }} called (overload)');
+                  try {
+                      console.log('    Arguments: ' + safeStringify(Array.prototype.slice.call(arguments)));
+                      var result = this.{{ method_name }}.apply(this, arguments);
+                      console.log('    Return value: ' + safeStringify(result));
+                      return result;
+                  } catch (e) {
+                      console.error('[!] Error in {{ class_name }}.{{ method_name }} hook: ' + e.message);
+                      return this.{{ method_name }}.apply(this, arguments);
+                  }
+              };
+          });
+          {% else %}
+          {{ class_short_name }}.{{ method_name }}.implementation = function({{ parameters | default('') }}) {
+              logWithTimestamp('[+] {{ class_name }}.{{ method_name }} called');
+              try {
+                  console.log('    Arguments: ' + safeStringify(Array.prototype.slice.call(arguments)));
+                  var result = this.{{ method_name }}({{ parameters | default('') }});
+                  console.log('    Return value: ' + safeStringify(result));
+                  return result;
+              } catch (e) {
+                  console.error('[!] Error in {{ class_name }}.{{ method_name }} hook: ' + e.message);
+                  return this.{{ method_name }}({{ parameters | default('') }});
+              }
+          };
+          {% endif %}
+          
+          logWithTimestamp('[+] Hook installed for {{ class_name }}.{{ method_name }}');
+      } catch (e) {
+          console.error('[!] Failed to hook {{ class_name }}.{{ method_name }}: ' + e.message);
+      }
+
+# Configuration for template generation
+template_config:
+    # Default settings
+    max_log_length: 100
+    log_hex_dump: true
+    log_base64: true
+    hook_encode: false
+    hook_all_overloads: false
+    
+    # Security settings
+    sanitize_output: true
+    max_output_size: 1024
+    
+    # Hook categories to generate
+    default_hooks:
+      - cipher_hooks
+      - base64_hooks
+      - key_derivation_hooks
+      - keyboard_hooks
+    
+    # ⌨️ Keyboard cache analysis settings
+    report_vulnerabilities: true
+    monitor_text_input: true
+    monitor_input_method: true
+    detect_sensitive_patterns: true
+    min_text_length: 3
+
+# AI/ML Enhanced Dynamic Analysis Templates
+ai_ml_enhanced_templates:
+  # Intelligent CVE-Targeted Hooks
+  cve_targeted_hooks: |
+    // CVE-Targeted Hooks - Generated by AODS AI/ML Intelligence
+    // CVE Correlations: {{ cve_correlations | join(', ') }}
+    // Confidence Score: {{ ml_confidence_score }}
+    
+    {% for cve_id in cve_correlations %}
+    console.log("[AODS-CVE-{{ cve_id }}] Targeting CVE {{ cve_id }} patterns");
+    {% endfor %}
+    
+    {% if 'cipher' in vulnerability_types %}
+    // Enhanced Cipher Analysis for CVE patterns
+    var CipherCVE = Java.use("javax.crypto.Cipher");
+    {% for method in ['getInstance', 'init', 'doFinal', 'update'] %}
+    CipherCVE.{{ method }}.overload.apply(CipherCVE.{{ method }}, [function() {
+        var result = this.apply(this, arguments);
+        logWithTimestamp("[CVE-CIPHER] {{ method }} called - Args: " + safeStringify(arguments));
+        
+        // CVE-specific pattern detection
+        {% for cve_id in cve_correlations %}
+        if (arguments.length > 0) {
+            var argStr = safeStringify(arguments);
+            if (argStr.includes("DES") || argStr.includes("RC4") || argStr.includes("ECB")) {
+                console.log("[AODS-CVE-{{ cve_id }}] VULNERABLE PATTERN DETECTED in {{ method }}");
+                console.log("[AODS-CVE-{{ cve_id }}] Evidence: " + argStr);
+            }
+        }
+        {% endfor %}
+        
+        return result;
+    }]);
+    {% endfor %}
+    {% endif %}
+    
+    {% if 'key_management' in vulnerability_types %}
+    // Enhanced Key Management Analysis for CVE patterns
+    var SecretKeyFactory = Java.use("javax.crypto.spec.SecretKeyFactory");
+    var KeyGenerator = Java.use("javax.crypto.KeyGenerator");
+    
+    {% for cve_id in cve_correlations %}
+    console.log("[AODS-CVE-{{ cve_id }}] Monitoring key generation for CVE {{ cve_id }}");
+    {% endfor %}
+    
+    SecretKeyFactory.getInstance.overload('java.lang.String').implementation = function(algorithm) {
+        var result = this.getInstance(algorithm);
+        logWithTimestamp("[CVE-KEY] SecretKeyFactory.getInstance called with: " + algorithm);
+        
+        // Check for weak algorithms associated with CVEs
+        var weakAlgorithms = ["DES", "DESede", "RC4", "RC2"];
+        if (weakAlgorithms.includes(algorithm)) {
+            console.log("[AODS-CVE-CRITICAL] Weak key algorithm detected: " + algorithm);
+        }
+        
+        return result;
+    };
+    {% endif %}
+
+  # ML-Predicted Vulnerability Hooks
+  ml_predicted_hooks: |
+    // ML-Predicted Vulnerability Hooks
+    // Prediction Confidence: {{ prediction_confidence }}
+    // Estimated Detection Rate: {{ estimated_detection_rate }}
+    // False Positive Risk: {{ false_positive_risk }}
+    
+    {% for prediction in vulnerability_predictions %}
+    // Prediction: {{ prediction.predicted_vulnerabilities | join(', ') }}
+    // Reasoning: {{ prediction.reasoning }}
+    
+    {% if 'weak_cryptography' in prediction.predicted_vulnerabilities %}
+    // ML-Enhanced Weak Cryptography Detection
+    var MLCryptoAnalyzer = {
+        patterns: {{ weak_crypto_patterns | safe }},
+        
+        analyzeCall: function(className, methodName, args) {
+            var signature = className + "." + methodName;
+            var argStr = safeStringify(args);
+            
+            // ML-based pattern matching
+            for (var i = 0; i < this.patterns.length; i++) {
+                var pattern = this.patterns[i];
+                if (signature.includes(pattern.class) && argStr.match(pattern.regex)) {
+                    console.log("[AODS-ML-PREDICTION] Weak crypto pattern detected");
+                    console.log("[AODS-ML-PREDICTION] Pattern: " + pattern.description);
+                    console.log("[AODS-ML-PREDICTION] Confidence: {{ prediction_confidence }}");
+                    console.log("[AODS-ML-PREDICTION] Evidence: " + argStr);
+                    
+                    // Enhanced evidence collection
+                    this.collectEvidence(signature, args, pattern);
+                }
+            }
+        },
+        
+        collectEvidence: function(signature, args, pattern) {
+            var evidence = {
+                timestamp: new Date().toISOString(),
+                signature: signature,
+                arguments: safeStringify(args),
+                pattern_matched: pattern.description,
+                ml_confidence: {{ prediction_confidence }},
+                stack_trace: Java.use("android.util.Log").getStackTraceString(
+                    Java.use("java.lang.Exception").$new()
+                )
+            };
+            
+            console.log("[AODS-ML-EVIDENCE] " + JSON.stringify(evidence));
+        }
+    };
+    {% endif %}
+    {% endfor %}
+
+  # Adaptive Hook Templates Based on Runtime Feedback
+  adaptive_hooks: |
+    // Adaptive Hooks - Learning from Runtime Behavior
+    // Adaptation Level: {{ adaptation_level }}
+    // Learning Iteration: {{ learning_iteration }}
+    
+    var AdaptiveHookManager = {
+        learningData: {},
+        adaptationThreshold: {{ adaptation_threshold | default(0.7) }},
+        
+        // Initialize adaptive learning
+        initialize: function() {
+            console.log("[AODS-ADAPTIVE] Initializing adaptive hook manager");
+            this.loadLearningData();
+        },
+        
+        // Collect runtime behavior data
+        collectBehaviorData: function(methodSignature, args, result) {
+            var behaviorKey = methodSignature;
+            
+            if (!this.learningData[behaviorKey]) {
+                this.learningData[behaviorKey] = {
+                    callCount: 0,
+                    argumentPatterns: [],
+                    vulnerabilityIndicators: 0,
+                    confidence: 0.5
+                };
+            }
+            
+            this.learningData[behaviorKey].callCount++;
+            this.learningData[behaviorKey].argumentPatterns.push(safeStringify(args));
+            
+            // Adaptive vulnerability detection
+            this.analyzeForVulnerabilities(behaviorKey, args, result);
+        },
+        
+        // Analyze for vulnerabilities using adaptive patterns
+        analyzeForVulnerabilities: function(methodSignature, args, result) {
+            var indicators = 0;
+            var argStr = safeStringify(args);
+            
+            // Adaptive pattern matching based on learning
+            {% for pattern in adaptive_patterns %}
+            if (argStr.match(/{{ pattern.regex }}/i)) {
+                indicators++;
+                console.log("[AODS-ADAPTIVE] Pattern match: {{ pattern.description }}");
+            }
+            {% endfor %}
+            
+            // Update learning data
+            if (indicators > 0) {
+                this.learningData[methodSignature].vulnerabilityIndicators += indicators;
+                this.updateConfidence(methodSignature);
+            }
+        },
+        
+        // Update confidence based on learning
+        updateConfidence: function(methodSignature) {
+            var data = this.learningData[methodSignature];
+            var ratio = data.vulnerabilityIndicators / data.callCount;
+            
+            // Adaptive confidence calculation
+            data.confidence = Math.min(0.95, 0.5 + (ratio * 0.45));
+            
+            if (data.confidence > this.adaptationThreshold) {
+                console.log("[AODS-ADAPTIVE] High confidence vulnerability pattern: " + methodSignature);
+                console.log("[AODS-ADAPTIVE] Confidence: " + data.confidence);
+                this.generateAdaptiveAlert(methodSignature, data);
+            }
+        },
+        
+        // Generate adaptive alerts
+        generateAdaptiveAlert: function(methodSignature, data) {
+            var alert = {
+                type: "ADAPTIVE_VULNERABILITY",
+                signature: methodSignature,
+                confidence: data.confidence,
+                evidence_count: data.vulnerabilityIndicators,
+                call_count: data.callCount,
+                timestamp: new Date().toISOString(),
+                learning_iteration: {{ learning_iteration }}
+            };
+            
+            console.log("[AODS-ADAPTIVE-ALERT] " + JSON.stringify(alert));
+        }
+    };
+    
+    // Initialize adaptive hooks
+    AdaptiveHookManager.initialize();
+
+  # Intelligence-Enhanced Hook Templates
+  intelligence_enhanced_hooks: |
+    // Intelligence-Enhanced Hooks - Threat Intelligence Integration
+    // Intelligence Sources: {{ intelligence_sources | join(', ') }}
+    // Threat Score: {{ threat_score }}
+    
+    var ThreatIntelligenceHooks = {
+        threatDatabase: {{ threat_database | safe }},
+        intelligenceSources: {{ intelligence_sources | safe }},
+        
+        // Analyze method calls against threat intelligence
+        analyzeThreatIntelligence: function(signature, args) {
+            var threats = this.threatDatabase[signature] || [];
+            
+            for (var i = 0; i < threats.length; i++) {
+                var threat = threats[i];
+                if (this.matchesThreatPattern(args, threat.patterns)) {
+                    console.log("[AODS-THREAT-INTEL] Threat pattern detected");
+                    console.log("[AODS-THREAT-INTEL] Threat ID: " + threat.id);
+                    console.log("[AODS-THREAT-INTEL] Severity: " + threat.severity);
+                    console.log("[AODS-THREAT-INTEL] Description: " + threat.description);
+                    console.log("[AODS-THREAT-INTEL] CVE References: " + threat.cve_references.join(', '));
+                    
+                    this.generateThreatAlert(signature, args, threat);
+                }
+            }
+        },
+        
+        // Match threat patterns
+        matchesThreatPattern: function(args, patterns) {
+            var argStr = safeStringify(args);
+            
+            for (var i = 0; i < patterns.length; i++) {
+                if (argStr.match(new RegExp(patterns[i], 'i'))) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        
+        // Generate threat alerts
+        generateThreatAlert: function(signature, args, threat) {
+            var alert = {
+                type: "THREAT_INTELLIGENCE_MATCH",
+                signature: signature,
+                arguments: safeStringify(args),
+                threat_id: threat.id,
+                severity: threat.severity,
+                cve_references: threat.cve_references,
+                intelligence_sources: this.intelligenceSources,
+                threat_score: {{ threat_score }},
+                timestamp: new Date().toISOString()
+            };
+            
+            console.log("[AODS-THREAT-ALERT] " + JSON.stringify(alert));
+        }
+    };
+
+# Reporting Configuration
+reporting:
+  # Output options
+  max_findings_per_report: 100
+  include_low_confidence: false
+  detailed_evidence: true
+  include_source_snippets: true
+  
+  # Summary options
+  executive_summary: true
+  technical_details: true
+  remediation_recommendations: true
+  masvs_compliance_assessment: true
+  
+  # Format options
+  rich_text_formatting: true
+  color_coding: true
+  severity_icons: true
+
+# MASVS Control Mappings
+masvs_mappings:
+  'MSTG-CRYPTO-01':
+    description: 'Cryptographic Key Management'
+    test_cases: ['hardcoded_keys', 'key_derivation', 'keystore_usage']
+  
+  'MSTG-CRYPTO-02':
+    description: 'Cryptographic Algorithms'
+    test_cases: ['weak_algorithms', 'custom_crypto', 'cipher_modes']
+  
+  'MSTG-RESILIENCE-02':
+    description: 'Runtime Application Self Protection'
+    test_cases: ['runtime_decryption', 'anti_tampering']
+  
+  'MSTG-STORAGE-01':
+    description: 'Secure Data Storage'
+    test_cases: ['encrypted_storage', 'resource_encryption']
+
+# Plugin Metadata
+metadata:
+  plugin_name: 'Runtime Decryption Analysis'
+  plugin_version: '2.0.0'
+  pattern_version: '1.0.0'
+  last_updated: '2024-01-15'
+  author: 'AODS Development Team'
+  description: 'Comprehensive runtime decryption pattern analysis with professional confidence scoring'
+
+# Intelligence-Enhanced Hook Templates
+  intelligence_enhanced_hooks: |
+    // Intelligence-Enhanced Hooks - Threat Intelligence Integration
+    // Intelligence Sources: {{ intelligence_sources | join(', ') }}
+    // Threat Score: {{ threat_score }}
+    
+    var ThreatIntelligenceHooks = {
+        threatDatabase: {{ threat_database | safe }},
+        intelligenceSources: {{ intelligence_sources | safe }},
+        
+        // Analyze method calls against threat intelligence
+        analyzeThreatIntelligence: function(signature, args) {
+            var threats = this.threatDatabase[signature] || [];
+            
+            for (var i = 0; i < threats.length; i++) {
+                var threat = threats[i];
+                if (this.matchesThreatPattern(args, threat.patterns)) {
+                    console.log("[AODS-THREAT-INTEL] Threat pattern detected");
+                    console.log("[AODS-THREAT-INTEL] Threat ID: " + threat.id);
+                    console.log("[AODS-THREAT-INTEL] Severity: " + threat.severity);
+                    console.log("[AODS-THREAT-INTEL] Description: " + threat.description);
+                    console.log("[AODS-THREAT-INTEL] CVE References: " + threat.cve_references.join(', '));
+                    
+                    this.generateThreatAlert(signature, args, threat);
+                }
+            }
+        },
+        
+        // Match threat patterns
+        matchesThreatPattern: function(args, patterns) {
+            var argStr = safeStringify(args);
+            
+            for (var i = 0; i < patterns.length; i++) {
+                if (argStr.match(new RegExp(patterns[i], 'i'))) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        
+        // Generate threat alerts
+        generateThreatAlert: function(signature, args, threat) {
+            var alert = {
+                type: "THREAT_INTELLIGENCE_MATCH",
+                signature: signature,
+                arguments: safeStringify(args),
+                threat_id: threat.id,
+                severity: threat.severity,
+                cve_references: threat.cve_references,
+                intelligence_sources: this.intelligenceSources,
+                threat_score: {{ threat_score }},
+                timestamp: new Date().toISOString()
+            };
+            
+            console.log("[AODS-THREAT-ALERT] " + JSON.stringify(alert));
+        }
+    };
+
+# Reporting Configuration
+reporting:
+  # Output options
+  max_findings_per_report: 100
+  include_low_confidence: false
+  detailed_evidence: true
+  include_source_snippets: true
+  
+  # Summary options
+  executive_summary: true
+  technical_details: true
+  remediation_recommendations: true
+  masvs_compliance_assessment: true
+  
+  # Format options
+  rich_text_formatting: true
+  color_coding: true
+  severity_icons: true
+
+# MASVS Control Mappings
+masvs_mappings:
+  'MSTG-CRYPTO-01':
+    description: 'Cryptographic Key Management'
+    test_cases: ['hardcoded_keys', 'key_derivation', 'keystore_usage']
+  
+  'MSTG-CRYPTO-02':
+    description: 'Cryptographic Algorithms'
+    test_cases: ['weak_algorithms', 'custom_crypto', 'cipher_modes']
+  
+  'MSTG-RESILIENCE-02':
+    description: 'Runtime Application Self Protection'
+    test_cases: ['runtime_decryption', 'anti_tampering']
+  
+  'MSTG-STORAGE-01':
+    description: 'Secure Data Storage'
+    test_cases: ['encrypted_storage', 'resource_encryption']
+
+# Plugin Metadata
+metadata:
+  plugin_name: 'Runtime Decryption Analysis'
+  plugin_version: '2.0.0'
+  pattern_version: '1.0.0'
+  last_updated: '2024-01-15'
+  author: 'AODS Development Team'
+  description: 'Comprehensive runtime decryption pattern analysis with professional confidence scoring' 
+ 
+ 

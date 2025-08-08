@@ -1,0 +1,613 @@
+# AI/ML Enhanced Frida Script Generator Configuration
+# AODS Runtime Decryption Analysis - AI/ML Enhancement Module
+
+# Core AI/ML Enhancement Settings
+ai_ml_enhancement:
+  enabled: true
+  fallback_to_base_generator: true
+  log_ml_decisions: true
+  
+  # ML Integration Configuration
+  ml_integration:
+    enabled: true
+    classification_threshold: 0.7
+    max_classification_time_seconds: 30
+    enable_ensemble_models: true
+    fallback_on_ml_failure: true
+    
+  # Intelligence Engine Configuration  
+  intelligence_engine:
+    enabled: true
+    enable_cve_correlation: true
+    enable_threat_intelligence: true
+    max_correlation_time_seconds: 45
+    cve_database_sources:
+      - "nvd_cve"
+      - "mitre_cve"
+      - "github_advisories"
+    threat_intelligence_sources:
+      - "alienvault_otx"
+      - "recorded_future"
+      - "local_intelligence"
+    
+  # Confidence Scoring Configuration
+  confidence_scoring:
+    enabled: true
+    use_ml_enhanced_scorer: true
+    uncertainty_quantification: true
+    ensemble_confidence_aggregation: true
+    calibration_enabled: true
+    min_confidence_threshold: 0.6
+    max_confidence_threshold: 0.95
+    
+  # Pattern Engine Configuration
+  pattern_engine:
+    enabled: true
+    use_advanced_patterns: true
+    pattern_database_size: 1000
+    enable_semantic_analysis: true
+    pattern_confidence_threshold: 0.5
+    max_patterns_per_finding: 10
+
+# Hook Intelligence Configuration
+hook_intelligence:
+  # ML-based Hook Selection
+  ml_hook_selection:
+    enabled: true
+    confidence_threshold: 0.7
+    effectiveness_threshold: 0.6
+    max_recommendations: 15
+    prioritize_high_confidence: true
+    
+  # Hook Effectiveness Prediction
+  effectiveness_prediction:
+    enabled: true
+    use_historical_data: true
+    ml_prediction_weight: 0.6
+    historical_weight: 0.4
+    min_historical_samples: 10
+    
+  # False Positive Risk Assessment
+  false_positive_assessment:
+    enabled: true
+    max_acceptable_fp_risk: 0.3
+    conservative_mode: true
+    risk_adjustment_factor: 0.1
+    
+  # Hook Prioritization
+  prioritization:
+    criteria:
+      - "confidence_score"
+      - "effectiveness_prediction" 
+      - "cve_correlation_count"
+      - "false_positive_risk"
+    weights:
+      confidence_score: 0.35
+      effectiveness_prediction: 0.30
+      cve_correlation_count: 0.20
+      false_positive_risk: 0.15
+
+# CVE Correlation Configuration
+cve_correlation:
+  enabled: true
+  correlation_sources:
+    nvd:
+      enabled: true
+      api_url: "https://services.nvd.nist.gov/rest/json/cves/2.0"
+      rate_limit_requests_per_minute: 50
+      cache_duration_hours: 24
+    
+    mitre:
+      enabled: true
+      api_url: "https://cve.mitre.org/data/downloads/"
+      cache_duration_hours: 48
+    
+    github_advisories:
+      enabled: true
+      api_url: "https://api.github.com/advisories"
+      cache_duration_hours: 12
+      
+  # Correlation Parameters
+  correlation_parameters:
+    max_correlations_per_finding: 5
+    similarity_threshold: 0.8
+    time_window_years: 3
+    technology_filters:
+      - "android"
+      - "mobile"
+      - "java"
+      - "kotlin"
+      - "cryptography"
+    
+  # Correlation Scoring
+  correlation_scoring:
+    exact_match_score: 1.0
+    semantic_match_score: 0.8
+    keyword_match_score: 0.6
+    technology_match_score: 0.4
+
+# Adaptive Generation Configuration
+adaptive_generation:
+  enabled: true
+  
+  # Runtime Feedback Integration
+  runtime_feedback:
+    enabled: true
+    collect_execution_metrics: true
+    adapt_based_on_findings: true
+    feedback_weight: 0.3
+    min_runtime_samples: 5
+    
+  # Learning and Adaptation
+  learning:
+    enabled: true
+    update_hook_effectiveness: true
+    update_confidence_models: true
+    learning_rate: 0.1
+    max_learning_iterations: 100
+    
+  # Context Awareness
+  context_awareness:
+    app_type_detection: true
+    framework_detection: true
+    api_level_consideration: true
+    device_characteristics: true
+
+# Vulnerability Prediction Configuration
+vulnerability_prediction:
+  enabled: true
+  
+  # Prediction Models
+  prediction_models:
+    zero_day_detection:
+      enabled: true
+      anomaly_threshold: 0.8
+      behavioral_analysis: true
+      
+    exploit_prediction:
+      enabled: true
+      exploit_db_integration: true
+      poc_availability_check: true
+      
+    severity_prediction:
+      enabled: true
+      cvss_score_prediction: true
+      business_impact_assessment: true
+      
+  # Prediction Confidence
+  prediction_confidence:
+    min_prediction_confidence: 0.6
+    ensemble_prediction: true
+    uncertainty_bounds: true
+
+# Performance Optimization
+performance:
+  # Caching Configuration
+  caching:
+    enabled: true
+    ml_model_cache_size_mb: 256
+    pattern_cache_size_mb: 128
+    cve_cache_size_mb: 64
+    cache_ttl_hours: 24
+    
+  # Parallel Processing
+  parallel_processing:
+    enabled: true
+    max_concurrent_ml_tasks: 4
+    max_concurrent_correlations: 8
+    task_timeout_seconds: 60
+    
+  # Resource Management
+  resource_management:
+    max_memory_usage_mb: 1024
+    ml_model_memory_limit_mb: 512
+    garbage_collection_threshold: 0.8
+
+# Logging and Monitoring
+logging:
+  # AI/ML Specific Logging
+  ai_ml_logging:
+    enabled: true
+    log_level: "INFO"
+    log_ml_decisions: true
+    log_confidence_scores: true
+    log_cve_correlations: true
+    log_performance_metrics: true
+    
+  # Structured Logging
+  structured_logging:
+    enabled: true
+    include_context: true
+    include_timing: true
+    include_ml_metadata: true
+    
+  # Log Destinations
+  log_destinations:
+    - "console"
+    - "file"
+    - "structured_file"
+  
+  log_files:
+    ai_ml_decisions: "logs/ai_ml_decisions.log"
+    performance_metrics: "logs/ai_ml_performance.log"
+    errors: "logs/ai_ml_errors.log"
+
+# Validation and Testing
+validation:
+  # Input Validation
+  input_validation:
+    strict_mode: true
+    validate_finding_structure: true
+    validate_ml_inputs: true
+    validate_confidence_bounds: true
+    
+  # Output Validation
+  output_validation:
+    validate_script_syntax: true
+    validate_hook_references: true
+    validate_confidence_scores: true
+    
+  # Testing Configuration
+  testing:
+    enable_synthetic_testing: true
+    ml_model_testing: true
+    integration_testing: true
+    performance_testing: true
+
+# Fallback and Error Handling
+error_handling:
+  # Fallback Strategies
+  fallback_strategies:
+    ml_unavailable: "use_base_generator"
+    correlation_failure: "continue_without_correlation"
+    confidence_calculation_failure: "use_default_confidence"
+    pattern_engine_failure: "use_basic_patterns"
+    
+  # Error Recovery
+  error_recovery:
+    max_retry_attempts: 3
+    exponential_backoff: true
+    circuit_breaker_enabled: true
+    graceful_degradation: true
+    
+  # Error Reporting
+  error_reporting:
+    log_all_errors: true
+    include_stack_traces: true
+    report_to_monitoring: true
+    error_correlation_tracking: true
+
+# Integration Testing Data
+test_data:
+  # Sample Findings for Testing
+  sample_findings:
+    - finding_type: "weak_cipher"
+      description: "Weak AES implementation detected"
+      severity: "HIGH"
+      confidence: 0.8
+      location: "com.example.crypto.CipherManager"
+      
+    - finding_type: "hardcoded_key"
+      description: "Hardcoded encryption key found"
+      severity: "CRITICAL"
+      confidence: 0.9
+      location: "com.example.crypto.KeyManager"
+      
+    - finding_type: "base64_obfuscation"
+      description: "Base64 encoded sensitive data"
+      severity: "MEDIUM"
+      confidence: 0.7
+      location: "com.example.utils.EncodingUtils"
+  
+  # Expected ML Outputs
+  expected_outputs:
+    hook_recommendations_count: 3
+    min_confidence_score: 0.6
+    max_generation_time_seconds: 30
+    cve_correlations_expected: true 
+# AODS Runtime Decryption Analysis - AI/ML Enhancement Module
+
+# Core AI/ML Enhancement Settings
+ai_ml_enhancement:
+  enabled: true
+  fallback_to_base_generator: true
+  log_ml_decisions: true
+  
+  # ML Integration Configuration
+  ml_integration:
+    enabled: true
+    classification_threshold: 0.7
+    max_classification_time_seconds: 30
+    enable_ensemble_models: true
+    fallback_on_ml_failure: true
+    
+  # Intelligence Engine Configuration  
+  intelligence_engine:
+    enabled: true
+    enable_cve_correlation: true
+    enable_threat_intelligence: true
+    max_correlation_time_seconds: 45
+    cve_database_sources:
+      - "nvd_cve"
+      - "mitre_cve"
+      - "github_advisories"
+    threat_intelligence_sources:
+      - "alienvault_otx"
+      - "recorded_future"
+      - "local_intelligence"
+    
+  # Confidence Scoring Configuration
+  confidence_scoring:
+    enabled: true
+    use_ml_enhanced_scorer: true
+    uncertainty_quantification: true
+    ensemble_confidence_aggregation: true
+    calibration_enabled: true
+    min_confidence_threshold: 0.6
+    max_confidence_threshold: 0.95
+    
+  # Pattern Engine Configuration
+  pattern_engine:
+    enabled: true
+    use_advanced_patterns: true
+    pattern_database_size: 1000
+    enable_semantic_analysis: true
+    pattern_confidence_threshold: 0.5
+    max_patterns_per_finding: 10
+
+# Hook Intelligence Configuration
+hook_intelligence:
+  # ML-based Hook Selection
+  ml_hook_selection:
+    enabled: true
+    confidence_threshold: 0.7
+    effectiveness_threshold: 0.6
+    max_recommendations: 15
+    prioritize_high_confidence: true
+    
+  # Hook Effectiveness Prediction
+  effectiveness_prediction:
+    enabled: true
+    use_historical_data: true
+    ml_prediction_weight: 0.6
+    historical_weight: 0.4
+    min_historical_samples: 10
+    
+  # False Positive Risk Assessment
+  false_positive_assessment:
+    enabled: true
+    max_acceptable_fp_risk: 0.3
+    conservative_mode: true
+    risk_adjustment_factor: 0.1
+    
+  # Hook Prioritization
+  prioritization:
+    criteria:
+      - "confidence_score"
+      - "effectiveness_prediction" 
+      - "cve_correlation_count"
+      - "false_positive_risk"
+    weights:
+      confidence_score: 0.35
+      effectiveness_prediction: 0.30
+      cve_correlation_count: 0.20
+      false_positive_risk: 0.15
+
+# CVE Correlation Configuration
+cve_correlation:
+  enabled: true
+  correlation_sources:
+    nvd:
+      enabled: true
+      api_url: "https://services.nvd.nist.gov/rest/json/cves/2.0"
+      rate_limit_requests_per_minute: 50
+      cache_duration_hours: 24
+    
+    mitre:
+      enabled: true
+      api_url: "https://cve.mitre.org/data/downloads/"
+      cache_duration_hours: 48
+    
+    github_advisories:
+      enabled: true
+      api_url: "https://api.github.com/advisories"
+      cache_duration_hours: 12
+      
+  # Correlation Parameters
+  correlation_parameters:
+    max_correlations_per_finding: 5
+    similarity_threshold: 0.8
+    time_window_years: 3
+    technology_filters:
+      - "android"
+      - "mobile"
+      - "java"
+      - "kotlin"
+      - "cryptography"
+    
+  # Correlation Scoring
+  correlation_scoring:
+    exact_match_score: 1.0
+    semantic_match_score: 0.8
+    keyword_match_score: 0.6
+    technology_match_score: 0.4
+
+# Adaptive Generation Configuration
+adaptive_generation:
+  enabled: true
+  
+  # Runtime Feedback Integration
+  runtime_feedback:
+    enabled: true
+    collect_execution_metrics: true
+    adapt_based_on_findings: true
+    feedback_weight: 0.3
+    min_runtime_samples: 5
+    
+  # Learning and Adaptation
+  learning:
+    enabled: true
+    update_hook_effectiveness: true
+    update_confidence_models: true
+    learning_rate: 0.1
+    max_learning_iterations: 100
+    
+  # Context Awareness
+  context_awareness:
+    app_type_detection: true
+    framework_detection: true
+    api_level_consideration: true
+    device_characteristics: true
+
+# Vulnerability Prediction Configuration
+vulnerability_prediction:
+  enabled: true
+  
+  # Prediction Models
+  prediction_models:
+    zero_day_detection:
+      enabled: true
+      anomaly_threshold: 0.8
+      behavioral_analysis: true
+      
+    exploit_prediction:
+      enabled: true
+      exploit_db_integration: true
+      poc_availability_check: true
+      
+    severity_prediction:
+      enabled: true
+      cvss_score_prediction: true
+      business_impact_assessment: true
+      
+  # Prediction Confidence
+  prediction_confidence:
+    min_prediction_confidence: 0.6
+    ensemble_prediction: true
+    uncertainty_bounds: true
+
+# Performance Optimization
+performance:
+  # Caching Configuration
+  caching:
+    enabled: true
+    ml_model_cache_size_mb: 256
+    pattern_cache_size_mb: 128
+    cve_cache_size_mb: 64
+    cache_ttl_hours: 24
+    
+  # Parallel Processing
+  parallel_processing:
+    enabled: true
+    max_concurrent_ml_tasks: 4
+    max_concurrent_correlations: 8
+    task_timeout_seconds: 60
+    
+  # Resource Management
+  resource_management:
+    max_memory_usage_mb: 1024
+    ml_model_memory_limit_mb: 512
+    garbage_collection_threshold: 0.8
+
+# Logging and Monitoring
+logging:
+  # AI/ML Specific Logging
+  ai_ml_logging:
+    enabled: true
+    log_level: "INFO"
+    log_ml_decisions: true
+    log_confidence_scores: true
+    log_cve_correlations: true
+    log_performance_metrics: true
+    
+  # Structured Logging
+  structured_logging:
+    enabled: true
+    include_context: true
+    include_timing: true
+    include_ml_metadata: true
+    
+  # Log Destinations
+  log_destinations:
+    - "console"
+    - "file"
+    - "structured_file"
+  
+  log_files:
+    ai_ml_decisions: "logs/ai_ml_decisions.log"
+    performance_metrics: "logs/ai_ml_performance.log"
+    errors: "logs/ai_ml_errors.log"
+
+# Validation and Testing
+validation:
+  # Input Validation
+  input_validation:
+    strict_mode: true
+    validate_finding_structure: true
+    validate_ml_inputs: true
+    validate_confidence_bounds: true
+    
+  # Output Validation
+  output_validation:
+    validate_script_syntax: true
+    validate_hook_references: true
+    validate_confidence_scores: true
+    
+  # Testing Configuration
+  testing:
+    enable_synthetic_testing: true
+    ml_model_testing: true
+    integration_testing: true
+    performance_testing: true
+
+# Fallback and Error Handling
+error_handling:
+  # Fallback Strategies
+  fallback_strategies:
+    ml_unavailable: "use_base_generator"
+    correlation_failure: "continue_without_correlation"
+    confidence_calculation_failure: "use_default_confidence"
+    pattern_engine_failure: "use_basic_patterns"
+    
+  # Error Recovery
+  error_recovery:
+    max_retry_attempts: 3
+    exponential_backoff: true
+    circuit_breaker_enabled: true
+    graceful_degradation: true
+    
+  # Error Reporting
+  error_reporting:
+    log_all_errors: true
+    include_stack_traces: true
+    report_to_monitoring: true
+    error_correlation_tracking: true
+
+# Integration Testing Data
+test_data:
+  # Sample Findings for Testing
+  sample_findings:
+    - finding_type: "weak_cipher"
+      description: "Weak AES implementation detected"
+      severity: "HIGH"
+      confidence: 0.8
+      location: "com.example.crypto.CipherManager"
+      
+    - finding_type: "hardcoded_key"
+      description: "Hardcoded encryption key found"
+      severity: "CRITICAL"
+      confidence: 0.9
+      location: "com.example.crypto.KeyManager"
+      
+    - finding_type: "base64_obfuscation"
+      description: "Base64 encoded sensitive data"
+      severity: "MEDIUM"
+      confidence: 0.7
+      location: "com.example.utils.EncodingUtils"
+  
+  # Expected ML Outputs
+  expected_outputs:
+    hook_recommendations_count: 3
+    min_confidence_score: 0.6
+    max_generation_time_seconds: 30
+    cve_correlations_expected: true 

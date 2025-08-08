@@ -1,0 +1,29 @@
+# SSL/TLS Security Analysis Patterns Configuration
+# Fixed YAML syntax errors
+
+ssl_patterns:
+  hostname_verification_disabled:
+    pattern: "(ALLOW_ALL_HOSTNAME_VERIFIER|setHostnameVerifier.*ALLOW_ALL|HostnameVerifier.*verify.*return\\s+true)"
+    severity: 'HIGH'
+    cwe: 'CWE-295'
+    description: 'Hostname verification is disabled for SSL connections'
+    masvs_control: 'MSTG-NETWORK-3'
+    confidence_base: 0.90
+    
+  weak_ssl_context:
+    pattern: "SSLContext\\.getInstance\\s*\\(\\s*[\"']SSL[\"']|SSLContext\\.getInstance\\s*\\(\\s*[\"']SSLv[23][\"']"
+    severity: 'HIGH'
+    cwe: 'CWE-326'
+    description: 'Application uses weak SSL context configuration'
+    masvs_control: 'MSTG-NETWORK-1'
+    confidence_base: 0.85
+    
+  weak_tls_protocols:
+    pattern: "(TLSv1[\"']|TLSv1\\.0[\"']|TLSv1\\.1[\"']|SSLv[23][\"'])"
+    severity: 'HIGH'
+    cwe: 'CWE-326'
+    description: 'Application uses weak TLS/SSL protocol versions'
+    masvs_control: 'MSTG-NETWORK-1'
+    confidence_base: 0.80
+
+# Additional patterns can be added here with proper YAML syntax 

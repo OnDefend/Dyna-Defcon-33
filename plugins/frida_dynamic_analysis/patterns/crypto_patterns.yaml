@@ -1,0 +1,155 @@
+# Cryptographic Vulnerability Patterns
+# These patterns define runtime detection rules for cryptographic weaknesses
+
+md5_usage:
+  name: "MD5 Hash Algorithm Usage"
+  pattern: "MessageDigest.getInstance.*MD5"
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "HIGH"
+  cwe: "CWE-327"
+  masvs: "MASVS-CRYPTO-1"
+  confidence: 0.95
+  description: "MD5 cryptographic hash algorithm detected during runtime execution"
+  remediation: "Replace MD5 with SHA-256, SHA-3, or other cryptographically secure hash algorithms"
+  examples:
+    - "MessageDigest.getInstance(\"MD5\")"
+    - "DigestUtils.md5Hex(input)"
+
+sha1_usage:
+  name: "SHA-1 Hash Algorithm Usage"
+  pattern: "MessageDigest.getInstance.*SHA1|SHA-1"
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "HIGH"
+  cwe: "CWE-327"
+  masvs: "MASVS-CRYPTO-1"
+  confidence: 0.90
+  description: "SHA-1 cryptographic hash algorithm detected during runtime execution"
+  remediation: "Replace SHA-1 with SHA-256, SHA-3, or other cryptographically secure hash algorithms"
+  examples:
+    - "MessageDigest.getInstance(\"SHA1\")"
+    - "MessageDigest.getInstance(\"SHA-1\")"
+
+des_usage:
+  name: "DES Encryption Algorithm Usage"
+  pattern: "Cipher.getInstance.*DES"
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "HIGH"
+  cwe: "CWE-326"
+  masvs: "MASVS-CRYPTO-2"
+  confidence: 0.90
+  description: "DES encryption algorithm detected during runtime execution"
+  remediation: "Replace DES with AES-256, ChaCha20, or other strong encryption algorithms"
+  examples:
+    - "Cipher.getInstance(\"DES\")"
+    - "Cipher.getInstance(\"DES/ECB/PKCS5Padding\")"
+
+triple_des_usage:
+  name: "3DES Encryption Algorithm Usage"
+  pattern: "Cipher.getInstance.*(3DES|TripleDES|DESede)"
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "HIGH"
+  cwe: "CWE-326"
+  masvs: "MASVS-CRYPTO-2"
+  confidence: 0.85
+  description: "3DES encryption algorithm detected during runtime execution"
+  remediation: "Replace 3DES with AES-256 or other modern encryption algorithms"
+  examples:
+    - "Cipher.getInstance(\"DESede\")"
+    - "Cipher.getInstance(\"TripleDES/CBC/PKCS5Padding\")"
+
+rc4_usage:
+  name: "RC4 Stream Cipher Usage"
+  pattern: "Cipher.getInstance.*RC4"
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "HIGH"
+  cwe: "CWE-326"
+  masvs: "MASVS-CRYPTO-2"
+  confidence: 0.95
+  description: "RC4 stream cipher detected during runtime execution"
+  remediation: "Replace RC4 with AES in GCM mode or ChaCha20 stream cipher"
+  examples:
+    - "Cipher.getInstance(\"RC4\")"
+    - "Cipher.getInstance(\"ARCFOUR\")"
+
+ecb_mode_usage:
+  name: "ECB Cipher Mode Usage"
+  pattern: "Cipher.getInstance.*ECB"
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "MEDIUM"
+  cwe: "CWE-327"
+  masvs: "MASVS-CRYPTO-2"
+  confidence: 0.85
+  description: "ECB cipher mode detected during runtime execution"
+  remediation: "Replace ECB mode with CBC, GCM, or other secure cipher modes"
+  examples:
+    - "Cipher.getInstance(\"AES/ECB/PKCS5Padding\")"
+    - "Cipher.getInstance(\"DES/ECB/NoPadding\")"
+
+weak_rsa_key:
+  name: "Weak RSA Key Size"
+  pattern: "KeyPairGenerator.getInstance.*RSA.*1024|512"
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "HIGH"
+  cwe: "CWE-326"
+  masvs: "MASVS-CRYPTO-1"
+  confidence: 0.90
+  description: "Weak RSA key size detected during runtime key generation"
+  remediation: "Use RSA keys of at least 2048 bits, preferably 3072 or 4096 bits"
+  examples:
+    - "KeyPairGenerator.getInstance(\"RSA\").initialize(1024)"
+    - "KeyPairGenerator.getInstance(\"RSA\").initialize(512)"
+
+insecure_random:
+  name: "Insecure Random Number Generation"
+  pattern: "Random\\(\\)|Math.random\\(\\)"
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "MEDIUM"
+  cwe: "CWE-338"
+  masvs: "MASVS-CRYPTO-1"
+  confidence: 0.75
+  description: "Insecure random number generation detected during runtime"
+  remediation: "Use SecureRandom for cryptographic operations instead of Random or Math.random"
+  examples:
+    - "new Random()"
+    - "Math.random()"
+
+weak_pbkdf2_iterations:
+  name: "Weak PBKDF2 Iteration Count"
+  pattern: "PBEKeySpec.*[1-9][0-9]{0,3}\\)"
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "MEDIUM"
+  cwe: "CWE-327"
+  masvs: "MASVS-CRYPTO-1"
+  confidence: 0.70
+  description: "Weak PBKDF2 iteration count detected during runtime"
+  remediation: "Use at least 100,000 iterations for PBKDF2, preferably 600,000 or more"
+  examples:
+    - "new PBEKeySpec(password, salt, 1000)"
+    - "new PBEKeySpec(password, salt, 10000)"
+
+hardcoded_crypto_key:
+  name: "Hardcoded Cryptographic Key"
+  pattern: "SecretKeySpec.*\"[A-Za-z0-9+/=]{16,}\""
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "CRITICAL"
+  cwe: "CWE-798"
+  masvs: "MASVS-CRYPTO-1"
+  confidence: 0.80
+  description: "Hardcoded cryptographic key detected during runtime"
+  remediation: "Generate keys dynamically or store them securely using Android Keystore"
+  examples:
+    - "new SecretKeySpec(\"hardcodedkey123456\".getBytes(), \"AES\")"
+
+null_iv_usage:
+  name: "Null or Empty IV Usage"
+  pattern: "IvParameterSpec\\(null\\)|IvParameterSpec\\(new byte\\[0\\]\\)"
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "HIGH"
+  cwe: "CWE-326"
+  masvs: "MASVS-CRYPTO-2"
+  confidence: 0.90
+  description: "Null or empty initialization vector detected during runtime"
+  remediation: "Use a randomly generated IV for each encryption operation"
+  examples:
+    - "new IvParameterSpec(null)"
+    - "new IvParameterSpec(new byte[0])"

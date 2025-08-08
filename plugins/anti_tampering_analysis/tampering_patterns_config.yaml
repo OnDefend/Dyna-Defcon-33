@@ -1,0 +1,1161 @@
+# Anti-Tampering Patterns Configuration
+# Comprehensive security patterns for anti-tampering analysis
+# Version: 2.0.0
+
+# Root Detection Patterns
+root_detection:
+  binary_checks:
+    - pattern_id: "ROOT_BINARY_SU_PATH"
+      pattern: "/system/(?:bin|xbin)/su\\b"
+      description: "Checks for su binary in system paths"
+      strength: "moderate"
+      bypass_resistance: "low"
+      reliability: 0.85
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ROOT_BINARY_BUSYBOX"
+      pattern: "/system/(?:bin|xbin)/busybox\\b"
+      description: "Checks for busybox binary"
+      strength: "moderate"
+      bypass_resistance: "low"
+      reliability: 0.80
+      false_positive_rate: 0.10
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ROOT_WHICH_COMMAND"
+      pattern: "which\\s+su\\b"
+      description: "Uses 'which' command to find su binary"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.75
+      false_positive_rate: 0.15
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+
+  root_management_apps:
+    - pattern_id: "ROOT_APP_SUPERUSER"
+      pattern: "com\\.noshufou\\.android\\.su"
+      description: "Detects Superuser app package"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.88
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ROOT_APP_SUPERSU"
+      pattern: "eu\\.chainfire\\.supersu"
+      description: "Detects SuperSU app package"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.90
+      false_positive_rate: 0.03
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ROOT_APP_MAGISK"
+      pattern: "com\\.topjohnwu\\.magisk"
+      description: "Detects Magisk Manager package"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.92
+      false_positive_rate: 0.02
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+
+  build_properties:
+    - pattern_id: "ROOT_BUILD_TAGS_TEST_KEYS"
+      pattern: "Build\\.TAGS\\.contains\\s*\\(\\s*[\"']test-keys[\"']"
+      description: "Checks Build.TAGS for test-keys"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.70
+      false_positive_rate: 0.20
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ROOT_BUILD_FINGERPRINT"
+      pattern: "Build\\.FINGERPRINT"
+      description: "Checks build fingerprint for generic/test signatures"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.78
+      false_positive_rate: 0.12
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+
+  system_properties:
+    - pattern_id: "ROOT_SYSPROP_DEBUGGABLE"
+      pattern: "SystemProperties\\.get\\s*\\(\\s*[\"']ro\\.debuggable[\"']"
+      description: "Checks ro.debuggable system property"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.80
+      false_positive_rate: 0.10
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ROOT_SYSPROP_SECURE"
+      pattern: "SystemProperties\\.get\\s*\\(\\s*[\"']ro\\.secure[\"']"
+      description: "Checks ro.secure system property"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.88
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+
+# Debugger Detection Patterns
+debugger_detection:
+  debug_flags:
+    - pattern_id: "DEBUG_FLAG_APPLICATION_INFO"
+      pattern: "ApplicationInfo\\.FLAG_DEBUGGABLE"
+      description: "Checks ApplicationInfo.FLAG_DEBUGGABLE flag"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.75
+      false_positive_rate: 0.10
+      masvs_refs: ["MSTG-RESILIENCE-2"]
+    
+    - pattern_id: "DEBUG_BUILD_CONFIG"
+      pattern: "BuildConfig\\.DEBUG"
+      description: "Checks BuildConfig.DEBUG flag"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.70
+      false_positive_rate: 0.15
+      masvs_refs: ["MSTG-RESILIENCE-2"]
+
+  debugger_process_detection:
+    - pattern_id: "DEBUG_PROCESS_IS_DEBUGGER_CONNECTED"
+      pattern: "Debug\\.isDebuggerConnected\\s*\\(\\s*\\)"
+      description: "Checks Debug.isDebuggerConnected()"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.90
+      false_positive_rate: 0.03
+      masvs_refs: ["MSTG-RESILIENCE-2"]
+    
+    - pattern_id: "DEBUG_PROCESS_TRACER_PID"
+      pattern: "/proc/self/status"
+      description: "Checks TracerPid in /proc/self/status"
+      strength: "advanced"
+      bypass_resistance: "high"
+      reliability: 0.92
+      false_positive_rate: 0.02
+      masvs_refs: ["MSTG-RESILIENCE-2"]
+
+  native_anti_debugging:
+    - pattern_id: "DEBUG_NATIVE_PTRACE"
+      pattern: "ptrace\\s*\\("
+      description: "Uses ptrace system call for anti-debugging"
+      strength: "advanced"
+      bypass_resistance: "expert"
+      reliability: 0.95
+      false_positive_rate: 0.01
+      masvs_refs: ["MSTG-RESILIENCE-2"]
+
+# Code Obfuscation Patterns
+code_obfuscation:
+  name_obfuscation:
+    - pattern_id: "CLASS_NAME_OBFUSCATION_SHORT"
+      pattern: "\\bclass\\s+[a-z]{1,3}\\b"
+      description: "Very short class names (likely obfuscated)"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.85
+      false_positive_rate: 0.08
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "METHOD_NAME_OBFUSCATION_SHORT"
+      pattern: "\\b(?:public|private|protected)\\s+\\w+\\s+[a-z]{1,2}\\s*\\("
+      description: "Very short method names (likely obfuscated)"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.82
+      false_positive_rate: 0.10
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+
+  string_obfuscation:
+    - pattern_id: "STRING_BASE64_PATTERN"
+      pattern: "\"[A-Za-z0-9+/]{20,}={0,2}\""
+      description: "Base64-like encoded strings"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.78
+      false_positive_rate: 0.15
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "STRING_UNICODE_ESCAPES"
+      pattern: "\"\\\\u[0-9a-fA-F]{4}"
+      description: "Unicode escape sequences in strings"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.80
+      false_positive_rate: 0.12
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+
+  control_flow_obfuscation:
+    - pattern_id: "CONTROL_FLOW_SWITCH_OBFUSCATION"
+      pattern: "switch\\s*\\(\\s*\\w+\\s*\\)\\s*\\{[^}]*case\\s+\\d+:[^}]*case\\s+\\d+:"
+      description: "Switch-based control flow obfuscation"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.85
+      false_positive_rate: 0.08
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+
+# Anti-Frida Patterns
+anti_frida:
+  frida_server_detection:
+    - pattern_id: "FRIDA_SERVER_PROCESS"
+      pattern: "frida-server"
+      description: "Detects Frida server process"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.88
+      false_positive_rate: 0.04
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "FRIDA_DEFAULT_PORT"
+      pattern: "27042"
+      description: "Checks for default Frida port"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.70
+      false_positive_rate: 0.20
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+
+  frida_signature_checks:
+    - pattern_id: "FRIDA_GUM_JS_LOOP"
+      pattern: "gum-js-loop"
+      description: "Detects Frida Gum JavaScript loop"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.90
+      false_positive_rate: 0.03
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "FRIDA_GMAIN"
+      pattern: "gmain"
+      description: "Detects Frida Gmain thread"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.82
+      false_positive_rate: 0.06
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+
+# RASP (Runtime Application Self Protection) Patterns
+rasp:
+  integrity_checks:
+    - pattern_id: "RASP_INTEGRITY_CHECK"
+      pattern: "integrity.*check"
+      description: "Runtime integrity checking mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.85
+      false_positive_rate: 0.08
+      masvs_refs: ["MSTG-RESILIENCE-1", "MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "RASP_CHECKSUM_VERIFY"
+      pattern: "checksum.*verify"
+      description: "Checksum verification for integrity"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.80
+      false_positive_rate: 0.10
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+
+  runtime_monitoring:
+    - pattern_id: "RASP_RUNTIME_MONITOR"
+      pattern: "runtime.*monitor"
+      description: "Runtime behavior monitoring"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.88
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "RASP_THREAT_DETECT"
+      pattern: "threat.*detect"
+      description: "Threat detection mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.86
+      false_positive_rate: 0.06
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+
+  self_protection:
+    - pattern_id: "RASP_SELF_PROTECT"
+      pattern: "self.*protect"
+      description: "Self-protection mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.84
+      false_positive_rate: 0.07
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+
+  threat_response:
+    - pattern_id: "RASP_THREAT_RESPONSE"
+      pattern: "threat.*response"
+      description: "Automated threat response"
+      strength: "advanced"
+      bypass_resistance: "expert"
+      reliability: 0.90
+      false_positive_rate: 0.03
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "RASP_EMERGENCY_SHUTDOWN"
+      pattern: "emergency.*shutdown"
+      description: "Emergency shutdown mechanism"
+      strength: "advanced"
+      bypass_resistance: "expert"
+      reliability: 0.92
+      false_positive_rate: 0.02
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+
+# Advanced Anti-Tampering Patterns
+advanced_patterns:
+  environment_detection:
+    - pattern_id: "ENV_EMULATOR_DETECT"
+      pattern: "emulator.*detect"
+      description: "Emulator detection mechanism"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.75
+      false_positive_rate: 0.15
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_SIMULATOR_DETECT"
+      pattern: "simulator.*detect"
+      description: "Simulator detection mechanism"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.78
+      false_positive_rate: 0.12
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_VIRTUAL_MACHINE_DETECT"
+      pattern: "virtual.*machine"
+      description: "Virtual machine environment detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.77
+      false_positive_rate: 0.13
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_ANDROID_ID_CHECK"
+      pattern: "android_id.*9774d56d682e549c"
+      description: "Default Android ID check for emulators"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.65
+      false_positive_rate: 0.20
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_DEVICE_ID_CHECK"
+      pattern: "device_id.*000000000000000"
+      description: "Default device ID check for emulators"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.68
+      false_positive_rate: 0.18
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_IMEI_CHECK"
+      pattern: "imei.*15\\d{13}"
+      description: "IMEI pattern check for emulators"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.73
+      false_positive_rate: 0.15
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_PHONE_NUMBER_CHECK"
+      pattern: "phone.*1555.*"
+      description: "Default phone number check for emulators"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.60
+      false_positive_rate: 0.25
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_NETWORK_OPERATOR_CHECK"
+      pattern: "network.*operator.*Android"
+      description: "Network operator check for emulators"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.62
+      false_positive_rate: 0.22
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_QEMU_DETECT"
+      pattern: "qemu"
+      description: "QEMU emulator detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.80
+      false_positive_rate: 0.10
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_GENYMOTION_DETECT"
+      pattern: "genymotion"
+      description: "Genymotion emulator detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.85
+      false_positive_rate: 0.08
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_BLUESTACKS_DETECT"
+      pattern: "bluestacks"
+      description: "BlueStacks emulator detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.82
+      false_positive_rate: 0.09
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_NOXPLAYER_DETECT"
+      pattern: "noxplayer"
+      description: "NoxPlayer emulator detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.81
+      false_positive_rate: 0.10
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_LDPLAYER_DETECT"
+      pattern: "ldplayer"
+      description: "LDPlayer emulator detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.79
+      false_positive_rate: 0.11
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_MEMU_DETECT"
+      pattern: "memu"
+      description: "MEmu emulator detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.78
+      false_positive_rate: 0.12
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_ANDY_DETECT"
+      pattern: "andy"
+      description: "Andy emulator detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.76
+      false_positive_rate: 0.14
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+
+  signature_validation:
+    - pattern_id: "SIG_CERT_VALIDATE"
+      pattern: "certificate.*valid"
+      description: "Certificate validation mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.88
+      false_positive_rate: 0.04
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_HASH_VERIFY"
+      pattern: "hash.*verify"
+      description: "Hash verification for signatures"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.86
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_SIGNATURE_CHECK"
+      pattern: "signature.*check"
+      description: "Application signature verification"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.90
+      false_positive_rate: 0.03
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_PACKAGE_VERIFY"
+      pattern: "package.*verify"
+      description: "Package verification mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.87
+      false_positive_rate: 0.04
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_INSTALLER_VERIFY"
+      pattern: "installer.*verify"
+      description: "Installer verification check"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.75
+      false_positive_rate: 0.12
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_CERT_PINNING"
+      pattern: "cert.*pinning"
+      description: "Certificate pinning implementation"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.85
+      false_positive_rate: 0.06
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_PUBLIC_KEY_VERIFY"
+      pattern: "public.*key.*verify"
+      description: "Public key verification"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.84
+      false_positive_rate: 0.07
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_KEYSTORE_VERIFY"
+      pattern: "keystore.*verify"
+      description: "Keystore verification mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.83
+      false_positive_rate: 0.07
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_CHECKSUM_VERIFY"
+      pattern: "checksum.*verify"
+      description: "Checksum verification for integrity"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.80
+      false_positive_rate: 0.10
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_CRC_CHECK"
+      pattern: "crc.*check"
+      description: "CRC integrity check"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.78
+      false_positive_rate: 0.11
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_MD5_VERIFY"
+      pattern: "md5.*verify"
+      description: "MD5 hash verification"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.65
+      false_positive_rate: 0.20
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_SHA1_VERIFY"
+      pattern: "sha1.*verify"
+      description: "SHA1 hash verification"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.70
+      false_positive_rate: 0.18
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_SHA256_VERIFY"
+      pattern: "sha256.*verify"
+      description: "SHA256 hash verification"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.90
+      false_positive_rate: 0.02
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_SHA512_VERIFY"
+      pattern: "sha512.*verify"
+      description: "SHA512 hash verification"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.88
+      false_positive_rate: 0.03
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "SIG_HMAC_VERIFY"
+      pattern: "hmac.*verify"
+      description: "HMAC verification mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.85
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+
+  hooking_detection:
+    - pattern_id: "HOOK_XPOSED_DETECT"
+      pattern: "xposed"
+      description: "Xposed framework detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.92
+      false_positive_rate: 0.02
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_SUBSTRATE_DETECT"
+      pattern: "substrate"
+      description: "Substrate framework detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.90
+      false_positive_rate: 0.03
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_CYDIA_DETECT"
+      pattern: "cydia"
+      description: "Cydia Substrate detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.88
+      false_positive_rate: 0.04
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_ROVO89_DETECT"
+      pattern: "rovo89"
+      description: "Rovo89 (Xposed author) detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.75
+      false_positive_rate: 0.12
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_EDXPOSED_DETECT"
+      pattern: "edxposed"
+      description: "EdXposed framework detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.89
+      false_positive_rate: 0.04
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_TAICHI_DETECT"
+      pattern: "taichi"
+      description: "TaiChi framework detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.87
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_VIRTUALXPOSED_DETECT"
+      pattern: "virtualxposed"
+      description: "VirtualXposed framework detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.86
+      false_positive_rate: 0.06
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_LSPOSED_DETECT"
+      pattern: "lsposed"
+      description: "LSPosed framework detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.91
+      false_positive_rate: 0.03
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_EPIC_DETECT"
+      pattern: "epic"
+      description: "Epic hooking framework detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.78
+      false_positive_rate: 0.11
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_YAHFA_DETECT"
+      pattern: "yahfa"
+      description: "YAHFA hooking framework detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.76
+      false_positive_rate: 0.13
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_SANDHOOK_DETECT"
+      pattern: "sandhook"
+      description: "SandHook framework detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.77
+      false_positive_rate: 0.12
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_PINE_DETECT"
+      pattern: "pine"
+      description: "Pine hooking framework detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.74
+      false_positive_rate: 0.14
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_DOBBY_DETECT"
+      pattern: "dobby"
+      description: "Dobby hooking framework detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.75
+      false_positive_rate: 0.13
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_MSHook_DETECT"
+      pattern: "mshook"
+      description: "MSHook framework detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.73
+      false_positive_rate: 0.15
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+    
+    - pattern_id: "HOOK_WHALE_DETECT"
+      pattern: "whale"
+      description: "Whale hooking framework detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.72
+      false_positive_rate: 0.16
+      masvs_refs: ["MSTG-RESILIENCE-4"]
+
+# Pattern Categories for Analysis
+pattern_categories:
+  critical_security:
+    - "root_detection"
+    - "debugger_detection"
+    - "anti_frida"
+  
+  obfuscation_protection:
+    - "code_obfuscation"
+  
+  runtime_protection:
+    - "rasp"
+    - "advanced_patterns"
+
+# Analysis Configuration
+analysis_config:
+  min_pattern_matches: 1
+  confidence_threshold: 0.1
+  max_false_positive_rate: 0.25
+  pattern_timeout_seconds: 30
+  
+  strength_thresholds:
+    weak: 0.3
+    moderate: 0.6
+    strong: 0.8
+    advanced: 0.9
+  
+  bypass_resistance_thresholds:
+    low: 0.25
+    medium: 0.5
+    high: 0.8
+    expert: 0.95 
+
+# Binary Protection Patterns
+binary_protection:
+  packing_detection:
+    - pattern_id: "BIN_UPX_PACKER"
+      pattern: "UPX"
+      description: "UPX packer detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.85
+      false_positive_rate: 0.08
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_APKTOOL_DETECT"
+      pattern: "apktool"
+      description: "APKTool usage detection"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.70
+      false_positive_rate: 0.18
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_DEXGUARD_DETECT"
+      pattern: "dexguard"
+      description: "DexGuard protection detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.92
+      false_positive_rate: 0.02
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_PROGUARD_DETECT"
+      pattern: "proguard"
+      description: "ProGuard obfuscation detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.78
+      false_positive_rate: 0.12
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_R8_DETECT"
+      pattern: "r8"
+      description: "R8 obfuscation detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.76
+      false_positive_rate: 0.14
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_OLLVM_DETECT"
+      pattern: "ollvm"
+      description: "OLLVM obfuscation detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.88
+      false_positive_rate: 0.04
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_IJIAMI_DETECT"
+      pattern: "ijiami"
+      description: "Ijiami protection detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.90
+      false_positive_rate: 0.03
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_BANGCLE_DETECT"
+      pattern: "bangcle"
+      description: "Bangcle protection detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.89
+      false_positive_rate: 0.04
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_QIHOO_DETECT"
+      pattern: "qihoo"
+      description: "Qihoo 360 protection detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.87
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_TENCENT_DETECT"
+      pattern: "tencent"
+      description: "Tencent protection detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.86
+      false_positive_rate: 0.06
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_BAIDU_DETECT"
+      pattern: "baidu"
+      description: "Baidu protection detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.84
+      false_positive_rate: 0.07
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_ALIBABA_DETECT"
+      pattern: "alibaba"
+      description: "Alibaba protection detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.85
+      false_positive_rate: 0.06
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_NAGAIN_DETECT"
+      pattern: "nagain"
+      description: "Nagain protection detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.75
+      false_positive_rate: 0.15
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_SECNEO_DETECT"
+      pattern: "secneo"
+      description: "SecNeo protection detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.83
+      false_positive_rate: 0.08
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "BIN_APPGUARD_DETECT"
+      pattern: "appguard"
+      description: "AppGuard protection detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.82
+      false_positive_rate: 0.09
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+
+  encryption_detection:
+    - pattern_id: "BIN_AES_ENCRYPT"
+      pattern: "aes.*encrypt"
+      description: "AES encryption mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.88
+      false_positive_rate: 0.04
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "BIN_DES_ENCRYPT"
+      pattern: "des.*encrypt"
+      description: "DES encryption mechanism"
+      strength: "weak"
+      bypass_resistance: "low"
+      reliability: 0.65
+      false_positive_rate: 0.20
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "BIN_RSA_ENCRYPT"
+      pattern: "rsa.*encrypt"
+      description: "RSA encryption mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.90
+      false_positive_rate: 0.02
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "BIN_ECC_ENCRYPT"
+      pattern: "ecc.*encrypt"
+      description: "ECC encryption mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.87
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "BIN_BLOWFISH_ENCRYPT"
+      pattern: "blowfish.*encrypt"
+      description: "Blowfish encryption mechanism"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.75
+      false_positive_rate: 0.15
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "BIN_TWOFISH_ENCRYPT"
+      pattern: "twofish.*encrypt"
+      description: "Twofish encryption mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.82
+      false_positive_rate: 0.09
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "BIN_CHACHA20_ENCRYPT"
+      pattern: "chacha20.*encrypt"
+      description: "ChaCha20 encryption mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.85
+      false_positive_rate: 0.06
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "BIN_SALSA20_ENCRYPT"
+      pattern: "salsa20.*encrypt"
+      description: "Salsa20 encryption mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.83
+      false_positive_rate: 0.08
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "BIN_SERPENT_ENCRYPT"
+      pattern: "serpent.*encrypt"
+      description: "Serpent encryption mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.84
+      false_positive_rate: 0.07
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "BIN_CAMELLIA_ENCRYPT"
+      pattern: "camellia.*encrypt"
+      description: "Camellia encryption mechanism"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.81
+      false_positive_rate: 0.10
+      masvs_refs: ["MSTG-RESILIENCE-3"] 
+
+# Additional Advanced Anti-Tampering Patterns
+advanced_protection:
+  memory_protection:
+    - pattern_id: "MEM_GUARD_PAGES"
+      pattern: "mprotect.*PROT_NONE"
+      description: "Memory guard pages protection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.88
+      false_positive_rate: 0.04
+      masvs_refs: ["MSTG-RESILIENCE-10"]
+    
+    - pattern_id: "MEM_STACK_CANARY"
+      pattern: "__stack_chk_guard"
+      description: "Stack canary protection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.85
+      false_positive_rate: 0.06
+      masvs_refs: ["MSTG-RESILIENCE-10"]
+    
+    - pattern_id: "MEM_HEAP_RANDOMIZATION"
+      pattern: "ASLR|heap.*random"
+      description: "Heap address randomization"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.90
+      false_positive_rate: 0.03
+      masvs_refs: ["MSTG-RESILIENCE-10"]
+
+  runtime_checks:
+    - pattern_id: "RT_INTEGRITY_CHECK"
+      pattern: "checksum.*runtime|runtime.*integrity"
+      description: "Runtime integrity verification"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.87
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "RT_CODE_SIGNING"
+      pattern: "signature.*verify|verify.*signature"
+      description: "Runtime code signature verification"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.89
+      false_positive_rate: 0.04
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+    
+    - pattern_id: "RT_TAMPER_DETECT"
+      pattern: "tamper.*detect|detect.*tamper"
+      description: "Runtime tampering detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.86
+      false_positive_rate: 0.06
+      masvs_refs: ["MSTG-RESILIENCE-3"]
+
+  anti_analysis:
+    - pattern_id: "ANTI_DISASSEMBLY"
+      pattern: "anti.*disasm|disasm.*protect"
+      description: "Anti-disassembly protection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.84
+      false_positive_rate: 0.07
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "ANTI_REVERSING"
+      pattern: "anti.*reverse|reverse.*protect"
+      description: "Anti-reverse engineering"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.85
+      false_positive_rate: 0.06
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+    
+    - pattern_id: "CONTROL_FLOW_GUARD"
+      pattern: "CFG|control.*flow.*guard"
+      description: "Control flow guard protection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.88
+      false_positive_rate: 0.04
+      masvs_refs: ["MSTG-RESILIENCE-9"]
+
+  environment_detection:
+    - pattern_id: "ENV_SIMULATOR_DETECT"
+      pattern: "simulator.*detect|detect.*simulator"
+      description: "Simulator environment detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.82
+      false_positive_rate: 0.08
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_VM_DETECT"
+      pattern: "virtual.*machine|vm.*detect"
+      description: "Virtual machine detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.80
+      false_positive_rate: 0.10
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+    
+    - pattern_id: "ENV_SANDBOX_DETECT"
+      pattern: "sandbox.*detect|detect.*sandbox"
+      description: "Sandbox environment detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.83
+      false_positive_rate: 0.07
+      masvs_refs: ["MSTG-RESILIENCE-1"]
+
+# Enhanced debugging detection patterns
+enhanced_debugging:
+  process_monitoring:
+    - pattern_id: "PROC_MONITOR_DETECT"
+      pattern: "procmon|process.*monitor"
+      description: "Process monitoring tool detection"
+      strength: "moderate"
+      bypass_resistance: "medium"
+      reliability: 0.78
+      false_positive_rate: 0.12
+      masvs_refs: ["MSTG-RESILIENCE-2"]
+    
+    - pattern_id: "PROC_INJECTION_DETECT"
+      pattern: "inject.*process|process.*inject"
+      description: "Process injection detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.86
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-2"]
+    
+    - pattern_id: "PROC_HOLLOWING_DETECT"
+      pattern: "hollow.*process|process.*hollow"
+      description: "Process hollowing detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.87
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-2"]
+
+  advanced_debugging:
+    - pattern_id: "DBG_HARDWARE_BREAK"
+      pattern: "hardware.*breakpoint|DR[0-7]"
+      description: "Hardware breakpoint detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.91
+      false_positive_rate: 0.03
+      masvs_refs: ["MSTG-RESILIENCE-2"]
+    
+    - pattern_id: "DBG_KERNEL_DEBUG"
+      pattern: "kernel.*debug|debug.*kernel"
+      description: "Kernel debugging detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.89
+      false_positive_rate: 0.04
+      masvs_refs: ["MSTG-RESILIENCE-2"]
+    
+    - pattern_id: "DBG_MEMORY_BREAK"
+      pattern: "memory.*breakpoint|access.*violation"
+      description: "Memory breakpoint detection"
+      strength: "strong"
+      bypass_resistance: "high"
+      reliability: 0.88
+      false_positive_rate: 0.05
+      masvs_refs: ["MSTG-RESILIENCE-2"]
+
+# Pattern reliability tracking configuration
+pattern_metadata:
+  total_patterns: 105
+  categories: 8
+  reliability_threshold: 0.75
+  production_threshold: 100
+  last_updated: "2024-01-01"
+  version: "2.1.0" 

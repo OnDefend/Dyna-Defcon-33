@@ -1,0 +1,195 @@
+# Network Security Vulnerability Patterns
+# These patterns define runtime detection rules for network security issues
+
+http_usage:
+  name: "HTTP Communication"
+  pattern: "http://"
+  type: "INSECURE_NETWORK"
+  severity: "HIGH"
+  cwe: "CWE-319"
+  masvs: "MASVS-NETWORK-1"
+  confidence: 0.90
+  description: "Unencrypted HTTP communication detected during runtime"
+  remediation: "Use HTTPS instead of HTTP for all network communications"
+  examples:
+    - "http://api.example.com/data"
+    - "http://insecure-endpoint.com"
+
+sensitive_data_in_url:
+  name: "Sensitive Data in URL"
+  pattern: "(password|token|key|secret|api_key|auth)="
+  type: "DATA_LEAKAGE"
+  severity: "HIGH"
+  cwe: "CWE-200"
+  masvs: "MASVS-NETWORK-1"
+  confidence: 0.80
+  description: "Sensitive data detected in URL parameters during runtime"
+  remediation: "Move sensitive data from URL parameters to request body or headers"
+  examples:
+    - "https://api.com/login?password=secret123"
+    - "https://api.com/auth?api_key=12345"
+
+ip_address_hardcoded:
+  name: "Hardcoded IP Address"
+  pattern: "\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b"
+  type: "INSECURE_NETWORK"
+  severity: "MEDIUM"
+  cwe: "CWE-547"
+  masvs: "MASVS-NETWORK-1"
+  confidence: 0.70
+  description: "Hardcoded IP address detected in network communication"
+  remediation: "Use domain names instead of hardcoded IP addresses"
+  examples:
+    - "192.168.1.100"
+    - "10.0.0.1"
+
+weak_ssl_protocol:
+  name: "Weak SSL/TLS Protocol"
+  pattern: "(SSLv2|SSLv3|TLSv1\\.0|TLSv1\\.1)"
+  type: "INSECURE_NETWORK"
+  severity: "HIGH"
+  cwe: "CWE-326"
+  masvs: "MASVS-NETWORK-2"
+  confidence: 0.85
+  description: "Weak SSL/TLS protocol version detected during runtime"
+  remediation: "Use TLS 1.2 or TLS 1.3 for secure communications"
+  examples:
+    - "TLSv1.0"
+    - "SSLv3"
+
+certificate_bypass:
+  name: "Certificate Validation Bypass"
+  pattern: "(checkServerTrusted.*return|trustAll|acceptAll|verify.*return true)"
+  type: "AUTHENTICATION_BYPASS"
+  severity: "CRITICAL"
+  cwe: "CWE-295"
+  masvs: "MASVS-NETWORK-3"
+  confidence: 0.90
+  description: "Certificate validation bypass detected during runtime"
+  remediation: "Implement proper certificate validation and pinning"
+  examples:
+    - "checkServerTrusted() { return; }"
+    - "verify() { return true; }"
+
+hostname_bypass:
+  name: "Hostname Verification Bypass"
+  pattern: "(setHostnameVerifier.*ALLOW_ALL|verify.*return true)"
+  type: "AUTHENTICATION_BYPASS"
+  severity: "HIGH"
+  cwe: "CWE-295"
+  masvs: "MASVS-NETWORK-3"
+  confidence: 0.85
+  description: "Hostname verification bypass detected during runtime"
+  remediation: "Enable proper hostname verification for SSL/TLS connections"
+  examples:
+    - "setHostnameVerifier(ALLOW_ALL_HOSTNAME_VERIFIER)"
+
+weak_cipher_suite:
+  name: "Weak Cipher Suite"
+  pattern: "(NULL|EXPORT|DES|RC4|MD5)"
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "HIGH"
+  cwe: "CWE-327"
+  masvs: "MASVS-NETWORK-2"
+  confidence: 0.80
+  description: "Weak cipher suite detected during runtime"
+  remediation: "Configure strong cipher suites for SSL/TLS connections"
+  examples:
+    - "TLS_RSA_WITH_NULL_SHA"
+    - "TLS_RSA_WITH_RC4_128_SHA"
+
+unencrypted_websocket:
+  name: "Unencrypted WebSocket"
+  pattern: "ws://"
+  type: "INSECURE_NETWORK"
+  severity: "HIGH"
+  cwe: "CWE-319"
+  masvs: "MASVS-NETWORK-1"
+  confidence: 0.90
+  description: "Unencrypted WebSocket connection detected during runtime"
+  remediation: "Use WSS (WebSocket Secure) instead of WS for WebSocket connections"
+  examples:
+    - "ws://websocket.example.com"
+    - "ws://chat.insecure.com"
+
+ftp_usage:
+  name: "FTP Protocol Usage"
+  pattern: "ftp://"
+  type: "INSECURE_NETWORK"
+  severity: "MEDIUM"
+  cwe: "CWE-319"
+  masvs: "MASVS-NETWORK-1"
+  confidence: 0.85
+  description: "FTP protocol usage detected during runtime"
+  remediation: "Use SFTP or FTPS instead of plain FTP for file transfers"
+  examples:
+    - "ftp://files.example.com"
+    - "ftp://upload.server.com"
+
+telnet_usage:
+  name: "Telnet Protocol Usage"
+  pattern: "telnet://"
+  type: "INSECURE_NETWORK"
+  severity: "HIGH"
+  cwe: "CWE-319"
+  masvs: "MASVS-NETWORK-1"
+  confidence: 0.90
+  description: "Telnet protocol usage detected during runtime"
+  remediation: "Use SSH instead of Telnet for remote access"
+  examples:
+    - "telnet://remote.server.com"
+
+cookie_security:
+  name: "Insecure Cookie Settings"
+  pattern: "(secure=false|httpOnly=false|sameSite=none)"
+  type: "INSECURE_NETWORK"
+  severity: "MEDIUM"
+  cwe: "CWE-614"
+  masvs: "MASVS-NETWORK-1"
+  confidence: 0.75
+  description: "Insecure cookie settings detected during runtime"
+  remediation: "Set secure, httpOnly, and appropriate sameSite attributes for cookies"
+  examples:
+    - "secure=false"
+    - "httpOnly=false"
+
+cors_wildcard:
+  name: "CORS Wildcard Usage"
+  pattern: "Access-Control-Allow-Origin: \\*"
+  type: "INSECURE_NETWORK"
+  severity: "MEDIUM"
+  cwe: "CWE-942"
+  masvs: "MASVS-NETWORK-1"
+  confidence: 0.80
+  description: "CORS wildcard usage detected during runtime"
+  remediation: "Specify explicit origins instead of using wildcard in CORS headers"
+  examples:
+    - "Access-Control-Allow-Origin: *"
+
+data_exfiltration_pattern:
+  name: "Potential Data Exfiltration"
+  pattern: "(upload|send|post).*\\.(zip|tar|db|sql|json|xml)"
+  type: "DATA_LEAKAGE"
+  severity: "HIGH"
+  cwe: "CWE-200"
+  masvs: "MASVS-NETWORK-1"
+  confidence: 0.70
+  description: "Potential data exfiltration pattern detected during runtime"
+  remediation: "Review data transmission patterns and implement data loss prevention"
+  examples:
+    - "upload database.db"
+    - "send data.json"
+
+excessive_requests:
+  name: "Excessive Network Requests"
+  pattern: "requests_per_minute > 100"
+  type: "BEHAVIORAL_ANOMALY"
+  severity: "MEDIUM"
+  cwe: "CWE-405"
+  masvs: "MASVS-NETWORK-1"
+  confidence: 0.60
+  description: "Excessive network request rate detected during runtime"
+  remediation: "Implement request throttling and review network usage patterns"
+  examples:
+    - "High frequency API calls"
+    - "Rapid successive requests"

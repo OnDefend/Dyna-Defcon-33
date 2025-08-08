@@ -1,0 +1,617 @@
+# Enhanced Data Storage Analyzer Pattern Configuration
+# External configuration file for comprehensive pattern matching across:
+# - PII Detection (Android ID, IMEI, GPS, MAC addresses, etc.)
+# - File Permission Analysis (world-readable, world-writable, etc.)
+# - Storage Security Assessment (encryption, key management, etc.)
+# - Path Traversal Detection (directory traversal, path injection, etc.)
+
+version: "2.0.0"
+last_updated: "2024-01-15"
+pattern_count: 180+
+
+# PII Detection Patterns
+pii_patterns:
+  android_id:
+    description: "Android device identifier patterns"
+    sensitivity: "high"
+    compliance_impact: ["GDPR", "CCPA", "MASVS-PRIVACY-1"]
+    patterns:
+      - pattern: 'android\.provider\.Settings\.Secure\.getString\([^,]+,\s*["\']android_id["\']'
+        reliability: 0.9
+        description: "Android ID retrieval through Settings.Secure"
+      - pattern: 'Settings\.Secure\.ANDROID_ID'
+        reliability: 0.95
+        description: "Direct Android ID constant reference"
+      - pattern: 'getString\([^,]+,\s*["\']android_id["\']'
+        reliability: 0.8
+        description: "Android ID string retrieval"
+      - pattern: 'ANDROID_ID\s*=\s*["\'][a-fA-F0-9]{16}["\']'
+        reliability: 0.85
+        description: "Android ID value assignment"
+      - pattern: 'android_id["\']?\s*[:=]\s*["\'][a-fA-F0-9]{16}["\']'
+        reliability: 0.85
+        description: "Android ID value in JSON/properties"
+      - pattern: 'device_id["\']?\s*[:=]\s*["\'][a-fA-F0-9]{16}["\']'
+        reliability: 0.8
+        description: "Device ID with Android ID pattern"
+    
+  imei:
+    description: "International Mobile Equipment Identity patterns"
+    sensitivity: "critical"
+    compliance_impact: ["GDPR", "CCPA", "MASVS-PRIVACY-1"]
+    patterns:
+      - pattern: 'TelephonyManager\.getImei\(\)'
+        reliability: 0.95
+        description: "IMEI retrieval through TelephonyManager"
+      - pattern: 'TelephonyManager\.getDeviceId\(\)'
+        reliability: 0.9
+        description: "Device ID retrieval (may include IMEI)"
+      - pattern: 'telephonyManager\.getImei\(\)'
+        reliability: 0.95
+        description: "IMEI retrieval through instance"
+      - pattern: 'telephonyManager\.getDeviceId\(\)'
+        reliability: 0.9
+        description: "Device ID retrieval through instance"
+      - pattern: 'getImei\(\)'
+        reliability: 0.8
+        description: "Generic IMEI retrieval"
+      - pattern: 'getDeviceId\(\)'
+        reliability: 0.7
+        description: "Generic device ID retrieval"
+      - pattern: 'IMEI["\']?\s*[:=]\s*["\'][0-9]{15}["\']'
+        reliability: 0.9
+        description: "IMEI value assignment"
+      - pattern: 'imei["\']?\s*[:=]\s*["\'][0-9]{15}["\']'
+        reliability: 0.9
+        description: "IMEI value in JSON/properties"
+      - pattern: 'device_id["\']?\s*[:=]\s*["\'][0-9]{15}["\']'
+        reliability: 0.85
+        description: "Device ID with IMEI pattern"
+    
+  gps_coordinates:
+    description: "GPS location coordinate patterns"
+    sensitivity: "critical"
+    compliance_impact: ["GDPR", "CCPA", "MASVS-PRIVACY-1"]
+    patterns:
+      - pattern: 'LocationManager\.getLastKnownLocation'
+        reliability: 0.9
+        description: "Location retrieval through LocationManager"
+      - pattern: 'locationManager\.getLastKnownLocation'
+        reliability: 0.9
+        description: "Location retrieval through instance"
+      - pattern: 'getLastKnownLocation\('
+        reliability: 0.85
+        description: "Generic location retrieval"
+      - pattern: 'latitude["\']?\s*[:=]\s*["\']?-?\d+\.\d+'
+        reliability: 0.8
+        description: "Latitude coordinate value"
+      - pattern: 'longitude["\']?\s*[:=]\s*["\']?-?\d+\.\d+'
+        reliability: 0.8
+        description: "Longitude coordinate value"
+      - pattern: 'lat["\']?\s*[:=]\s*["\']?-?\d+\.\d+'
+        reliability: 0.75
+        description: "Abbreviated latitude value"
+      - pattern: 'lng["\']?\s*[:=]\s*["\']?-?\d+\.\d+'
+        reliability: 0.75
+        description: "Abbreviated longitude value"
+      - pattern: 'geo["\']?\s*[:=]\s*["\']?-?\d+\.\d+,-?\d+\.\d+'
+        reliability: 0.85
+        description: "Combined geo coordinates"
+      - pattern: 'location["\']?\s*[:=]\s*["\']?-?\d+\.\d+,-?\d+\.\d+'
+        reliability: 0.85
+        description: "Location coordinate pair"
+    
+  mac_addresses:
+    description: "MAC address patterns for WiFi and Bluetooth"
+    sensitivity: "high"
+    compliance_impact: ["GDPR", "CCPA", "MASVS-PRIVACY-1"]
+    patterns:
+      - pattern: 'WifiManager\.getConnectionInfo\(\)\.getMacAddress\(\)'
+        reliability: 0.95
+        description: "WiFi MAC address retrieval"
+      - pattern: 'wifiManager\.getConnectionInfo\(\)\.getMacAddress\(\)'
+        reliability: 0.95
+        description: "WiFi MAC address retrieval through instance"
+      - pattern: 'getMacAddress\(\)'
+        reliability: 0.8
+        description: "Generic MAC address retrieval"
+      - pattern: 'BluetoothAdapter\.getDefaultAdapter\(\)\.getAddress\(\)'
+        reliability: 0.95
+        description: "Bluetooth MAC address retrieval"
+      - pattern: 'bluetoothAdapter\.getAddress\(\)'
+        reliability: 0.9
+        description: "Bluetooth MAC address retrieval through instance"
+      - pattern: 'mac["\']?\s*[:=]\s*["\'][a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}["\']'
+        reliability: 0.9
+        description: "MAC address value pattern"
+      - pattern: 'macAddress["\']?\s*[:=]\s*["\'][a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}:[a-fA-F0-9]{2}["\']'
+        reliability: 0.9
+        description: "MAC address value in JSON/properties"
+    
+  phone_numbers:
+    description: "Phone number patterns"
+    sensitivity: "high"
+    compliance_impact: ["GDPR", "CCPA", "MASVS-PRIVACY-1"]
+    patterns:
+      - pattern: 'TelephonyManager\.getLine1Number\(\)'
+        reliability: 0.95
+        description: "Phone number retrieval through TelephonyManager"
+      - pattern: 'telephonyManager\.getLine1Number\(\)'
+        reliability: 0.95
+        description: "Phone number retrieval through instance"
+      - pattern: 'getLine1Number\(\)'
+        reliability: 0.8
+        description: "Generic phone number retrieval"
+      - pattern: 'phone["\']?\s*[:=]\s*["\'][+]?[0-9\s\-\(\)]{7,15}["\']'
+        reliability: 0.8
+        description: "Phone number value pattern"
+      - pattern: 'phoneNumber["\']?\s*[:=]\s*["\'][+]?[0-9\s\-\(\)]{7,15}["\']'
+        reliability: 0.8
+        description: "Phone number value in JSON/properties"
+      - pattern: 'mobile["\']?\s*[:=]\s*["\'][+]?[0-9\s\-\(\)]{7,15}["\']'
+        reliability: 0.8
+        description: "Mobile number value pattern"
+    
+  email_addresses:
+    description: "Email address patterns"
+    sensitivity: "medium"
+    compliance_impact: ["GDPR", "CCPA", "MASVS-PRIVACY-1"]
+    patterns:
+      - pattern: 'email["\']?\s*[:=]\s*["\'][a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}["\']'
+        reliability: 0.85
+        description: "Email address value pattern"
+      - pattern: 'emailAddress["\']?\s*[:=]\s*["\'][a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}["\']'
+        reliability: 0.85
+        description: "Email address value in JSON/properties"
+      - pattern: 'mail["\']?\s*[:=]\s*["\'][a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}["\']'
+        reliability: 0.8
+        description: "Mail address value pattern"
+      - pattern: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+        reliability: 0.7
+        description: "Generic email pattern"
+    
+  credit_cards:
+    description: "Credit card number patterns"
+    sensitivity: "critical"
+    compliance_impact: ["PCI-DSS", "GDPR", "CCPA", "MASVS-PRIVACY-1"]
+    patterns:
+      - pattern: 'creditCard["\']?\s*[:=]\s*["\'][0-9]{13,19}["\']'
+        reliability: 0.9
+        description: "Credit card number value"
+      - pattern: 'cardNumber["\']?\s*[:=]\s*["\'][0-9]{13,19}["\']'
+        reliability: 0.9
+        description: "Card number value"
+      - pattern: 'card["\']?\s*[:=]\s*["\'][0-9]{13,19}["\']'
+        reliability: 0.85
+        description: "Card value pattern"
+      - pattern: '[0-9]{4}[-\s]?[0-9]{4}[-\s]?[0-9]{4}[-\s]?[0-9]{4}'
+        reliability: 0.8
+        description: "Credit card format pattern"
+
+# File Permission Analysis Patterns
+file_permission_patterns:
+  world_readable:
+    description: "World-readable file permission patterns"
+    severity: "high"
+    compliance_impact: ["MASVS-STORAGE-1", "MSTG-STORAGE-1"]
+    patterns:
+      - pattern: 'MODE_WORLD_READABLE'
+        reliability: 0.95
+        description: "World readable mode constant"
+      - pattern: 'Context\.MODE_WORLD_READABLE'
+        reliability: 0.95
+        description: "World readable mode through Context"
+      - pattern: 'openFileOutput\([^,]+,\s*MODE_WORLD_READABLE'
+        reliability: 0.9
+        description: "World readable file output"
+      - pattern: 'getSharedPreferences\([^,]+,\s*MODE_WORLD_READABLE'
+        reliability: 0.9
+        description: "World readable shared preferences"
+      - pattern: 'FileOutputStream.*MODE_WORLD_READABLE'
+        reliability: 0.85
+        description: "World readable file output stream"
+      - pattern: 'chmod\s+[0-9]*[0-9][4-7][0-9]'
+        reliability: 0.8
+        description: "World readable chmod command"
+      - pattern: 'permissions\s*=\s*["\'].*r.*["\']'
+        reliability: 0.7
+        description: "World readable permissions string"
+      - pattern: 'file\.setReadable\(true,\s*false\)'
+        reliability: 0.8
+        description: "Set file readable for all"
+    
+  world_writable:
+    description: "World-writable file permission patterns"
+    severity: "critical"
+    compliance_impact: ["MASVS-STORAGE-1", "MSTG-STORAGE-1"]
+    patterns:
+      - pattern: 'MODE_WORLD_WRITEABLE'
+        reliability: 0.95
+        description: "World writable mode constant"
+      - pattern: 'Context\.MODE_WORLD_WRITEABLE'
+        reliability: 0.95
+        description: "World writable mode through Context"
+      - pattern: 'openFileOutput\([^,]+,\s*MODE_WORLD_WRITEABLE'
+        reliability: 0.9
+        description: "World writable file output"
+      - pattern: 'getSharedPreferences\([^,]+,\s*MODE_WORLD_WRITEABLE'
+        reliability: 0.9
+        description: "World writable shared preferences"
+      - pattern: 'FileOutputStream.*MODE_WORLD_WRITEABLE'
+        reliability: 0.85
+        description: "World writable file output stream"
+      - pattern: 'chmod\s+[0-9]*[0-9][2367][0-9]'
+        reliability: 0.8
+        description: "World writable chmod command"
+      - pattern: 'permissions\s*=\s*["\'].*w.*["\']'
+        reliability: 0.7
+        description: "World writable permissions string"
+      - pattern: 'file\.setWritable\(true,\s*false\)'
+        reliability: 0.8
+        description: "Set file writable for all"
+    
+  unsafe_file_operations:
+    description: "Unsafe file operation patterns"
+    severity: "medium"
+    compliance_impact: ["MASVS-STORAGE-2", "MSTG-STORAGE-2"]
+    patterns:
+      - pattern: 'File\s*\([^)]*getExternalStorageDirectory\(\)'
+        reliability: 0.8
+        description: "External storage directory access"
+      - pattern: 'Environment\.getExternalStorageDirectory\(\)'
+        reliability: 0.85
+        description: "External storage directory retrieval"
+      - pattern: 'getExternalFilesDir\(null\)'
+        reliability: 0.8
+        description: "External files directory access"
+      - pattern: 'getCacheDir\(\)'
+        reliability: 0.7
+        description: "Cache directory access"
+      - pattern: 'getExternalCacheDir\(\)'
+        reliability: 0.8
+        description: "External cache directory access"
+      - pattern: 'openFileOutput\([^,]+,\s*MODE_APPEND'
+        reliability: 0.7
+        description: "File output in append mode"
+      - pattern: 'RandomAccessFile.*["\']rw["\']'
+        reliability: 0.8
+        description: "Random access file in read-write mode"
+    
+  insecure_permissions:
+    description: "Insecure file permission patterns"
+    severity: "high"
+    compliance_impact: ["MASVS-STORAGE-1", "MSTG-STORAGE-1"]
+    patterns:
+      - pattern: 'setPermissions\(.*777.*\)'
+        reliability: 0.9
+        description: "Set 777 permissions"
+      - pattern: 'setPermissions\(.*666.*\)'
+        reliability: 0.9
+        description: "Set 666 permissions"
+      - pattern: 'chmod.*777'
+        reliability: 0.85
+        description: "chmod 777 command"
+      - pattern: 'chmod.*666'
+        reliability: 0.85
+        description: "chmod 666 command"
+      - pattern: 'umask\s*\(\s*0\s*\)'
+        reliability: 0.8
+        description: "Umask set to 0"
+      - pattern: 'permissions\s*=\s*["\']777["\']'
+        reliability: 0.85
+        description: "777 permissions string"
+      - pattern: 'file\.setExecutable\(true,\s*false\)'
+        reliability: 0.8
+        description: "Set file executable for all"
+
+# Storage Security Patterns
+storage_security_patterns:
+  unencrypted_storage:
+    description: "Unencrypted storage patterns"
+    severity: "high"
+    compliance_impact: ["MASVS-STORAGE-1", "MSTG-STORAGE-1"]
+    patterns:
+      - pattern: 'SharedPreferences.*putString\([^,]+,\s*[^)]+\)'
+        reliability: 0.7
+        description: "Shared preferences string storage"
+      - pattern: 'getSharedPreferences\([^)]+\)\.edit\(\)'
+        reliability: 0.7
+        description: "Shared preferences editing"
+      - pattern: 'FileOutputStream.*write\('
+        reliability: 0.6
+        description: "File output stream write"
+      - pattern: 'openFileOutput\([^,]+,\s*MODE_PRIVATE\)'
+        reliability: 0.6
+        description: "Private file output"
+      - pattern: 'SQLiteDatabase.*execSQL\('
+        reliability: 0.7
+        description: "SQLite database execution"
+      - pattern: 'ContentValues.*put\('
+        reliability: 0.6
+        description: "Content values insertion"
+      - pattern: 'getWritableDatabase\(\)'
+        reliability: 0.7
+        description: "Writable database access"
+      - pattern: 'editor\.putString\('
+        reliability: 0.7
+        description: "Editor string insertion"
+    
+  weak_encryption:
+    description: "Weak encryption algorithm patterns"
+    severity: "medium"
+    compliance_impact: ["MASVS-CRYPTO-1", "MSTG-CRYPTO-1"]
+    patterns:
+      - pattern: 'DES\.'
+        reliability: 0.9
+        description: "DES encryption usage"
+      - pattern: 'new\s+DES'
+        reliability: 0.9
+        description: "DES instantiation"
+      - pattern: 'Algorithm\s*=\s*["\']DES["\']'
+        reliability: 0.9
+        description: "DES algorithm specification"
+      - pattern: 'cipher\.getInstance\(["\']DES'
+        reliability: 0.9
+        description: "DES cipher instance"
+      - pattern: 'MD5\.'
+        reliability: 0.85
+        description: "MD5 hash usage"
+      - pattern: 'MessageDigest\.getInstance\(["\']MD5["\']'
+        reliability: 0.85
+        description: "MD5 message digest"
+      - pattern: 'Base64\.encode\('
+        reliability: 0.6
+        description: "Base64 encoding (not encryption)"
+      - pattern: 'ROT13'
+        reliability: 0.9
+        description: "ROT13 encoding"
+      - pattern: 'XOR.*encrypt'
+        reliability: 0.8
+        description: "XOR encryption"
+    
+  key_hardcoding:
+    description: "Hardcoded encryption key patterns"
+    severity: "critical"
+    compliance_impact: ["MASVS-CRYPTO-1", "MSTG-CRYPTO-1"]
+    patterns:
+      - pattern: 'key\s*=\s*["\'][^"\']{8,}["\']'
+        reliability: 0.9
+        description: "Hardcoded key assignment"
+      - pattern: 'password\s*=\s*["\'][^"\']{8,}["\']'
+        reliability: 0.9
+        description: "Hardcoded password assignment"
+      - pattern: 'secret\s*=\s*["\'][^"\']{8,}["\']'
+        reliability: 0.9
+        description: "Hardcoded secret assignment"
+      - pattern: 'private.*key\s*=\s*["\'][^"\']{20,}["\']'
+        reliability: 0.9
+        description: "Hardcoded private key"
+      - pattern: 'AES.*key\s*=\s*["\'][^"\']{16,}["\']'
+        reliability: 0.9
+        description: "Hardcoded AES key"
+      - pattern: 'String.*KEY\s*=\s*["\'][^"\']{8,}["\']'
+        reliability: 0.85
+        description: "Hardcoded key constant"
+      - pattern: 'final.*KEY\s*=\s*["\'][^"\']{8,}["\']'
+        reliability: 0.85
+        description: "Hardcoded final key"
+    
+  backup_vulnerabilities:
+    description: "Backup vulnerability patterns"
+    severity: "medium"
+    compliance_impact: ["MASVS-STORAGE-1", "MSTG-STORAGE-1"]
+    patterns:
+      - pattern: 'android:allowBackup\s*=\s*["\']true["\']'
+        reliability: 0.9
+        description: "Backup allowed in manifest"
+      - pattern: 'allowBackup\s*=\s*true'
+        reliability: 0.9
+        description: "Backup enabled"
+      - pattern: 'backup.*Agent'
+        reliability: 0.8
+        description: "Backup agent usage"
+      - pattern: 'onBackup\('
+        reliability: 0.8
+        description: "Backup callback"
+      - pattern: 'onRestore\('
+        reliability: 0.8
+        description: "Restore callback"
+      - pattern: 'BackupManager'
+        reliability: 0.8
+        description: "Backup manager usage"
+      - pattern: 'dataExtractionRules'
+        reliability: 0.8
+        description: "Data extraction rules"
+
+# Path Traversal Patterns
+path_traversal_patterns:
+  directory_traversal:
+    description: "Directory traversal attack patterns"
+    severity: "high"
+    compliance_impact: ["MASVS-PLATFORM-1", "MSTG-PLATFORM-1"]
+    patterns:
+      - pattern: '\.\./\.\./\.\.'
+        reliability: 0.95
+        description: "Triple dot-dot traversal"
+      - pattern: '\.\.[\\/]\.\.[\\/]'
+        reliability: 0.9
+        description: "Double dot-dot traversal"
+      - pattern: '\.\.[\\/]\.\.[\\/]\.\.[\\/]'
+        reliability: 0.95
+        description: "Triple dot-dot traversal (any separator)"
+      - pattern: '\.\.[\\/]\.\.[\\/]\.\.[\\/]\.\.[\\/]'
+        reliability: 0.95
+        description: "Quad dot-dot traversal"
+      - pattern: '\.\.[\\/]\.\.[\\/]\.\.[\\/]\.\.[\\/]\.\.[\\/]'
+        reliability: 0.95
+        description: "Penta dot-dot traversal"
+      - pattern: '%2e%2e%2f'
+        reliability: 0.9
+        description: "URL-encoded dot-dot traversal"
+      - pattern: '%2e%2e%5c'
+        reliability: 0.9
+        description: "URL-encoded dot-dot backslash"
+      - pattern: '%2e%2e/'
+        reliability: 0.85
+        description: "Partially encoded traversal"
+      - pattern: '\.\.%2f'
+        reliability: 0.85
+        description: "Mixed encoding traversal"
+    
+  path_injection:
+    description: "Path injection vulnerability patterns"
+    severity: "high"
+    compliance_impact: ["MASVS-PLATFORM-1", "MSTG-PLATFORM-1"]
+    patterns:
+      - pattern: 'new\s+File\([^)]*\+[^)]*\)'
+        reliability: 0.8
+        description: "File constructor with concatenation"
+      - pattern: 'new\s+File\([^)]*user[^)]*\)'
+        reliability: 0.8
+        description: "File constructor with user input"
+      - pattern: 'new\s+File\([^)]*input[^)]*\)'
+        reliability: 0.8
+        description: "File constructor with input parameter"
+      - pattern: 'new\s+File\([^)]*request[^)]*\)'
+        reliability: 0.8
+        description: "File constructor with request parameter"
+      - pattern: 'new\s+File\([^)]*parameter[^)]*\)'
+        reliability: 0.8
+        description: "File constructor with parameter"
+      - pattern: 'FileInputStream\([^)]*\+[^)]*\)'
+        reliability: 0.8
+        description: "FileInputStream with concatenation"
+      - pattern: 'FileOutputStream\([^)]*\+[^)]*\)'
+        reliability: 0.8
+        description: "FileOutputStream with concatenation"
+      - pattern: 'File\([^)]*getString\([^)]*\)'
+        reliability: 0.8
+        description: "File with getString parameter"
+    
+  zip_slip:
+    description: "Zip slip vulnerability patterns"
+    severity: "high"
+    compliance_impact: ["MASVS-PLATFORM-1", "MSTG-PLATFORM-1"]
+    patterns:
+      - pattern: 'ZipEntry\.getName\(\)'
+        reliability: 0.8
+        description: "Zip entry name retrieval"
+      - pattern: 'zipEntry\.getName\(\)'
+        reliability: 0.8
+        description: "Zip entry name retrieval (instance)"
+      - pattern: 'new\s+File\([^)]*zipEntry\.getName\(\)'
+        reliability: 0.9
+        description: "File creation with zip entry name"
+      - pattern: 'new\s+File\([^)]*entry\.getName\(\)'
+        reliability: 0.9
+        description: "File creation with entry name"
+      - pattern: 'File\([^)]*\.getName\(\)'
+        reliability: 0.8
+        description: "File with getName method"
+      - pattern: 'extractTo\([^)]*zipEntry'
+        reliability: 0.8
+        description: "Extract to zip entry"
+      - pattern: 'unzip\([^)]*entry'
+        reliability: 0.8
+        description: "Unzip with entry"
+    
+  web_path_traversal:
+    description: "Web-based path traversal patterns"
+    severity: "high"
+    compliance_impact: ["MASVS-PLATFORM-1", "MSTG-PLATFORM-1"]
+    patterns:
+      - pattern: 'WebView.*loadUrl\([^)]*\.\.'
+        reliability: 0.9
+        description: "WebView load URL with traversal"
+      - pattern: 'loadUrl\([^)]*\.\.'
+        reliability: 0.85
+        description: "Load URL with traversal"
+      - pattern: 'WebSettings.*setAllowFileAccess\(true\)'
+        reliability: 0.8
+        description: "WebView file access enabled"
+      - pattern: 'WebSettings.*setAllowFileAccessFromFileURLs\(true\)'
+        reliability: 0.8
+        description: "WebView file access from file URLs"
+      - pattern: 'WebSettings.*setAllowUniversalAccessFromFileURLs\(true\)'
+        reliability: 0.8
+        description: "WebView universal access from file URLs"
+      - pattern: 'file://[^"\']*\.\.'
+        reliability: 0.9
+        description: "File URL with traversal"
+      - pattern: 'content://[^"\']*\.\.'
+        reliability: 0.85
+        description: "Content URL with traversal"
+
+# Pattern Reliability Metadata
+pattern_reliability:
+  high_reliability: 0.9  # 90% accuracy
+  medium_reliability: 0.8  # 80% accuracy
+  low_reliability: 0.7  # 70% accuracy
+  
+  # False positive indicators
+  false_positive_indicators:
+    - "example"
+    - "sample"
+    - "test"
+    - "demo"
+    - "placeholder"
+    - "dummy"
+    - "mock"
+    - "fake"
+    - "template"
+    - "default"
+  
+  # Context boost keywords
+  context_boost_keywords:
+    pii: ["sensitive", "personal", "private", "confidential", "user", "profile"]
+    file_permission: ["security", "access", "permission", "mode", "readable", "writable"]
+    storage_security: ["encrypt", "decrypt", "key", "password", "secret", "secure"]
+    path_traversal: ["path", "file", "directory", "folder", "navigation", "access"]
+
+# Compliance Mapping
+compliance_mapping:
+  MASVS-STORAGE-1: "Secure data storage"
+  MASVS-STORAGE-2: "Prevent sensitive data in logs"
+  MASVS-CRYPTO-1: "Cryptographic key management"
+  MASVS-PLATFORM-1: "Platform interaction"
+  MASVS-PRIVACY-1: "User privacy protection"
+  MSTG-STORAGE-1: "Testing local storage for sensitive data"
+  MSTG-STORAGE-2: "Testing whether sensitive data is sent to third parties"
+  MSTG-CRYPTO-1: "Testing cryptographic key management"
+  MSTG-PLATFORM-1: "Testing app permissions"
+  GDPR: "General Data Protection Regulation"
+  CCPA: "California Consumer Privacy Act"
+  PCI-DSS: "Payment Card Industry Data Security Standard"
+
+# Analysis Configuration
+analysis_config:
+  max_pattern_matches: 1000
+  confidence_threshold: 0.7
+  severity_weights:
+    critical: 4.0
+    high: 3.0
+    medium: 2.0
+    low: 1.0
+    info: 0.5
+  
+  context_analysis:
+    enabled: true
+    context_window: 200  # characters
+    keyword_boost: 0.1
+    false_positive_penalty: -0.3
+  
+  pattern_optimization:
+    cache_compiled_patterns: true
+    parallel_matching: true
+    max_workers: 4
+    timeout_per_file: 30  # seconds
+
+# Reporting Configuration
+reporting_config:
+  include_confidence_scores: true
+  include_context_snippets: true
+  include_remediation_advice: true
+  include_compliance_mapping: true
+  max_context_length: 150
+  group_by_severity: true
+  sort_by_confidence: true 
