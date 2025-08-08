@@ -1,0 +1,238 @@
+# AODS Modular Pattern Engine Configuration - SCALED FOR 1000+ PATTERNS
+# This file controls pattern source behavior, performance settings, and operational parameters
+
+engine:
+  # Core engine settings - optimized for larger pattern sets
+  max_workers: 6  # Increased for parallel processing
+  enable_parallel_loading: true
+  enable_semantic_analysis: true
+  match_timeout_seconds: 45  # Increased timeout for larger pattern sets
+  enable_caching: true
+  cache_size_limit: 15000  # Increased cache size
+  log_level: "INFO"
+  
+  # Performance tuning for 1000+ patterns
+  lazy_loading: true
+  precompile_patterns: true
+  memory_limit_mb: 1024  # Increased memory limit
+  pattern_batch_size: 150  # Larger batch size
+
+# Pattern source configurations - SCALED FOR 1000+ PATTERNS
+pattern_sources:
+  # CVE/NVD Database Source - EXPANDED
+  cve_source:
+    enabled: true
+    priority: 1
+    max_patterns: 500  # INCREASED from 200 to 500
+    timeout_seconds: 90  # Increased timeout
+    retry_count: 3
+    cache_duration_hours: 24
+    
+    # CVE-specific settings - ENHANCED
+    use_external_integrator: true
+    generate_synthetic_patterns: true
+    synthetic_pattern_count: 400  # INCREASED from 150 to 400
+    confidence_threshold: 0.6  # Slightly lowered to include more patterns
+    
+    # Pattern generation rules - EXPANDED
+    pattern_types:
+      - sql_injection
+      - path_traversal  
+      - code_injection
+      - hardcoded_secrets
+      - weak_cryptography
+      - authentication_bypass
+      - authorization_flaws
+      - input_validation_errors
+      - buffer_overflow
+      - race_conditions
+      - improper_error_handling
+      - insecure_storage
+    
+    severity_distribution:
+      critical: 0.15
+      high: 0.45
+      medium: 0.35
+      low: 0.05
+
+  # Template-based Pattern Source - EXPANDED  
+  template_source:
+    enabled: true
+    priority: 2
+    max_patterns: 400  # INCREASED from 300 to 400 to exceed 1000+ target
+    timeout_seconds: 60  # Increased timeout
+    retry_count: 2
+    cache_duration_hours: 12
+    
+    # Template expansion settings - ENHANCED
+    expand_all_templates: true
+    variation_limit_per_template: 25  # INCREASED from 10 to 25
+    enable_context_variations: true
+    enable_severity_variations: true  # NEW
+    enable_language_variations: true  # NEW
+    
+    # Template categories - EXPANDED
+    template_categories:
+      - android_security
+      - owasp_top_10
+      - masvs_compliance
+      - platform_specific
+      - framework_vulnerabilities  # NEW
+      - api_security  # NEW
+      - mobile_specific  # NEW
+      - crypto_weaknesses  # NEW
+
+  # Research Dataset Source - NOW ENABLED
+  research_dataset_source:
+    enabled: true  # CHANGED from false to true
+    priority: 3
+    max_patterns: 400  # INCREASED from 300 to 400
+    timeout_seconds: 120  # Increased timeout for external data
+    retry_count: 3
+    cache_duration_hours: 48
+    
+    # Research dataset settings - ENHANCED
+    datasets:
+      - diversevul
+      - droidbench
+      - ghera
+      - lvd_android
+      - cve_details  # NEW
+      - exploit_db  # NEW
+      - security_advisories  # NEW
+    
+    filter_criteria:
+      min_confidence: 0.5  # Lowered to include more patterns
+      exclude_duplicates: true
+      language_filter: ["java", "kotlin", "javascript", "c", "cpp"]
+      severity_filter: ["high", "medium", "critical"]  # NEW
+
+  # OWASP Guidelines Source - NOW ENABLED
+  owasp_source:
+    enabled: true  # CHANGED from false to true
+    priority: 4
+    max_patterns: 200  # INCREASED from 100 to 200
+    timeout_seconds: 60
+    retry_count: 2
+    cache_duration_hours: 168  # 1 week
+    
+    # OWASP-specific settings - ENHANCED
+    guidelines:
+      - masvs
+      - asvs
+      - top_10
+      - mobile_top_10  # NEW
+      - api_security  # NEW
+    
+    compliance_levels:
+      - L1
+      - L2
+      - L3
+    
+    # NEW: Category-specific pattern counts
+    category_limits:
+      masvs: 80
+      asvs: 50
+      top_10: 40
+      mobile_top_10: 20
+      api_security: 10
+
+  # Machine Learning Pattern Source - NOW ENABLED
+  ml_pattern_source:
+    enabled: true  # NEW SOURCE
+    priority: 5
+    max_patterns: 150
+    timeout_seconds: 180  # Longer timeout for ML processing
+    retry_count: 2
+    cache_duration_hours: 72
+    
+    # ML-specific settings
+    ml_models:
+      - vulnerability_classifier
+      - pattern_generator
+      - similarity_detector
+    
+    generation_criteria:
+      min_confidence: 0.7
+      diversity_threshold: 0.8
+      novelty_factor: 0.6
+
+# Pattern validation and quality control - ENHANCED FOR SCALE
+validation:
+  enable_pattern_validation: true
+  validation_timeout_seconds: 15  # Increased timeout
+  
+  # Quality thresholds - ADJUSTED FOR LARGER SCALE
+  min_confidence_score: 0.4  # Lowered to include more patterns
+  max_false_positive_rate: 0.20  # Slightly increased tolerance
+  min_detection_accuracy: 0.75  # Slightly lowered
+  
+  # Pattern filtering - ENHANCED
+  filter_duplicates: true
+  deduplicate_by_regex: true
+  merge_similar_patterns: true
+  similarity_threshold: 0.90  # Increased to allow more variation
+  
+  # NEW: Pattern quality improvement
+  enable_pattern_refinement: true
+  refinement_iterations: 2
+  confidence_boosting: true
+
+# Monitoring and metrics - ENHANCED FOR SCALE
+monitoring:
+  enable_metrics_collection: true
+  metrics_retention_days: 60  # Increased retention
+  
+  # Performance monitoring - ENHANCED
+  track_pattern_effectiveness: true
+  track_source_performance: true
+  track_memory_usage: true
+  track_pattern_distribution: true  # NEW
+  
+  # Alerting thresholds - ADJUSTED FOR SCALE
+  max_loading_time_seconds: 30  # Increased for larger pattern sets
+  min_patterns_threshold: 800  # NEW: Alert if below 800 patterns
+  max_memory_usage_mb: 2048  # Increased memory threshold
+  
+  # NEW: Pattern quality monitoring
+  min_average_confidence: 0.6
+  max_duplicate_percentage: 15
+  min_source_diversity: 4
+
+# Advanced features - MANY NOW ENABLED
+advanced:
+  # ML-based enhancements - NOW ENABLED
+  enable_ml_pattern_generation: true  # CHANGED from false
+  ml_model_path: "models/pattern_generator.pkl"
+  ml_confidence_threshold: 0.70
+  
+  # Zero-day detection integration - NOW ENABLED
+  enable_zero_day_integration: true  # CHANGED from false
+  zero_day_confidence_boost: 0.15  # Increased boost
+  
+  # Custom pattern sources - NOW ENABLED
+  enable_custom_sources: true  # CHANGED from false
+  custom_source_directory: "custom_sources/"
+  
+  # External API integration - NOW ENABLED
+  enable_api_sources: true  # CHANGED from false
+  api_rate_limit_requests_per_minute: 120  # Increased rate limit
+  api_timeout_seconds: 45  # Increased timeout
+  
+  # NEW: Pattern enhancement features
+  enable_pattern_clustering: true
+  enable_semantic_enrichment: true
+  enable_contextual_adaptation: true
+  enable_dynamic_confidence_adjustment: true
+
+# Development and debugging - ENHANCED
+development:
+  enable_debug_logging: false
+  pattern_generation_stats: true
+  source_performance_profiling: true
+  memory_usage_tracking: true
+  
+  # NEW: Development features
+  enable_pattern_testing: true
+  test_pattern_percentage: 5
+  enable_benchmark_mode: false 
