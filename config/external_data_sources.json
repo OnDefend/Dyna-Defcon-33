@@ -1,0 +1,163 @@
+{
+  "sources": {
+    "nvd_cve": {
+      "enabled": true,
+      "api_key": null,
+      "priority": 1,
+      "update_frequency": "daily",
+      "data_schema": {
+        "vulnerability_field": "cve.description.description_data[0].value",
+        "severity_field": "impact.baseMetricV3.cvssV3.baseSeverity",
+        "score_field": "impact.baseMetricV3.cvssV3.baseScore"
+      },
+      "filters": {
+        "min_cvss_score": 4.0,
+        "keywords": ["android", "mobile", "java", "kotlin"],
+        "exclude_rejected": true
+      }
+    },
+    
+    "owasp_mastg": {
+      "enabled": true,
+      "priority": 2,
+      "update_frequency": "weekly",
+      "git_branch": "main",
+      "data_extraction": {
+        "test_cases_path": "tests",
+        "vulnerability_patterns_path": "Document/0x05-Testing-Processes-and-Techniques",
+        "include_examples": true
+      }
+    },
+    
+    "android_security_bulletins": {
+      "enabled": true,
+      "priority": 1,
+      "update_frequency": "monthly",
+      "api_key": null,
+      "filters": {
+        "severity_levels": ["Critical", "High", "Moderate"],
+        "component_types": ["Framework", "Media Framework", "System"],
+        "years": [2023, 2024]
+      }
+    },
+    
+    "exploit_db": {
+      "enabled": false,
+      "priority": 3,
+      "update_frequency": "daily",
+      "api_key": null,
+      "filters": {
+        "platforms": ["android", "linux"],
+        "types": ["remote", "local", "webapps"],
+        "verified_only": true
+      }
+    },
+    
+    "mitre_cwe": {
+      "enabled": true,
+      "priority": 2,
+      "update_frequency": "monthly",
+      "filters": {
+        "categories": ["Mobile", "Web Application", "Cryptographic"],
+        "weakness_classes": ["Base", "Variant", "Class"]
+      }
+    },
+    
+    "github_security_advisories": {
+      "enabled": true,
+      "priority": 2,
+      "update_frequency": "daily",
+      "headers": {
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "AODS-Security-Scanner/1.0"
+      },
+      "filters": {
+        "ecosystems": ["Maven", "npm", "Gradle"],
+        "severities": ["critical", "high", "moderate"],
+        "keywords": ["android", "mobile", "java"]
+      }
+    },
+    
+    "local_files": {
+      "enabled": true,
+      "priority": 1,
+      "file_path": "data/external_training/manual",
+      "update_frequency": "manual",
+      "validation": {
+        "required_fields": ["text", "label", "severity"],
+        "min_confidence": 0.5,
+        "max_file_size_mb": 100
+      }
+    },
+    
+    "academic_datasets": {
+      "enabled": false,
+      "priority": 4,
+      "sources": [
+        {
+          "name": "Android Malware Dataset",
+          "url": "https://www.unb.ca/cic/datasets/andmal2017.html",
+          "format": "csv",
+          "license": "Academic Use Only"
+        },
+        {
+          "name": "DREBIN Android Malware Dataset",
+          "url": "https://www.sec.cs.tu-bs.de/~danarp/drebin/",
+          "format": "custom",
+          "license": "Research Use"
+        }
+      ]
+    },
+    
+    "commercial_feeds": {
+      "enabled": false,
+      "priority": 1,
+      "providers": {
+        "recorded_future": {
+          "api_key": null,
+          "url": "https://api.recordedfuture.com/v2/",
+          "endpoints": ["vulnerability", "malware", "threat_actor"]
+        },
+        "alienvault_otx": {
+          "api_key": null,
+          "url": "https://otx.alienvault.com/api/v1/",
+          "endpoints": ["indicators", "pulses"]
+        }
+      }
+    }
+  },
+  
+  "global_settings": {
+    "max_concurrent_updates": 5,
+    "request_timeout_seconds": 30,
+    "retry_attempts": 3,
+    "retry_delay_seconds": 5,
+    "cache_expiry_hours": 24,
+    "data_validation": {
+      "min_description_length": 10,
+      "max_description_length": 5000,
+      "required_confidence_threshold": 0.3,
+      "duplicate_detection": true,
+      "quality_score_threshold": 0.7
+    },
+    "privacy_compliance": {
+      "anonymize_identifiers": true,
+      "exclude_personal_data": true,
+      "data_retention_days": 365
+    },
+    "export_settings": {
+      "default_format": "json",
+      "include_metadata": true,
+      "compress_large_files": true,
+      "max_export_size_mb": 500
+    }
+  },
+  
+  "update_schedule": {
+    "automatic_updates": true,
+    "update_time": "02:00",
+    "timezone": "UTC",
+    "max_update_duration_minutes": 60,
+    "notification_email": null
+  }
+} 

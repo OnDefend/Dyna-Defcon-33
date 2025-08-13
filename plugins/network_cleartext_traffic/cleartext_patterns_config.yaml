@@ -1,0 +1,299 @@
+# Network Cleartext Traffic Analyzer - Pattern Configuration
+# External configuration for pattern matching, security rules, and analysis parameters
+
+version: "1.0.0"
+last_updated: "2024-01-20"
+description: "Comprehensive patterns and configurations for network cleartext traffic analysis"
+
+# HTTP URL Detection Patterns
+http_url_patterns:
+  basic_http:
+    pattern: "http://[^\\s'\"<>]+"
+    description: "Basic HTTP URL pattern"
+    risk_level: "MEDIUM"
+    confidence: 0.85
+    flags: ["IGNORECASE"]
+
+  quoted_http:
+    pattern: "\"http://[^\"]*\""
+    description: "HTTP URLs in double quotes"
+    risk_level: "MEDIUM"
+    confidence: 0.80
+    flags: ["IGNORECASE"]
+
+  single_quoted_http:
+    pattern: "'http://[^']*'"
+    description: "HTTP URLs in single quotes"
+    risk_level: "MEDIUM"
+    confidence: 0.80
+    flags: ["IGNORECASE"]
+
+  xml_encoded_http:
+    pattern: "&quot;http://[^&]*&quot;"
+    description: "XML encoded HTTP URLs"
+    risk_level: "MEDIUM"
+    confidence: 0.75
+    flags: ["IGNORECASE"]
+
+  api_endpoints:
+    pattern: "http://[\\w.-]+/api/"
+    description: "API endpoint URLs"
+    risk_level: "HIGH"
+    confidence: 0.90
+    flags: ["IGNORECASE"]
+
+  staging_urls:
+    pattern: "http://[\\w.-]*(?:staging|test|dev)[\\w.-]*"
+    description: "Staging/test environment URLs"
+    risk_level: "MEDIUM"
+    confidence: 0.85
+    flags: ["IGNORECASE"]
+
+  analytics_urls:
+    pattern: "http://[\\w.-]*(?:analytics|tracking|metrics)[\\w.-]*"
+    description: "Analytics and tracking URLs"
+    risk_level: "LOW"
+    confidence: 0.70
+    flags: ["IGNORECASE"]
+
+# Network Security Configuration Patterns
+nsc_patterns:
+  cleartext_permitted:
+    pattern: "<domain-config\\s+cleartextTrafficPermitted=\"true\""
+    description: "Domain config allowing cleartext traffic"
+    risk_level: "HIGH"
+    confidence: 0.95
+    flags: ["IGNORECASE", "MULTILINE"]
+
+  base_config_cleartext:
+    pattern: "<base-config\\s+cleartextTrafficPermitted=\"true\""
+    description: "Base config allowing cleartext traffic"
+    risk_level: "CRITICAL"
+    confidence: 0.98
+    flags: ["IGNORECASE", "MULTILINE"]
+
+  trust_user_certs:
+    pattern: "<trust-anchors>.*<certificates\\s+src=\"user\".*</trust-anchors>"
+    description: "Configuration trusting user certificates"
+    risk_level: "HIGH"
+    confidence: 0.90
+    flags: ["IGNORECASE", "MULTILINE", "DOTALL"]
+
+  certificate_pinning:
+    pattern: "<pin-set>"
+    description: "Certificate pinning configuration"
+    risk_level: "POSITIVE"
+    confidence: 0.85
+    flags: ["IGNORECASE"]
+
+  debug_overrides:
+    pattern: "<debug-overrides>"
+    description: "Debug override configuration"
+    risk_level: "MEDIUM"
+    confidence: 0.80
+    flags: ["IGNORECASE"]
+
+# AndroidManifest.xml Patterns
+manifest_patterns:
+  uses_cleartext_traffic:
+    pattern: "android:usesCleartextTraffic=\"true\""
+    description: "Explicit cleartext traffic enablement"
+    risk_level: "HIGH"
+    confidence: 0.95
+    flags: ["IGNORECASE"]
+
+  network_security_config:
+    pattern: "android:networkSecurityConfig=\"@xml/"
+    description: "Network Security Configuration reference"
+    risk_level: "POSITIVE"
+    confidence: 0.90
+    flags: ["IGNORECASE"]
+
+  internet_permission:
+    pattern: "<uses-permission\\s+android:name=\"android.permission.INTERNET\""
+    description: "Internet permission declaration"
+    risk_level: "INFO"
+    confidence: 0.85
+    flags: ["IGNORECASE"]
+
+  network_state_permission:
+    pattern: "<uses-permission\\s+android:name=\"android.permission.ACCESS_NETWORK_STATE\""
+    description: "Network state permission"
+    risk_level: "INFO"
+    confidence: 0.85
+    flags: ["IGNORECASE"]
+
+# Domain Classification Patterns
+domain_classifiers:
+  analytics:
+    patterns:
+      - "analytics\\.google\\.com"
+      - "googleanalytics\\.com"
+      - "google-analytics\\.com"
+      - "firebase-analytics\\.com"
+      - "mixpanel\\.com"
+      - "amplitude\\.com"
+    risk_level: "LOW"
+    description: "Analytics service domains"
+
+  advertising:
+    patterns:
+      - "doubleclick\\.net"
+      - "googlesyndication\\.com"
+      - "googleadservices\\.com"
+      - "facebook\\.com/tr"
+      - "ads\\.twitter\\.com"
+    risk_level: "LOW"
+    description: "Advertising service domains"
+
+  cdn:
+    patterns:
+      - "cloudfront\\.net"
+      - "amazonaws\\.com"
+      - "cloudflare\\.com"
+      - "fastly\\.com"
+      - "jsdelivr\\.net"
+    risk_level: "MEDIUM"
+    description: "Content delivery networks"
+
+  staging_test:
+    patterns:
+      - ".*\\.test"
+      - ".*\\.staging"
+      - ".*\\.dev"
+      - "localhost"
+      - "127\\.0\\.0\\.1"
+      - "10\\.0\\."
+      - "192\\.168\\."
+    risk_level: "HIGH"
+    description: "Test and staging environments"
+
+  api_services:
+    patterns:
+      - ".*/api/.*"
+      - ".*/rest/.*"
+      - ".*/v\\d+/.*"
+      - "api\\."
+    risk_level: "HIGH"
+    description: "API service endpoints"
+
+# Risk Assessment Rules
+risk_assessment:
+  target_sdk_impact:
+    sdk_28_plus:
+      cleartext_blocked_by_default: true
+      nsc_required_for_cleartext: true
+      risk_multiplier: 0.7
+    sdk_27_minus:
+      cleartext_allowed_by_default: true
+      risk_multiplier: 1.2
+
+  finding_severity_weights:
+    CRITICAL: 1.0
+    HIGH: 0.8
+    MEDIUM: 0.5
+    LOW: 0.3
+    INFO: 0.1
+
+  confidence_thresholds:
+    high_confidence: 0.8
+    medium_confidence: 0.5
+    low_confidence: 0.3
+
+# Professional Confidence Calculation Factors
+confidence_factors:
+  evidence_weights:
+    pattern_reliability: 0.25
+    context_relevance: 0.20
+    validation_coverage: 0.20
+    analysis_depth: 0.15
+    risk_factors: 0.20
+
+  pattern_reliability_db:
+    basic_http: 0.95
+    quoted_http: 0.90
+    xml_encoded_http: 0.85
+    api_endpoints: 0.92
+    staging_urls: 0.88
+    analytics_urls: 0.75
+    cleartext_permitted: 0.98
+    base_config_cleartext: 0.99
+    uses_cleartext_traffic: 0.96
+
+  context_factors:
+    implementation_file: 1.0
+    configuration_file: 0.9
+    resource_file: 0.8
+    test_file: 0.6
+    documentation_file: 0.4
+
+  validation_methods:
+    manifest_analysis: 0.9
+    nsc_analysis: 0.85
+    static_code_analysis: 0.8
+    pattern_matching: 0.7
+    heuristic_analysis: 0.6
+
+# Processing Limits and Performance
+processing_limits:
+  max_files_to_scan: 10000
+  max_file_size_mb: 50
+  max_url_matches_per_file: 100
+  analysis_timeout_seconds: 300
+  thread_pool_size: 4
+
+# Security Recommendations Templates
+recommendations:
+  cleartext_traffic_enabled:
+    title: "Disable Cleartext Traffic"
+    description: "Remove or set android:usesCleartextTraffic to false"
+    priority: "HIGH"
+    masvs_control: "MASVS-NETWORK-1"
+
+  implement_nsc:
+    title: "Implement Network Security Configuration"
+    description: "Create network security configuration to restrict cleartext traffic"
+    priority: "HIGH"
+    masvs_control: "MASVS-NETWORK-1"
+
+  replace_http_urls:
+    title: "Replace HTTP URLs with HTTPS"
+    description: "Update all HTTP URLs to use HTTPS protocol"
+    priority: "MEDIUM"
+    masvs_control: "MASVS-NETWORK-1"
+
+  implement_certificate_pinning:
+    title: "Implement Certificate Pinning"
+    description: "Add certificate pinning for critical API endpoints"
+    priority: "MEDIUM"
+    masvs_control: "MASVS-NETWORK-2"
+
+# Verification Commands
+verification_commands:
+  static_analysis:
+    - "grep -r 'http://' app/src/"
+    - "grep -r 'usesCleartextTraffic' AndroidManifest.xml"
+    - "find . -name '*network_security_config*' -type f"
+
+  dynamic_analysis:
+    - "adb shell 'tcpdump -i any -w /sdcard/capture.pcap'"
+    - "mitmdump --set confdir=~/.mitmproxy -s intercept_http.py"
+
+  frida_scripts:
+    - "frida -U -f com.package.name -l ssl_bypass.js"
+    - "frida -U -f com.package.name -l network_intercept.js"
+
+# MASVS and MASTG Mappings
+masvs_mappings:
+  "MASVS-NETWORK-1":
+    title: "Network Communication Security"
+    description: "Data is encrypted on the network using TLS"
+    tests:
+      - "MASTG-TEST-0024"
+      - "MASTG-TEST-0025"
+
+  "MASVS-NETWORK-2":
+    title: "Certificate and Public Key Pinning"
+    description: "The TLS settings are configured properly"
+    tests:
+      - "MASTG-TEST-0026" 

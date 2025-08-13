@@ -1,0 +1,275 @@
+# WebView Security Analysis Patterns Configuration
+# External configuration for WebView security vulnerability patterns
+
+javascript_interface_exposure:
+  patterns:
+    - "addJavascriptInterface"
+    - "@JavascriptInterface"
+    - "setJavaScriptEnabled\\(true\\)"
+    - "WebView.*addJavascriptInterface"
+    - "webView\\.addJavascriptInterface"
+    - "JavascriptInterface.*public"
+    - "WebSettings.*setJavaScriptEnabled.*true"
+  reliability: 0.95
+  fp_rate: 0.05
+  description: "JavaScript interface exposure allowing potential code execution"
+  severity: "HIGH"
+  cwe_id: "CWE-94"
+  masvs_refs: ["MASVS-PLATFORM-3", "MASVS-CODE-1"]
+
+webview_xss_vulnerabilities:
+  patterns:
+    - "loadUrl.*javascript:"
+    - "loadData.*text/html"
+    - "loadDataWithBaseURL.*text/html"
+    - "evaluateJavascript"
+    - "loadUrl.*data:"
+    - "WebView.*loadUrl.*<script"
+    - "WebView.*loadData.*<script"
+  reliability: 0.92
+  fp_rate: 0.08
+  description: "WebView XSS vulnerabilities through unsafe content loading"
+  severity: "HIGH"
+  cwe_id: "CWE-79"
+  masvs_refs: ["MASVS-CODE-2", "MASVS-PLATFORM-3"]
+
+javascript_enabled_globally:
+  patterns:
+    - "setJavaScriptEnabled\\(true\\)"
+    - "WebSettings.*setJavaScriptEnabled.*true"
+    - "getSettings\\(\\)\\.setJavaScriptEnabled\\(true\\)"
+    - "webSettings\\.setJavaScriptEnabled\\(true\\)"
+  reliability: 0.85
+  fp_rate: 0.15
+  description: "JavaScript enabled globally in WebView settings"
+  severity: "MEDIUM"
+  cwe_id: "CWE-20"
+  masvs_refs: ["MASVS-PLATFORM-3"]
+
+file_access_enabled:
+  patterns:
+    - "setAllowFileAccess\\(true\\)"
+    - "setAllowFileAccessFromFileURLs\\(true\\)"
+    - "WebSettings.*setAllowFileAccess.*true"
+    - "WebSettings.*setAllowFileAccessFromFileURLs.*true"
+    - "getAllowFileAccess\\(\\).*true"
+  reliability: 0.88
+  fp_rate: 0.12
+  description: "File access enabled allowing local file reading"
+  severity: "MEDIUM"
+  cwe_id: "CWE-200"
+  masvs_refs: ["MASVS-PLATFORM-3", "MASVS-PLATFORM-1"]
+
+universal_access_enabled:
+  patterns:
+    - "setAllowUniversalAccessFromFileURLs\\(true\\)"
+    - "WebSettings.*setAllowUniversalAccessFromFileURLs.*true"
+    - "getAllowUniversalAccessFromFileURLs\\(\\).*true"
+    - "setAllowContentAccess\\(true\\)"
+    - "WebSettings.*setAllowContentAccess.*true"
+  reliability: 0.98
+  fp_rate: 0.02
+  description: "Universal access enabled allowing cross-origin requests"
+  severity: "CRITICAL"
+  cwe_id: "CWE-346"
+  masvs_refs: ["MASVS-PLATFORM-3", "MASVS-NETWORK-1"]
+
+mixed_content_allowed:
+  patterns:
+    - "setMixedContentMode.*MIXED_CONTENT_ALWAYS_ALLOW"
+    - "MIXED_CONTENT_ALWAYS_ALLOW"
+    - "WebSettings.*setMixedContentMode.*0"
+    - "setMixedContentMode\\(0\\)"
+  reliability: 0.90
+  fp_rate: 0.10
+  description: "Mixed content allowed enabling MITM attacks"
+  severity: "HIGH"
+  cwe_id: "CWE-311"
+  masvs_refs: ["MASVS-NETWORK-1", "MASVS-PLATFORM-3"]
+
+webview_configuration_issues:
+  patterns:
+    - "setGeolocationEnabled\\(true\\)"
+    - "setDatabaseEnabled\\(true\\)"
+    - "setDomStorageEnabled\\(true\\)"
+    - "setAppCacheEnabled\\(true\\)"
+    - "setSavePassword\\(true\\)"
+    - "setSaveFormData\\(true\\)"
+    - "setDisplayZoomControls\\(true\\)"
+    - "setBuiltInZoomControls\\(true\\)"
+  reliability: 0.87
+  fp_rate: 0.13
+  description: "Insecure WebView configuration settings"
+  severity: "MEDIUM"
+  cwe_id: "CWE-200"
+  masvs_refs: ["MASVS-PLATFORM-3"]
+
+dangerous_operations_exposed:
+  patterns:
+    - "@JavascriptInterface.*public.*void.*exec"
+    - "@JavascriptInterface.*public.*String.*readFile"
+    - "@JavascriptInterface.*public.*void.*writeFile"
+    - "@JavascriptInterface.*public.*void.*system"
+    - "@JavascriptInterface.*public.*Runtime"
+    - "@JavascriptInterface.*public.*Process"
+    - "JavascriptInterface.*getSystemService"
+  reliability: 0.93
+  fp_rate: 0.07
+  description: "Dangerous operations exposed through JavaScript interface"
+  severity: "CRITICAL"
+  cwe_id: "CWE-250"
+  masvs_refs: ["MASVS-PLATFORM-3", "MASVS-CODE-1"]
+
+input_validation_missing:
+  patterns:
+    - "loadUrl\\([^)]*\\+[^)]*\\)"
+    - "loadData\\([^)]*\\+[^)]*\\)"
+    - "evaluateJavascript\\([^)]*\\+[^)]*\\)"
+    - "loadDataWithBaseURL\\([^)]*\\+[^)]*\\)"
+    - "WebView.*loadUrl.*getString"
+    - "WebView.*loadData.*getIntent"
+  reliability: 0.80
+  fp_rate: 0.20
+  description: "Missing input validation for WebView content"
+  severity: "HIGH"
+  cwe_id: "CWE-20"
+  masvs_refs: ["MASVS-CODE-2", "MASVS-PLATFORM-3"]
+
+webview_bridge_security:
+  patterns:
+    - "WebViewClient.*shouldOverrideUrlLoading"
+    - "WebChromeClient.*onJsAlert"
+    - "WebChromeClient.*onJsConfirm"
+    - "WebChromeClient.*onJsPrompt"
+    - "addJavascriptInterface.*new"
+    - "removeJavascriptInterface"
+  reliability: 0.86
+  fp_rate: 0.14
+  description: "WebView bridge security implementation issues"
+  severity: "MEDIUM"
+  cwe_id: "CWE-284"
+  masvs_refs: ["MASVS-PLATFORM-3", "MASVS-CODE-1"]
+
+ssl_errors_ignored:
+  patterns:
+    - "onReceivedSslError.*proceed"
+    - "SslErrorHandler.*proceed"
+    - "WebViewClient.*onReceivedSslError.*handler\\.proceed"
+    - "handler\\.proceed\\(\\)"
+  reliability: 0.95
+  fp_rate: 0.05
+  description: "SSL certificate errors ignored in WebView"
+  severity: "HIGH"
+  cwe_id: "CWE-295"
+  masvs_refs: ["MASVS-NETWORK-1", "MASVS-PLATFORM-3"]
+
+# XSS Testing Payloads
+xss_test_payloads:
+  basic_script:
+    - "<script>alert('XSS')</script>"
+    - "<script>alert(1)</script>"
+    - "<script>alert(document.cookie)</script>"
+    - "<script>alert(document.domain)</script>"
+  
+  event_handler:
+    - "<img src=x onerror=alert('XSS')>"
+    - "<body onload=alert('XSS')>"
+    - "<input onfocus=alert('XSS') autofocus>"
+    - "<svg onload=alert('XSS')>"
+  
+  iframe_injection:
+    - "<iframe src='javascript:alert(\"XSS\")'></iframe>"
+    - "<iframe src='data:text/html,<script>alert(1)</script>'></iframe>"
+  
+  data_uri:
+    - "data:text/html,<script>alert('XSS')</script>"
+    - "data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4="
+  
+  javascript_uri:
+    - "javascript:alert('XSS')"
+    - "javascript:alert(document.cookie)"
+    - "javascript:void(alert('XSS'))"
+
+# WebView Security Configuration Checks
+secure_webview_settings:
+  javascript_disabled:
+    setting: "setJavaScriptEnabled"
+    secure_value: false
+    description: "Disable JavaScript unless absolutely necessary"
+  
+  file_access_disabled:
+    setting: "setAllowFileAccess"
+    secure_value: false
+    description: "Disable file access to prevent local file reading"
+  
+  universal_access_disabled:
+    setting: "setAllowUniversalAccessFromFileURLs"
+    secure_value: false
+    description: "Disable universal access to prevent cross-origin requests"
+  
+  content_access_disabled:
+    setting: "setAllowContentAccess"
+    secure_value: false
+    description: "Disable content access to prevent content provider access"
+  
+  mixed_content_blocked:
+    setting: "setMixedContentMode"
+    secure_value: "MIXED_CONTENT_NEVER_ALLOW"
+    description: "Block mixed content to prevent MITM attacks"
+  
+  geolocation_disabled:
+    setting: "setGeolocationEnabled"
+    secure_value: false
+    description: "Disable geolocation to protect user privacy"
+  
+  database_disabled:
+    setting: "setDatabaseEnabled"
+    secure_value: false
+    description: "Disable database access unless required"
+  
+  dom_storage_disabled:
+    setting: "setDomStorageEnabled"
+    secure_value: false
+    description: "Disable DOM storage unless required"
+
+# Pattern reliability tracking for continuous improvement
+pattern_reliability_tracking:
+  enabled: true
+  learning_rate: 0.1
+  min_samples: 10
+  confidence_threshold: 0.7
+
+# Context factors for different analysis sources
+analysis_context_weights:
+  production_webview: 0.9
+  development_webview: 0.7
+  hybrid_app: 0.8
+  native_app: 0.6
+  configuration_file: 0.85
+  manifest_file: 0.80
+  javascript_bridge: 0.95
+  third_party_webview: 0.75
+  custom_webview: 0.70
+  unknown_context: 0.65
+
+# Vulnerability impact levels
+vulnerability_impact_levels:
+  javascript_interface_exposure: 0.95
+  webview_xss_vulnerabilities: 0.90
+  universal_access_enabled: 0.98
+  file_access_enabled: 0.85
+  mixed_content_allowed: 0.88
+  javascript_enabled_globally: 0.70
+  dangerous_operations_exposed: 0.93
+  input_validation_missing: 0.75
+  webview_configuration_issues: 0.80
+  webview_bridge_security: 0.85
+  ssl_errors_ignored: 0.92
+
+# Evidence weight distribution
+evidence_weights:
+  pattern_reliability: 0.3
+  evidence_strength: 0.25
+  context_awareness: 0.2
+  cross_validation: 0.15
+  analysis_depth: 0.1 

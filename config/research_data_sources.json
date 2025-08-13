@@ -1,0 +1,247 @@
+{
+  "research_datasets": {
+    "droidbench": {
+      "name": "DroidBench Taint-Analysis Benchmarks",
+      "url": "https://github.com/secure-software-engineering/DroidBench",
+      "type": "github_repository",
+      "access_status": "public",
+      "license": "Apache 2.0",
+      "integration_status": "ready",
+      "description": "Android taint-analysis benchmark suite with categorized vulnerable patterns",
+      "data_characteristics": {
+        "format": "APK + Java source code",
+        "categories": ["ArrayAccess", "Callbacks", "EmulatorDetection", "FieldAndObjectSensitivity", "GeneralJava", "ICC", "Lifecycle", "PrivateDataLeaks", "Reflection", "Threading"],
+        "vulnerability_types": ["BUFFER_OVERFLOW", "INFORMATION_DISCLOSURE", "AUTHORIZATION", "COMPONENT_HIJACKING"],
+        "sample_count": "100+ test cases",
+        "label_quality": "expert_curated"
+      },
+      "integration_notes": "Contains paired vulnerable/safe implementations for each test case. Excellent for taint analysis and static analysis training."
+    },
+    
+    "ghera": {
+      "name": "Ghera Vulnerable/Benign App Pairs",
+      "url": "https://github.com/secure-software-engineering/Ghera",
+      "type": "github_repository",
+      "access_status": "public",
+      "license": "Academic Use",
+      "integration_status": "ready",
+      "description": "Repository of 25 paired vulnerable/benign Android apps covering common vulnerability patterns",
+      "data_characteristics": {
+        "format": "APK files + source code",
+        "app_pairs": 25,
+        "vulnerability_types": ["SQL_INJECTION", "XSS", "CRYPTOGRAPHY", "AUTHORIZATION", "PATH_TRAVERSAL", "DATA_STORAGE"],
+        "sample_count": "50 APKs (25 pairs)",
+        "label_quality": "expert_curated"
+      },
+      "integration_notes": "High-quality paired vulnerable/benign apps. Perfect for binary classification training and false positive reduction."
+    },
+    
+    "owapp_benchmarking": {
+      "name": "OWApp Benchmarking Suite",
+      "url": "https://github.com/Mobile-IoT-Security-Lab/OWApp-Benchmarking-Suite",
+      "type": "github_repository", 
+      "access_status": "public",
+      "license": "MIT",
+      "integration_status": "ready",
+      "description": "Framework for automated benchmarking of mobile security tools against curated apps",
+      "data_characteristics": {
+        "format": "APK files + analysis results",
+        "benchmark_apps": "50+ curated apps",
+        "analysis_tools": ["MobSF", "QARK", "AndroBugs", "Others"],
+        "ground_truth": "Available",
+        "label_quality": "tool_validated"
+      },
+      "integration_notes": "Contains ground truth data for tool validation. Useful for benchmarking AODS performance against other tools."
+    },
+    
+    "androzoo": {
+      "name": "AndroZoo Large-Scale APK Collection",
+      "url": "https://androzoo.uni.lu/",
+      "type": "api_database",
+      "access_status": "requires_registration",
+      "license": "Academic Use",
+      "integration_status": "requires_api_key",
+      "description": "Large-scale collection of millions of real-world APKs with metadata for sampling benign vs. malicious apps",
+      "data_characteristics": {
+        "format": "APK files + metadata",
+        "sample_count": "15+ million APKs",
+        "malware_labels": "VirusTotal + other engines",
+        "metadata": ["SHA256", "package_name", "markets", "dates"],
+        "label_quality": "automated_antivirus"
+      },
+      "integration_notes": "Massive dataset requiring API key. Best used for large-scale training and benign/malicious classification.",
+      "api_requirements": {
+        "registration_url": "https://androzoo.uni.lu/access",
+        "rate_limits": "Depends on access level",
+        "data_access": "Metadata free, APK download requires approval"
+      }
+    },
+    
+    "lvdandro": {
+      "name": "LVDAndro Labeled Android Vulnerability Datasets",
+      "url": "https://github.com/softwaresec-labs/LVDAndro",
+      "type": "github_repository",
+      "access_status": "public",
+      "license": "Academic Use",
+      "integration_status": "ready",
+      "description": "CWE-annotated Android source code vulnerability datasets with Google Drive links",
+      "data_characteristics": {
+        "format": "Source code + CWE annotations",
+        "cwe_coverage": "25+ CWE types",
+        "vulnerability_types": ["SQL_INJECTION", "XSS", "CRYPTOGRAPHY", "AUTHORIZATION", "BUFFER_OVERFLOW"],
+        "sample_count": "1000+ code samples",
+        "label_quality": "expert_annotated"
+      },
+      "integration_notes": "High-quality CWE-mapped vulnerability examples. Excellent for source code analysis training."
+    },
+    
+    "diversevul": {
+      "name": "DiverseVul Vulnerable Functions Dataset",
+      "url": "https://github.com/wagner-group/diversevul",
+      "type": "github_repository",
+      "access_status": "public",
+      "license": "MIT",
+      "integration_status": "ready",
+      "description": "Dataset of 18,945 vulnerable functions (150 CWEs) + 330,492 non-vulnerable ones from 7,514 commits",
+      "data_characteristics": {
+        "format": "C/C++ functions + metadata",
+        "vulnerable_functions": 18945,
+        "safe_functions": 330492,
+        "cwe_coverage": "150 CWE types",
+        "commit_analysis": "7,514 commits analyzed",
+        "label_quality": "commit_analysis_validated"
+      },
+      "integration_notes": "Largest function-level vulnerability dataset. Excellent for function-level classification and pattern learning.",
+      "mobile_relevance": "High - many CWEs apply to native Android code"
+    },
+    
+    "d2a": {
+      "name": "D2A Static Analysis True/False Positive Dataset",
+      "url": "https://github.com/IBM/D2A",
+      "type": "github_repository",
+      "access_status": "public",
+      "license": "Apache 2.0",
+      "integration_status": "ready",
+      "description": "Differential Analysis dataset of static analysis issues labeled true/false positives from pre/post-fix commits",
+      "data_characteristics": {
+        "format": "Static analysis alerts + labels",
+        "true_positives": "Thousands",
+        "false_positives": "Thousands",
+        "analysis_tools": ["CodeQL", "SonarQube", "Others"],
+        "commit_validation": "Pre/post fix comparison",
+        "label_quality": "differential_analysis_validated"
+      },
+      "integration_notes": "Critical for false positive reduction training. Contains real-world static analysis results with ground truth.",
+      "aods_benefit": "Directly applicable to reducing AODS false positives"
+    },
+    
+    "cvefixes": {
+      "name": "CVEfixes CVE-to-Fix Dataset", 
+      "url": "https://github.com/secureIT-project/CVEfixes",
+      "type": "github_repository",
+      "access_status": "public",
+      "license": "MIT",
+      "integration_status": "ready",
+      "description": "Automated CVE to fix dataset (12,107 fix commits, 11,873 CVEs, relational DB)",
+      "data_characteristics": {
+        "format": "CVE metadata + commit diffs",
+        "cve_count": 11873,
+        "fix_commits": 12107,
+        "database_format": "SQLite + CSV",
+        "cvss_scores": "Available",
+        "cwe_mapping": "Available",
+        "label_quality": "cve_validated"
+      },
+      "integration_notes": "Links CVEs to actual fixes. Perfect for understanding vulnerability patterns and fix strategies.",
+      "zenodo_doi": "10.5281/zenodo.4476563"
+    },
+    
+    "nvd_enhanced": {
+      "name": "NVD JSON Feeds & CVE API (Enhanced)",
+      "url": "https://nvd.nist.gov/vuln/data-feeds",
+      "type": "api_feeds",
+      "access_status": "public",
+      "license": "Public Domain",
+      "integration_status": "active",
+      "description": "Official NIST feeds (JSON/XML) of all CVE records with CWE, CPE, and severity metadata",
+      "data_characteristics": {
+        "format": "JSON API + XML feeds",
+        "cve_count": "200,000+",
+        "update_frequency": "Real-time",
+        "metadata": ["CVSS", "CWE", "CPE", "references"],
+        "mobile_filtering": "Android, mobile keywords",
+        "label_quality": "official_government"
+      },
+      "integration_notes": "Already integrated and collecting real CVE data. Enhanced with mobile-specific filtering.",
+      "current_status": "2000+ Android-relevant CVEs collected"
+    }
+  },
+  
+  "integration_summary": {
+    "total_datasets": 8,
+    "immediately_available": 6,
+    "requires_setup": 2,
+    "estimated_training_samples": {
+      "droidbench": "200+ (paired vulnerable/safe)",
+      "ghera": "50 (25 pairs)",
+      "lvdandro": "1000+ (CWE-annotated)",
+      "diversevul": "349,000+ (functions)",
+      "d2a": "10,000+ (static analysis results)",
+      "cvefixes": "24,000+ (pre/post fix)",
+      "androzoo": "Millions (requires API)",
+      "nvd_enhanced": "200,000+ (already active)"
+    },
+    "total_potential_samples": "500,000+",
+    "vulnerability_coverage": {
+      "cwe_types": "150+",
+      "platforms": ["Android", "Mobile", "General"],
+      "analysis_types": ["Static", "Dynamic", "Hybrid"],
+      "quality_levels": ["Expert", "Automated", "Validated"]
+    }
+  },
+  
+  "integration_roadmap": {
+    "phase_1_immediate": {
+      "datasets": ["droidbench", "ghera", "lvdandro", "d2a", "cvefixes"],
+      "effort": "Low - GitHub repositories, public access",
+      "timeline": "1-2 weeks",
+      "expected_samples": "25,000+",
+      "benefits": "High-quality expert-curated data"
+    },
+    "phase_2_enhanced": {
+      "datasets": ["owapp_benchmarking", "diversevul"],
+      "effort": "Medium - Large datasets, processing required",
+      "timeline": "2-4 weeks", 
+      "expected_samples": "350,000+",
+      "benefits": "Large-scale function-level training"
+    },
+    "phase_3_advanced": {
+      "datasets": ["androzoo"],
+      "effort": "High - API registration, large data transfers",
+      "timeline": "4-8 weeks",
+      "expected_samples": "Millions",
+      "benefits": "Real-world APK analysis at scale"
+    }
+  },
+  
+  "validation_results": {
+    "accessibility_check": {
+      "droidbench": "✅ Public GitHub repository accessible",
+      "ghera": "✅ Public GitHub repository accessible", 
+      "owapp_benchmarking": "✅ Public GitHub repository accessible",
+      "lvdandro": "✅ Public GitHub repository accessible",
+      "diversevul": "✅ Public GitHub repository accessible",
+      "d2a": "✅ Public GitHub repository accessible",
+      "cvefixes": "✅ Public GitHub repository accessible",
+      "androzoo": "⚠️ Requires registration for API access",
+      "nvd_enhanced": "✅ Already integrated and collecting data"
+    },
+    "integration_feasibility": {
+      "immediate": "7/8 sources ready for integration",
+      "data_quality": "Expert-curated and validated datasets",
+      "format_compatibility": "JSON/CSV/XML - all supported",
+      "license_compliance": "All academic/research friendly",
+      "technical_complexity": "Low to Medium"
+    }
+  }
+} 

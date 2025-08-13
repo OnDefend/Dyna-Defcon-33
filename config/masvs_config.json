@@ -1,0 +1,189 @@
+{
+  "masvs_compliance": {
+    "enabled": true,
+    "version": "2.0",
+    "target_coverage_percentage": 83.3,
+    "target_covered_controls": 20,
+    "operational_categories_target": 8,
+    "categories": {
+      "STORAGE": {
+        "name": "Data Storage and Privacy",
+        "description": "Secure storage of sensitive data",
+        "controls": [
+          "MASVS-STORAGE-1",
+          "MASVS-STORAGE-2"
+        ],
+        "plugins": [
+          "enhanced_data_storage_analyzer",
+          "insecure_data_storage",
+          "enhanced_data_storage_modular"
+        ]
+      },
+      "CRYPTO": {
+        "name": "Cryptography",
+        "description": "Cryptographic implementation security",
+        "controls": [
+          "MASVS-CRYPTO-1",
+          "MASVS-CRYPTO-2"
+        ],
+        "plugins": [
+          "cryptography_tests",
+          "runtime_decryption_analysis",
+          "enhanced_encoding_cloud_analysis"
+        ]
+      },
+      "AUTH": {
+        "name": "Authentication and Session Management",
+        "description": "Authentication and session security",
+        "controls": [
+          "MASVS-AUTH-1",
+          "MASVS-AUTH-2",
+          "MASVS-AUTH-3"
+        ],
+        "plugins": [
+          "authentication_security_analysis",
+          "token_replay_analysis",
+          "biometric_security_analyzer"
+        ]
+      },
+      "NETWORK": {
+        "name": "Network Communication",
+        "description": "Network communication security",
+        "controls": [
+          "MASVS-NETWORK-1",
+          "MASVS-NETWORK-2"
+        ],
+        "plugins": [
+          "network_cleartext_traffic_analyzer",
+          "enhanced_network_security_analysis",
+          "network_pii_traffic_analyzer"
+        ]
+      },
+      "PLATFORM": {
+        "name": "Platform Interaction",
+        "description": "Platform-specific security features",
+        "controls": [
+          "MASVS-PLATFORM-1",
+          "MASVS-PLATFORM-2",
+          "MASVS-PLATFORM-3"
+        ],
+        "plugins": [
+          "enhanced_manifest_analysis",
+          "intent_fuzzing_analysis",
+          "webview_security_analysis",
+          "improper_platform_usage"
+        ]
+      },
+      "CODE": {
+        "name": "Code Quality",
+        "description": "Code quality and implementation security",
+        "controls": [
+          "MASVS-CODE-1",
+          "MASVS-CODE-2",
+          "MASVS-CODE-3",
+          "MASVS-CODE-4"
+        ],
+        "plugins": [
+          "code_quality_injection_analysis",
+          "injection_vulnerabilities",
+          "jadx_static_analysis",
+          "dynamic_code_analyzer"
+        ]
+      },
+      "RESILIENCE": {
+        "name": "Resilience Against Reverse Engineering",
+        "description": "Anti-tampering and reverse engineering protection",
+        "controls": [
+          "MASVS-RESILIENCE-1",
+          "MASVS-RESILIENCE-2",
+          "MASVS-RESILIENCE-3",
+          "MASVS-RESILIENCE-4"
+        ],
+        "plugins": [
+          "anti_tampering_analyzer",
+          "enhanced_root_detection_bypass_analyzer",
+          "emulator_detection_analyzer"
+        ]
+      },
+      "PRIVACY": {
+        "name": "Privacy",
+        "description": "Privacy protection and data minimization",
+        "controls": [
+          "MASVS-PRIVACY-1",
+          "MASVS-PRIVACY-2",
+          "MASVS-PRIVACY-3",
+          "MASVS-PRIVACY-4"
+        ],
+        "plugins": [
+          "privacy_analyzer",
+          "data_minimization_analyzer",
+          "consent_analyzer",
+          "tracking_analyzer"
+        ]
+      }
+    },
+    "analysis": {
+      "auto_analyze": true,
+      "generate_reports": true,
+      "track_improvements": true
+    },
+    "reporting": {
+      "format": [
+        "json",
+        "html"
+      ],
+      "include_recommendations": true,
+      "detailed_breakdown": true
+    },
+    "validation": {
+      "test_controls": true,
+      "validate_plugins": true,
+      "benchmark_coverage": true
+    }
+  },
+  "plugin_mapping": {
+    "STORAGE": [
+      "secret_extractor",
+      "data_storage_analyzer",
+      "database_security_analyzer"
+    ],
+    "CRYPTO": [
+      "cryptographic_security_analyzer",
+      "key_management_analyzer",
+      "ssl_security_analyzer"
+    ],
+    "AUTH": [
+      "authentication_analyzer",
+      "session_management_analyzer",
+      "biometric_security_analyzer"
+    ],
+    "NETWORK": [
+      "network_security_analyzer",
+      "certificate_pinning_analyzer",
+      "network_pii_traffic_analyzer"
+    ],
+    "PLATFORM": [
+      "permissions_analyzer",
+      "intent_security_analyzer",
+      "webview_security_analyzer",
+      "deep_link_analyzer"
+    ],
+    "CODE": [
+      "code_quality_analyzer",
+      "anti_debugging_analyzer",
+      "obfuscation_analyzer",
+      "dynamic_code_analyzer"
+    ],
+    "RESILIENCE": [
+      "anti_tampering_analyzer",
+      "root_detection_analyzer",
+      "emulator_detection_analyzer"
+    ],
+    "PRIVACY": [
+      "privacy_analyzer",
+      "data_minimization_analyzer",
+      "consent_analyzer",
+      "tracking_analyzer"
+    ]
+  }
+}

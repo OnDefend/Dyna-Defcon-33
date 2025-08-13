@@ -1,0 +1,351 @@
+{
+  "sensitive_column_patterns": {
+    "authentication_data": {
+      "patterns": [
+        "password",
+        "passwd", 
+        "pwd",
+        "pass_word",
+        "user_password",
+        "login_password",
+        "auth_password",
+        "credential",
+        "credentials",
+        "auth_token",
+        "access_token",
+        "refresh_token",
+        "session_token",
+        "api_key",
+        "secret_key",
+        "private_key",
+        "hash",
+        "salt",
+        "nonce"
+      ],
+      "severity": "HIGH",
+      "reason": "Authentication data columns may contain sensitive credential information",
+      "recommendation": "Ensure passwords are properly hashed with strong algorithms and salts are unique",
+      "category": "AUTHENTICATION"
+    },
+    "personal_information": {
+      "patterns": [
+        "email",
+        "email_address",
+        "e_mail",
+        "mail",
+        "phone",
+        "phone_number",
+        "telephone",
+        "mobile",
+        "cell_phone",
+        "ssn",
+        "social_security",
+        "national_id",
+        "passport",
+        "license",
+        "birth_date",
+        "birthdate",
+        "dob",
+        "date_of_birth",
+        "first_name",
+        "last_name",
+        "full_name",
+        "address",
+        "home_address",
+        "street_address",
+        "postal_code",
+        "zip_code",
+        "zipcode"
+      ],
+      "severity": "MEDIUM",
+      "reason": "Personal information columns may contain PII subject to privacy regulations",
+      "recommendation": "Implement data encryption for PII and ensure compliance with privacy laws",
+      "category": "PII"
+    },
+    "financial_data": {
+      "patterns": [
+        "credit_card",
+        "card_number",
+        "cc_number",
+        "cvv",
+        "cvc",
+        "expiry",
+        "expiration",
+        "bank_account",
+        "account_number",
+        "routing_number",
+        "iban",
+        "swift",
+        "payment",
+        "transaction",
+        "balance",
+        "amount",
+        "salary",
+        "income",
+        "tax_id",
+        "ein"
+      ],
+      "severity": "CRITICAL",
+      "reason": "Financial data columns contain sensitive payment and banking information",
+      "recommendation": "Use PCI DSS compliant encryption and tokenization for financial data",
+      "category": "FINANCIAL"
+    },
+    "security_tokens": {
+      "patterns": [
+        "session_id",
+        "sessionid",
+        "csrf_token",
+        "xsrf_token",
+        "jwt_token",
+        "bearer_token",
+        "oauth_token",
+        "auth_code",
+        "verification_code",
+        "reset_token",
+        "activation_token",
+        "otp",
+        "one_time_password",
+        "recovery_code",
+        "backup_code"
+      ],
+      "severity": "HIGH",
+      "reason": "Security token columns contain authentication and session management data",
+      "recommendation": "Implement proper token expiration and secure storage mechanisms",
+      "category": "SECURITY"
+    },
+    "medical_data": {
+      "patterns": [
+        "medical_record",
+        "health_record",
+        "diagnosis",
+        "medication",
+        "prescription",
+        "treatment",
+        "allergy",
+        "blood_type",
+        "weight",
+        "height",
+        "bmi",
+        "medical_condition",
+        "illness",
+        "disease",
+        "symptom"
+      ],
+      "severity": "HIGH",
+      "reason": "Medical data is highly sensitive and subject to HIPAA and other health privacy laws",
+      "recommendation": "Implement HIPAA-compliant encryption and access controls",
+      "category": "MEDICAL"
+    }
+  },
+  "sensitive_data_patterns": {
+    "email_addresses": {
+      "pattern": "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b",
+      "severity": "MEDIUM",
+      "reason": "Email addresses are PII and may be subject to privacy regulations",
+      "recommendation": "Ensure proper consent and encryption for email storage",
+      "category": "PII"
+    },
+    "phone_numbers": {
+      "pattern": "\\b(?:\\+?1[-.]?)?\\(?([0-9]{3})\\)?[-.]?([0-9]{3})[-.]?([0-9]{4})\\b",
+      "severity": "MEDIUM",
+      "reason": "Phone numbers are PII and may be used for identity verification",
+      "recommendation": "Implement proper data protection and user consent mechanisms",
+      "category": "PII"
+    },
+    "credit_card_numbers": {
+      "pattern": "\\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3[0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})\\b",
+      "severity": "CRITICAL",
+      "reason": "Credit card numbers are highly sensitive financial data",
+      "recommendation": "Use PCI DSS compliant tokenization and never store full card numbers",
+      "category": "FINANCIAL"
+    },
+    "social_security_numbers": {
+      "pattern": "\\b\\d{3}-\\d{2}-\\d{4}\\b",
+      "severity": "CRITICAL",
+      "reason": "SSNs are highly sensitive government identifiers",
+      "recommendation": "Avoid storing SSNs or use strong encryption with restricted access",
+      "category": "PII"
+    },
+    "api_keys": {
+      "pattern": "\\b[A-Za-z0-9]{32,}\\b",
+      "severity": "HIGH",
+      "reason": "API keys provide programmatic access to services",
+      "recommendation": "Store API keys securely and implement key rotation",
+      "category": "SECURITY",
+      "context_required": true
+    },
+    "hash_values": {
+      "pattern": "\\b[a-fA-F0-9]{32,}\\b",
+      "severity": "LOW",
+      "reason": "Hash values may indicate password storage or data integrity mechanisms",
+      "recommendation": "Ensure strong hashing algorithms are used for passwords",
+      "category": "SECURITY",
+      "context_required": true
+    },
+    "jwt_tokens": {
+      "pattern": "eyJ[A-Za-z0-9_-]*\\.[A-Za-z0-9_-]*\\.[A-Za-z0-9_-]*",
+      "severity": "HIGH",
+      "reason": "JWT tokens contain authentication and authorization information",
+      "recommendation": "Implement proper token expiration and secure storage",
+      "category": "SECURITY"
+    },
+    "base64_encoded_data": {
+      "pattern": "(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?",
+      "severity": "LOW",
+      "reason": "Base64 encoded data may contain sensitive information",
+      "recommendation": "Verify that encoded data doesn't contain sensitive information",
+      "category": "ENCODING",
+      "min_length": 20
+    }
+  },
+  "database_configuration_issues": {
+    "world_readable_files": {
+      "description": "Database files with world-readable permissions",
+      "severity": "HIGH",
+      "reason": "World-readable database files can be accessed by any user on the system",
+      "recommendation": "Set appropriate file permissions (600 or 640) for database files"
+    },
+    "no_encryption": {
+      "description": "Database files without encryption",
+      "severity": "MEDIUM",
+      "reason": "Unencrypted databases expose data if the device is compromised",
+      "recommendation": "Use SQLCipher or similar encryption solutions for sensitive data"
+    },
+    "backup_files": {
+      "patterns": [
+        "\\.db\\.backup$",
+        "\\.sqlite\\.backup$",
+        "\\.db\\.bak$",
+        "-backup\\.db$",
+        "_backup\\.sqlite$"
+      ],
+      "severity": "MEDIUM",
+      "reason": "Database backup files may contain sensitive data with weak protection",
+      "recommendation": "Secure backup files with proper encryption and access controls"
+    },
+    "temporary_files": {
+      "patterns": [
+        "\\.db-journal$",
+        "\\.sqlite-journal$",
+        "\\.db-wal$",
+        "\\.sqlite-wal$",
+        "\\.db-shm$",
+        "\\.sqlite-shm$",
+        "\\.tmp$"
+      ],
+      "severity": "LOW",
+      "reason": "Temporary database files may contain sensitive data fragments",
+      "recommendation": "Ensure temporary files are properly cleaned up and secured"
+    }
+  },
+  "sql_injection_indicators": {
+    "dynamic_queries": {
+      "patterns": [
+        "SELECT.*\\+.*\\+",
+        "INSERT.*\\+.*\\+",
+        "UPDATE.*\\+.*\\+",
+        "DELETE.*\\+.*\\+",
+        "String\\.format.*SELECT",
+        "String\\.format.*INSERT",
+        "String\\.format.*UPDATE", 
+        "String\\.format.*DELETE",
+        "StringBuilder.*SELECT",
+        "StringBuilder.*INSERT",
+        "StringBuilder.*UPDATE",
+        "StringBuilder.*DELETE"
+      ],
+      "severity": "HIGH",
+      "reason": "Dynamic SQL query construction may be vulnerable to SQL injection",
+      "recommendation": "Use parameterized queries or prepared statements instead of string concatenation",
+      "category": "SQL_INJECTION"
+    },
+    "user_input_in_queries": {
+      "patterns": [
+        "getText\\(\\).*SELECT",
+        "getUserInput\\(\\).*SELECT",
+        "getParameter\\(\\).*SELECT",
+        "request\\.getParameter.*SELECT",
+        "editText.*SELECT",
+        "input.*SELECT"
+      ],
+      "severity": "CRITICAL",
+      "reason": "Direct user input in SQL queries creates SQL injection vulnerabilities",
+      "recommendation": "Always use parameterized queries for user input",
+      "category": "SQL_INJECTION"
+    }
+  },
+  "data_exposure_risks": {
+    "debug_logging": {
+      "patterns": [
+        "Log\\.d.*SELECT",
+        "Log\\.v.*SELECT",
+        "System\\.out\\.println.*SELECT",
+        "console\\.log.*sql",
+        "print.*query",
+        "debug.*sql"
+      ],
+      "severity": "MEDIUM",
+      "reason": "SQL queries in debug logs may expose sensitive data and schema information",
+      "recommendation": "Remove or sanitize SQL logging in production builds",
+      "category": "INFORMATION_DISCLOSURE"
+    },
+    "error_messages": {
+      "patterns": [
+        "SQLException",
+        "database.*error",
+        "sql.*error",
+        "query.*failed",
+        "table.*not.*found"
+      ],
+      "severity": "LOW",
+      "reason": "Detailed database error messages may reveal schema information",
+      "recommendation": "Use generic error messages in production and log details securely",
+      "category": "INFORMATION_DISCLOSURE"
+    }
+  },
+  "performance_and_security": {
+    "missing_indexes": {
+      "description": "Tables without proper indexes on frequently queried columns",
+      "severity": "LOW",
+      "reason": "Missing indexes can lead to performance issues and potential DoS",
+      "recommendation": "Create appropriate indexes for frequently queried columns"
+    },
+    "large_blob_storage": {
+      "patterns": [
+        "BLOB",
+        "LONGBLOB",
+        "MEDIUMBLOB",
+        "blob"
+      ],
+      "severity": "LOW",
+      "reason": "Large binary data in database may impact performance and storage",
+      "recommendation": "Consider storing large files externally and referencing them in the database"
+    }
+  },
+  "compliance_considerations": {
+    "gdpr_concerns": {
+      "patterns": [
+        "user_data",
+        "personal_data",
+        "tracking",
+        "analytics",
+        "behavioral_data"
+      ],
+      "severity": "MEDIUM",
+      "reason": "Data collection patterns may require GDPR compliance measures",
+      "recommendation": "Implement data minimization, user consent, and right to deletion"
+    },
+    "retention_policies": {
+      "indicators": [
+        "created_at",
+        "modified_at",
+        "last_accessed",
+        "expiry_date",
+        "delete_after"
+      ],
+      "severity": "LOW",
+      "reason": "Data without retention policies may violate compliance requirements",
+      "recommendation": "Implement automated data retention and deletion policies"
+    }
+  }
+} 

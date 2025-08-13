@@ -1,0 +1,100 @@
+---
+# Enhanced Detection Configuration for AODS
+# Addresses scan result accuracy and context extraction issues
+
+version: "3.0"
+created: "2025-07-30"
+
+# Context extraction settings
+context_extraction:
+  enabled: true
+  lines_before: 5
+  lines_after: 5
+  extract_method_signatures: true
+  extract_class_context: true
+  minimum_context_length: 50
+
+# Vulnerability classification
+classification:
+  crypto_vulnerabilities:
+    md5_usage:
+      pattern: "MessageDigest\\.getInstance\\([\"']MD5[\"']\\)|md5|MD5"
+      title: "Weak Hash Algorithm: MD5"
+      severity: "HIGH"
+      cwe_id: "CWE-327"
+      owasp_category: "M10: Extraneous Functionality"
+      remediation: "Replace MD5 with SHA-256 or SHA-3"
+      
+  authentication_issues:
+    hardcoded_credentials:
+      pattern: "(password|pwd|passwd)\\s*=\\s*[\"'][^\"']+[\"']"
+      title: "Hardcoded Credentials"
+      severity: "CRITICAL"
+      cwe_id: "CWE-798"
+      
+  logging_issues:
+    sensitive_logging:
+      pattern: "Log\\.(d|v|i|w|e)\\(.*(?:password|token|key|secret)"
+      title: "Sensitive Information in Logs"
+      severity: "MEDIUM"
+      cwe_id: "CWE-532"
+
+# File filtering for accurate targeting
+file_filters:
+  target_directories:
+    - "org/owasp/goatdroid/"
+    - "owasp/sat/agoat/"
+    - "src/main/java/"
+    
+  exclude_directories:
+    - "okhttp3/"
+    - "retrofit2/"
+    - "androidx/"
+    - "com/google/"
+    - "com/android/"
+    
+  include_extensions:
+    - ".java"
+    - ".kt"
+    - ".xml"
+
+# Deduplication configuration
+deduplication:
+  enabled: true
+  algorithm: "semantic"
+  similarity_threshold: 0.9
+  comparison_fields:
+    - "file_path"
+    - "line_number"
+    - "vulnerable_code"
+    - "pattern_type"
+  
+# Confidence scoring
+confidence_scoring:
+  enabled: true
+  factors:
+    pattern_specificity: 0.3
+    context_quality: 0.2
+    code_evidence: 0.3
+    location_relevance: 0.2
+  minimum_confidence: 0.6
+
+# AndroGoat specific configurations
+androgoat_specific:
+  expected_vulnerabilities:
+    - "SQL Injection"
+    - "Insecure Data Storage"
+    - "Weak Cryptography"
+    - "Insecure Authentication"
+    - "Session Management Issues"
+    - "Hardcoded Credentials"
+    - "Insecure Logging"
+    
+  minimum_expected_findings: 10
+  
+# Performance optimization
+performance:
+  max_file_size_mb: 50
+  timeout_per_file_seconds: 30
+  parallel_processing: true
+  cache_results: true

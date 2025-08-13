@@ -1,0 +1,160 @@
+{
+  "exported_activity_patterns": {
+    "dangerous_exported_activities": [
+      "(?i)<activity[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*>.*?<intent-filter",
+      "(?i)<activity[^>]*>.*?<intent-filter[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"']android\\.intent\\.action\\.MAIN[\"']",
+      "(?i)<activity[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*>.*?android:permission\\s*=\\s*[\"'][\"']",
+      "(?i)<activity[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*(?!.*android:permission)",
+      "(?i)<activity[^>]*android:name\\s*=\\s*[\"'][^\"']*MainActivity[\"'][^>]*android:exported\\s*=\\s*[\"']true[\"']"
+    ],
+    "intent_filter_vulnerabilities": [
+      "(?i)<intent-filter[^>]*>.*?<data[^>]*android:scheme\\s*=\\s*[\"']http[\"']",
+      "(?i)<intent-filter[^>]*>.*?<data[^>]*android:pathPattern\\s*=\\s*[\"'][^\"']*\\*[^\"']*[\"']",
+      "(?i)<intent-filter[^>]*>.*?<category[^>]*android:name\\s*=\\s*[\"']android\\.intent\\.category\\.BROWSABLE[\"']",
+      "(?i)<intent-filter[^>]*>.*?<data[^>]*android:host\\s*=\\s*[\"']\\*[\"']",
+      "(?i)<intent-filter[^>]*>.*?<data[^>]*android:pathPrefix\\s*=\\s*[\"']/[\"']"
+    ],
+    "deep_link_vulnerabilities": [
+      "(?i)<intent-filter[^>]*>.*?<data[^>]*android:scheme\\s*=\\s*[\"'][^\"']*://[^\"']*[\"']",
+      "(?i)<intent-filter[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"']android\\.intent\\.action\\.VIEW[\"'].*?<category[^>]*android:name\\s*=\\s*[\"']android\\.intent\\.category\\.BROWSABLE[\"']",
+      "(?i)<intent-filter[^>]*>.*?<data[^>]*android:scheme\\s*=\\s*[\"']https?[\"'].*?android:pathPattern"
+    ]
+  },
+  "service_security_patterns": {
+    "exported_service_vulnerabilities": [
+      "(?i)<service[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*(?!.*android:permission)",
+      "(?i)<service[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*android:permission\\s*=\\s*[\"'][\"']",
+      "(?i)<service[^>]*>.*?<intent-filter[^>]*>(?!.*android:permission)",
+      "(?i)<service[^>]*android:enabled\\s*=\\s*[\"']true[\"'].*?android:exported\\s*=\\s*[\"']true[\"'][^>]*(?!.*android:permission)"
+    ],
+    "service_permission_issues": [
+      "(?i)<service[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*android:permission\\s*=\\s*[\"']android\\.permission\\.BIND_[^\"']*[\"']",
+      "(?i)<service[^>]*>.*?android:process\\s*=\\s*[\"'][^\"']*:[^\"']*[\"']",
+      "(?i)<service[^>]*android:isolatedProcess\\s*=\\s*[\"']false[\"']",
+      "(?i)<service[^>]*android:exported\\s*=\\s*[\"']true[\"'].*?android:permission\\s*=\\s*[\"']android\\.permission\\.SYSTEM_ALERT_WINDOW[\"']"
+    ],
+    "dangerous_service_actions": [
+      "(?i)<service[^>]*>.*?<intent-filter[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"'][^\"']*BIND_[^\"']*[\"']",
+      "(?i)<service[^>]*>.*?<intent-filter[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"'][^\"']*START_[^\"']*[\"']"
+    ]
+  },
+  "receiver_security_patterns": {
+    "broadcast_receiver_vulnerabilities": [
+      "(?i)<receiver[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*(?!.*android:permission)",
+      "(?i)<receiver[^>]*>.*?<intent-filter[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"'][^\"']*BOOT_COMPLETED[\"']",
+      "(?i)<receiver[^>]*>.*?<intent-filter[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"'][^\"']*SMS_RECEIVED[\"']",
+      "(?i)<receiver[^>]*>.*?<intent-filter[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"'][^\"']*PHONE_STATE[\"']",
+      "(?i)<receiver[^>]*>.*?<intent-filter[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"'][^\"']*NEW_OUTGOING_CALL[\"']"
+    ],
+    "receiver_permission_bypass": [
+      "(?i)<receiver[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*android:permission\\s*=\\s*[\"'][\"']",
+      "(?i)<receiver[^>]*>.*?<intent-filter[^>]*android:priority\\s*=\\s*[\"'][0-9]+[\"']",
+      "(?i)<receiver[^>]*android:priority\\s*=\\s*[\"']1000[\"']",
+      "(?i)<receiver[^>]*>.*?<intent-filter[^>]*android:priority\\s*=\\s*[\"']999[\"']"
+    ],
+    "sensitive_broadcast_actions": [
+      "(?i)<receiver[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"']android\\.intent\\.action\\.PACKAGE_ADDED[\"']",
+      "(?i)<receiver[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"']android\\.intent\\.action\\.PACKAGE_REMOVED[\"']",
+      "(?i)<receiver[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"']android\\.intent\\.action\\.USER_PRESENT[\"']",
+      "(?i)<receiver[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"']android\\.intent\\.action\\.SCREEN_ON[\"']",
+      "(?i)<receiver[^>]*>.*?<action[^>]*android:name\\s*=\\s*[\"']android\\.intent\\.action\\.SCREEN_OFF[\"']"
+    ]
+  },
+  "provider_security_patterns": {
+    "content_provider_vulnerabilities": [
+      "(?i)<provider[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*(?!.*android:permission)",
+      "(?i)<provider[^>]*android:grantUriPermissions\\s*=\\s*[\"']true[\"']",
+      "(?i)<provider[^>]*>.*?<path-permission[^>]*android:readPermission\\s*=\\s*[\"'][\"']",
+      "(?i)<provider[^>]*>.*?<path-permission[^>]*android:writePermission\\s*=\\s*[\"'][\"']",
+      "(?i)<provider[^>]*android:exported\\s*=\\s*[\"']true[\"'].*?android:readPermission\\s*=\\s*[\"'][\"']"
+    ],
+    "provider_data_exposure": [
+      "(?i)<provider[^>]*android:authorities\\s*=\\s*[\"'][^\"']*\\.[^\"']*[\"'].*android:exported\\s*=\\s*[\"']true[\"']",
+      "(?i)<provider[^>]*>.*?<grant-uri-permission[^>]*android:pathPattern\\s*=\\s*[\"'][^\"']*\\*[^\"']*[\"']",
+      "(?i)<provider[^>]*android:authorities\\s*=\\s*[\"'][^\"']*\\.provider[^\"']*[\"'].*android:exported\\s*=\\s*[\"']true[\"']",
+      "(?i)<provider[^>]*android:multiprocess\\s*=\\s*[\"']true[\"'].*android:exported\\s*=\\s*[\"']true[\"']"
+    ],
+    "provider_permission_issues": [
+      "(?i)<provider[^>]*android:exported\\s*=\\s*[\"']true[\"'].*?android:permission\\s*=\\s*[\"'][\"']",
+      "(?i)<provider[^>]*android:exported\\s*=\\s*[\"']true[\"'].*?android:readPermission\\s*=\\s*[\"'][\"']",
+      "(?i)<provider[^>]*android:exported\\s*=\\s*[\"']true[\"'].*?android:writePermission\\s*=\\s*[\"'][\"']"
+    ]
+  },
+  "permission_patterns": {
+    "dangerous_permissions": [
+      "(?i)android:permission\\s*=\\s*[\"']android\\.permission\\.SYSTEM_ALERT_WINDOW[\"']",
+      "(?i)android:permission\\s*=\\s*[\"']android\\.permission\\.WRITE_EXTERNAL_STORAGE[\"']",
+      "(?i)android:permission\\s*=\\s*[\"']android\\.permission\\.READ_EXTERNAL_STORAGE[\"']",
+      "(?i)android:permission\\s*=\\s*[\"']android\\.permission\\.CAMERA[\"']",
+      "(?i)android:permission\\s*=\\s*[\"']android\\.permission\\.RECORD_AUDIO[\"']"
+    ],
+    "empty_permissions": [
+      "(?i)android:permission\\s*=\\s*[\"'][\"']",
+      "(?i)android:readPermission\\s*=\\s*[\"'][\"']",
+      "(?i)android:writePermission\\s*=\\s*[\"'][\"']"
+    ],
+    "weak_permissions": [
+      "(?i)android:permission\\s*=\\s*[\"']android\\.permission\\.INTERNET[\"']",
+      "(?i)android:permission\\s*=\\s*[\"']android\\.permission\\.ACCESS_NETWORK_STATE[\"']",
+      "(?i)android:permission\\s*=\\s*[\"']android\\.permission\\.WAKE_LOCK[\"']"
+    ]
+  },
+  "component_exposure_patterns": {
+    "implicit_exports": [
+      "(?i)<activity[^>]*>.*?<intent-filter(?!.*android:exported\\s*=\\s*[\"']false[\"'])",
+      "(?i)<service[^>]*>.*?<intent-filter(?!.*android:exported\\s*=\\s*[\"']false[\"'])",
+      "(?i)<receiver[^>]*>.*?<intent-filter(?!.*android:exported\\s*=\\s*[\"']false[\"'])"
+    ],
+    "explicit_exports": [
+      "(?i)<activity[^>]*android:exported\\s*=\\s*[\"']true[\"']",
+      "(?i)<service[^>]*android:exported\\s*=\\s*[\"']true[\"']",
+      "(?i)<receiver[^>]*android:exported\\s*=\\s*[\"']true[\"']",
+      "(?i)<provider[^>]*android:exported\\s*=\\s*[\"']true[\"']"
+    ],
+    "protected_components": [
+      "(?i)<activity[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*android:permission\\s*=\\s*[\"'][^\"']+[\"']",
+      "(?i)<service[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*android:permission\\s*=\\s*[\"'][^\"']+[\"']",
+      "(?i)<receiver[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*android:permission\\s*=\\s*[\"'][^\"']+[\"']",
+      "(?i)<provider[^>]*android:exported\\s*=\\s*[\"']true[\"'][^>]*android:permission\\s*=\\s*[\"'][^\"']+[\"']"
+    ]
+  },
+  "advanced_component_patterns": {
+    "task_affinity_issues": [
+      "(?i)<activity[^>]*android:taskAffinity\\s*=\\s*[\"'][^\"']*[\"'].*android:exported\\s*=\\s*[\"']true[\"']",
+      "(?i)<activity[^>]*android:allowTaskReparenting\\s*=\\s*[\"']true[\"'].*android:exported\\s*=\\s*[\"']true[\"']"
+    ],
+    "launch_mode_vulnerabilities": [
+      "(?i)<activity[^>]*android:launchMode\\s*=\\s*[\"']singleTask[\"'].*android:exported\\s*=\\s*[\"']true[\"']",
+      "(?i)<activity[^>]*android:launchMode\\s*=\\s*[\"']singleInstance[\"'].*android:exported\\s*=\\s*[\"']true[\"']"
+    ],
+    "process_sharing": [
+      "(?i)<activity[^>]*android:process\\s*=\\s*[\"'][^\"']*:[^\"']*[\"']",
+      "(?i)<service[^>]*android:process\\s*=\\s*[\"'][^\"']*:[^\"']*[\"']",
+      "(?i)<receiver[^>]*android:process\\s*=\\s*[\"'][^\"']*:[^\"']*[\"']"
+    ]
+  },
+  "meta": {
+    "version": "1.0.0",
+    "description": "Component security patterns for Android application analysis",
+    "categories": [
+      "exported_activities",
+      "intent_filters", 
+      "services",
+      "broadcast_receivers",
+      "content_providers",
+      "permissions",
+      "component_exposure"
+    ],
+    "severity_levels": {
+      "HIGH": "Components exported without proper permission protection",
+      "MEDIUM": "Components with potentially risky configurations",
+      "LOW": "Components with minor security considerations"
+    },
+    "cwe_mappings": {
+      "CWE-926": "Improper Export of Android Application Components",
+      "CWE-925": "Improper Verification of Intent by Broadcast Receiver",
+      "CWE-200": "Exposure of Sensitive Information to an Unauthorized Actor",
+      "CWE-276": "Incorrect Default Permissions"
+    }
+  }
+} 

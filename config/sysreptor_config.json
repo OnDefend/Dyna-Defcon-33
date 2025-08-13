@@ -1,0 +1,112 @@
+{
+  "sysreptor": {
+    "enabled": false,
+    "server_url": "https://demo.sysreptor.com",
+    "api_token": "",
+    "verify_ssl": true,
+    "timeout": 30,
+    "report_formats": ["pdf", "html", "docx"],
+    "default_format": "pdf",
+    "auto_create_project": true,
+    "collaborative_mode": false,
+    "project_settings": {
+      "template_category": "mobile-security",
+      "tags": ["mobile-security", "aods", "automated-scan", "owasp-masvs"],
+      "custom_fields": {
+        "scanner_version": "AODS v2.0",
+        "compliance_frameworks": ["OWASP MASVS", "NIST Cybersecurity Framework"],
+        "assessment_type": "automated-dynamic-analysis"
+      }
+    },
+    "finding_templates": {
+      "MASVS-STORAGE": {
+        "template_name": "mobile-data-storage-vulnerability",
+        "category": "Data Storage and Privacy",
+        "default_severity": "Medium",
+        "compliance_mapping": ["MASVS-STORAGE-1", "MASVS-STORAGE-2"]
+      },
+      "MASVS-CRYPTO": {
+        "template_name": "mobile-cryptography-vulnerability", 
+        "category": "Cryptography",
+        "default_severity": "High",
+        "compliance_mapping": ["MASVS-CRYPTO-1", "MASVS-CRYPTO-2"]
+      },
+      "MASVS-AUTH": {
+        "template_name": "mobile-authentication-vulnerability",
+        "category": "Authentication and Session Management",
+        "default_severity": "High",
+        "compliance_mapping": ["MASVS-AUTH-1", "MASVS-AUTH-2", "MASVS-AUTH-3"]
+      },
+      "MASVS-NETWORK": {
+        "template_name": "mobile-network-security-vulnerability",
+        "category": "Network Communication",
+        "default_severity": "Medium",
+        "compliance_mapping": ["MASVS-NETWORK-1", "MASVS-NETWORK-2"]
+      },
+      "MASVS-PLATFORM": {
+        "template_name": "mobile-platform-vulnerability",
+        "category": "Platform Interaction",
+        "default_severity": "Medium",
+        "compliance_mapping": ["MASVS-PLATFORM-1", "MASVS-PLATFORM-2", "MASVS-PLATFORM-3"]
+      },
+      "MASVS-CODE": {
+        "template_name": "mobile-code-quality-vulnerability",
+        "category": "Code Quality and Build",
+        "default_severity": "Low",
+        "compliance_mapping": ["MASVS-CODE-1", "MASVS-CODE-2", "MASVS-CODE-3", "MASVS-CODE-4"]
+      },
+      "MASVS-RESILIENCE": {
+        "template_name": "mobile-resilience-vulnerability",
+        "category": "Resilience Against Reverse Engineering",
+        "default_severity": "Medium",
+        "compliance_mapping": ["MASVS-RESILIENCE-1", "MASVS-RESILIENCE-2", "MASVS-RESILIENCE-3", "MASVS-RESILIENCE-4"]
+      },
+      "MASVS-PRIVACY": {
+        "template_name": "mobile-privacy-vulnerability",
+        "category": "Privacy",
+        "default_severity": "Medium",
+        "compliance_mapping": ["MASVS-PRIVACY-1", "MASVS-PRIVACY-2", "MASVS-PRIVACY-3", "MASVS-PRIVACY-4"]
+      }
+    },
+    "report_customization": {
+      "include_executive_summary": true,
+      "include_technical_details": true,
+      "include_remediation_guidance": true,
+      "include_compliance_mapping": true,
+      "include_risk_matrix": true,
+      "include_appendices": true,
+      "branding": {
+        "company_name": "AODS Mobile Security Assessment",
+        "logo_url": "",
+        "primary_color": "#2563eb",
+        "secondary_color": "#64748b"
+      }
+    },
+    "export_settings": {
+      "pdf": {
+        "page_size": "A4",
+        "margins": "normal",
+        "include_toc": true,
+        "include_page_numbers": true,
+        "watermark": ""
+      },
+      "html": {
+        "theme": "professional",
+        "responsive": true,
+        "include_print_styles": true
+      },
+      "docx": {
+        "template": "professional",
+        "include_styles": true
+      }
+    }
+  },
+  "integration_options": {
+    "fallback_to_html": true,
+    "backup_original_reports": true,
+    "notification_webhook": "",
+    "cleanup_temp_files": true,
+    "retry_attempts": 3,
+    "retry_delay": 5
+  }
+} 

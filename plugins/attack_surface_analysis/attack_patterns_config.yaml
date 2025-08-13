@@ -1,0 +1,183 @@
+# Attack Surface Analysis Patterns Configuration
+# External configuration for attack surface vulnerability patterns
+
+dangerous_actions:
+  patterns:
+    - "android.intent.action.MAIN"
+    - "android.intent.action.VIEW"
+    - "android.intent.action.SEND"
+    - "android.intent.action.SENDTO"
+    - "android.intent.action.EDIT"
+    - "android.intent.action.PICK"
+    - "android.intent.action.GET_CONTENT"
+    - "android.intent.action.DELETE"
+    - "android.intent.action.INSERT"
+    - "android.intent.action.CALL"
+    - "android.intent.action.DIAL"
+    - "android.provider.MediaStore.ACTION_IMAGE_CAPTURE"
+    - "android.provider.MediaStore.ACTION_VIDEO_CAPTURE"
+    - "android.media.action.IMAGE_CAPTURE"
+  reliability: 0.92
+  fp_rate: 0.08
+  description: "Intent actions that could expose functionality to external apps"
+
+sensitive_schemes:
+  patterns:
+    - "http"
+    - "https"
+    - "file"
+    - "content"
+    - "ftp"
+    - "tel"
+    - "sms"
+    - "mailto"
+    - "geo"
+    - "market"
+    - "intent"
+    - "android-app"
+  reliability: 0.87
+  fp_rate: 0.13
+  description: "URI schemes that could be exploited for deep linking attacks"
+
+high_risk_patterns:
+  patterns:
+    - ".*exported.*true.*"
+    - ".*permission.*null.*"
+    - ".*permission.*\"\".*"
+    - ".*android:protectionLevel.*normal.*"
+    - ".*android:exported.*true.*android:permission.*$"
+    - ".*intent-filter.*android.intent.action.MAIN.*"
+    - ".*intent-filter.*android.intent.category.LAUNCHER.*"
+    - ".*android:authorities.*"
+    - ".*android:readPermission.*$"
+    - ".*android:writePermission.*$"
+  reliability: 0.75
+  fp_rate: 0.25
+  description: "High-risk component configuration patterns"
+
+unprotected_components:
+  patterns:
+    - "activity.*exported.*true.*(?!.*permission)"
+    - "service.*exported.*true.*(?!.*permission)"
+    - "receiver.*exported.*true.*(?!.*permission)"
+    - "provider.*exported.*true.*(?!.*permission)"
+    - "activity.*intent-filter.*(?!.*permission)"
+    - "service.*intent-filter.*(?!.*permission)"
+    - "receiver.*intent-filter.*(?!.*permission)"
+  reliability: 0.85
+  fp_rate: 0.15
+  description: "Components exported without proper permission protection"
+
+ipc_vulnerabilities:
+  patterns:
+    - ".*android:process.*:"
+    - ".*android:multiprocess.*true.*"
+    - ".*android:isolatedProcess.*false.*"
+    - ".*android:sharedUserId.*"
+    - ".*android:taskAffinity.*"
+    - ".*android:allowTaskReparenting.*true.*"
+    - ".*android:launchMode.*singleInstance.*"
+    - ".*android:launchMode.*singleTask.*"
+  reliability: 0.80
+  fp_rate: 0.20
+  description: "IPC and process isolation vulnerability patterns"
+
+content_provider_risks:
+  patterns:
+    - ".*android:grantUriPermissions.*true.*"
+    - ".*android:multiprocess.*true.*"
+    - ".*grant-uri-permission.*"
+    - ".*path-permission.*"
+    - ".*android:authorities.*\\*.*"
+    - ".*android:readPermission.*android\\.permission\\..*"
+    - ".*android:writePermission.*android\\.permission\\..*"
+  reliability: 0.85
+  fp_rate: 0.15
+  description: "Content provider security risk patterns"
+
+intent_filter_risks:
+  patterns:
+    - ".*android.intent.category.DEFAULT.*"
+    - ".*android.intent.category.BROWSABLE.*"
+    - ".*data.*android:scheme.*"
+    - ".*data.*android:host.*"
+    - ".*data.*android:pathPattern.*\\*.*"
+    - ".*data.*android:pathPrefix.*"
+    - ".*data.*android:mimeType.*\\*/\\*.*"
+  reliability: 0.88
+  fp_rate: 0.12
+  description: "Intent filter configuration risks"
+
+exported_activities:
+  patterns:
+    - "activity.*android:exported.*true"
+    - "activity.*intent-filter"
+    - "activity.*android.intent.action.MAIN"
+    - "activity.*android.intent.category.LAUNCHER"
+    - "activity.*android.intent.action.VIEW"
+  reliability: 0.90
+  fp_rate: 0.10
+  description: "Exported activity patterns that could expose attack surface"
+
+unprotected_broadcasts:
+  patterns:
+    - "receiver.*android:exported.*true.*(?!.*permission)"
+    - "receiver.*intent-filter.*(?!.*permission)"
+    - "receiver.*android.intent.action.BOOT_COMPLETED"
+    - "receiver.*android.intent.action.USER_PRESENT"
+    - "receiver.*android.intent.action.SCREEN_ON"
+    - "receiver.*android.intent.action.SCREEN_OFF"
+  reliability: 0.95
+  fp_rate: 0.05
+  description: "Unprotected broadcast receivers that could be exploited"
+
+deep_link_vulnerabilities:
+  patterns:
+    - ".*android:scheme.*http.*"
+    - ".*android:scheme.*https.*"
+    - ".*android:scheme.*[a-zA-Z]+.*"
+    - ".*android:host.*"
+    - ".*android:pathPattern.*"
+    - ".*android:pathPrefix.*"
+    - ".*android.intent.category.BROWSABLE.*"
+  reliability: 0.83
+  fp_rate: 0.17
+  description: "Deep linking patterns that could be exploited"
+
+# Pattern reliability tracking for continuous improvement
+pattern_reliability_tracking:
+  enabled: true
+  learning_rate: 0.1
+  min_samples: 10
+  confidence_threshold: 0.7
+  
+# Context factors for different analysis sources
+analysis_context_weights:
+  manifest_analysis: 0.9
+  static_analysis: 0.8
+  drozer_analysis: 0.7
+  pattern_matching: 0.6
+  heuristic_analysis: 0.5
+
+# Component exposure scoring
+exposure_scoring:
+  exported_unprotected: 1.0
+  exported_protected: 0.7
+  implicit_export: 0.8
+  internal_only: 0.2
+
+# Attack complexity factors
+attack_complexity_factors:
+  trivial: 1.0
+  simple: 0.8
+  moderate: 0.6
+  complex: 0.4
+  very_complex: 0.2
+
+# Evidence weight distribution
+evidence_weights:
+  component_exposure: 0.3
+  permission_protection: 0.25
+  attack_complexity: 0.2
+  validation_methods: 0.15
+  context_relevance: 0.1 

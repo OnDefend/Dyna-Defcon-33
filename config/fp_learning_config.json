@@ -1,0 +1,42 @@
+{
+  "false_positive_learning": {
+    "enabled": true,
+    "data_dir": "data/fp_learning",
+    "models_dir": "models/fp_learning",
+    "min_feedback_count": 5,
+    "learning_threshold": 0.7,
+    "pattern_effectiveness": 0.8,
+    "max_feedback_age_days": 30,
+    "learning_interval_seconds": 300,
+    "auto_start_learning": true,
+    "feedback_sources": {
+      "user_review": true,
+      "automated_validation": true,
+      "expert_review": true
+    },
+    "pattern_types": {
+      "file_patterns": true,
+      "context_patterns": true,
+      "confidence_thresholds": true
+    }
+  },
+  "feedback_collection": {
+    "enabled": true,
+    "collection_methods": [
+      "user_interface",
+      "api_feedback",
+      "automated_validation"
+    ],
+    "validation_rules": {
+      "min_confidence_for_feedback": 0.3,
+      "require_reviewer_id": false,
+      "max_feedback_per_hour": 100
+    }
+  },
+  "integration": {
+    "optimized_framework_filter": true,
+    "enhanced_scan_status_reporter": true,
+    "ml_vulnerability_classifier": true,
+    "confidence_scorer": true
+  }
+}

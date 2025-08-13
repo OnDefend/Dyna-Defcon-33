@@ -1,0 +1,154 @@
+{
+  "description": "User-configurable Drozer connection settings",
+  "version": "1.0",
+  
+  "connection_settings": {
+    "device_id": null,
+    "drozer_port": 31415,
+    "adb_port": 5037,
+    "connection_timeout": 30,
+    "command_timeout": 60
+  },
+  
+  "reconnection_strategy": {
+    "max_reconnection_attempts": 5,
+    "reconnection_delay": 2.0,
+    "persistent_mode": true,
+    "force_reconnect_every_command": false,
+    "restart_adb_on_failure": true,
+    "kill_existing_drozer": true
+  },
+  
+  "custom_commands": {
+    "description": "User-defined commands for custom environments",
+    
+    "pre_connection_commands": [
+      "# Commands to run before establishing connection",
+      "# Example: adb root",
+      "# Example: adb remount"
+    ],
+    
+    "custom_adb_setup": [
+      "# Custom ADB port forwarding commands",
+      "# Variables: {device_id}, {port}",
+      "# Example: adb -s {device_id} forward tcp:{port} tcp:{port}",
+      "# Example: adb -s {device_id} shell 'su -c \"iptables -I INPUT -p tcp --dport {port} -j ACCEPT\"'"
+    ],
+    
+    "custom_drozer_start": [
+      "# Custom Drozer connection commands",
+      "# Variables: {port}, {package}",
+      "# Example: drozer console connect --server localhost:{port}",
+      "# Example: timeout 30 drozer console connect --command 'run app.package.info -a {package}'"
+    ],
+    
+    "post_connection_commands": [
+      "# Commands to run after successful connection",
+      "# Variables: {package}, {device_id}",
+      "# Example: adb -s {device_id} shell 'pm grant {package} android.permission.WRITE_EXTERNAL_STORAGE'"
+    ]
+  },
+  
+  "advanced_options": {
+    "auto_install_drozer_agent": false,
+    "drozer_agent_apk_path": "/path/to/drozer-agent.apk",
+    "connection_test_command": "list",
+    "debug_logging": false
+  },
+  
+  "preset_configurations": {
+    "description": "Pre-defined configurations for common scenarios",
+    
+    "standard": {
+      "description": "Standard reconnection with moderate persistence",
+      "max_reconnection_attempts": 3,
+      "reconnection_delay": 2.0,
+      "force_reconnect_every_command": false
+    },
+    
+    "aggressive": {
+      "description": "Aggressive reconnection for unstable environments",
+      "max_reconnection_attempts": 5,
+      "reconnection_delay": 1.0,
+      "force_reconnect_every_command": false,
+      "restart_adb_on_failure": true
+    },
+    
+    "ultra_persistent": {
+      "description": "Reconnects before every single command",
+      "max_reconnection_attempts": 3,
+      "reconnection_delay": 0.5,
+      "force_reconnect_every_command": true,
+      "restart_adb_on_failure": true
+    },
+    
+    "production": {
+      "description": "Production environment with comprehensive setup",
+      "max_reconnection_attempts": 3,
+      "reconnection_delay": 3.0,
+      "force_reconnect_every_command": false,
+      "pre_connection_commands": [
+        "adb root",
+        "adb wait-for-device"
+      ],
+      "post_connection_commands": [
+        "adb shell 'pm grant {package} android.permission.INTERNET'"
+      ]
+    }
+  },
+  
+  "example_custom_setups": {
+    "description": "Example configurations for different environments",
+    
+    "emulator_setup": {
+      "pre_connection_commands": [
+        "adb root",
+        "adb remount",
+        "adb shell 'setenforce 0'"
+      ],
+      "custom_adb_setup": [
+        "adb -s {device_id} forward tcp:{port} tcp:{port}",
+        "adb -s {device_id} shell 'netstat -tuln | grep {port}'"
+      ]
+    },
+    
+    "rooted_device_setup": {
+      "pre_connection_commands": [
+        "adb root",
+        "adb shell 'su -c \"iptables -F\"'",
+        "adb shell 'su -c \"setenforce 0\"'"
+      ],
+      "post_connection_commands": [
+        "adb shell 'su -c \"pm grant {package} android.permission.WRITE_EXTERNAL_STORAGE\"'",
+        "adb shell 'su -c \"pm grant {package} android.permission.READ_EXTERNAL_STORAGE\"'"
+      ]
+    },
+    
+    "ci_cd_setup": {
+      "max_reconnection_attempts": 2,
+      "reconnection_delay": 1.0,
+      "connection_timeout": 15,
+      "command_timeout": 30,
+      "pre_connection_commands": [
+        "adb kill-server",
+        "adb start-server",
+        "adb wait-for-device"
+      ]
+    },
+    
+    "custom_port_setup": {
+      "drozer_port": 9999,
+      "custom_adb_setup": [
+        "adb forward tcp:9999 tcp:9999",
+        "adb shell 'netstat -tuln | grep 9999'"
+      ],
+      "custom_drozer_start": [
+        "drozer console connect --server localhost:9999 --command '{command}'"
+      ]
+    }
+  }
+} 
+ 
+ 
+ 
+ 

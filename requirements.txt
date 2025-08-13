@@ -1,0 +1,226 @@
+# AODS Framework - Production Requirements
+# Generated from working aods_venv environment and validated against codebase
+# All dependencies verified to work with AODS framework
+
+# ========================================
+# Core UI and Progress Display
+# ========================================
+rich>=13.9.0
+click>=8.1.0
+colorama>=0.4.6
+tqdm>=4.60.0
+prompt-toolkit>=3.0.0
+
+# ========================================
+# Data Processing and Analysis
+# ========================================
+numpy>=1.26.0
+pandas>=2.2.0
+scipy>=1.14.0
+scikit-learn>=1.4.0
+joblib>=1.3.0
+
+# ========================================
+# Machine Learning and NLP
+# ========================================
+nltk>=3.8
+textblob>=0.17.1
+xgboost>=2.0.0
+
+# ========================================
+# Web and Networking
+# ========================================
+requests>=2.32.0
+urllib3>=2.0.0
+certifi>=2024.0.0
+aiohttp>=3.8.0
+aiohappyeyeballs>=2.6.0
+aiosignal>=1.4.0
+websockets>=11.0.0
+multidict>=6.0.0
+yarl>=1.8.0
+frozenlist>=1.4.0
+
+# ========================================
+# Security and Cryptography
+# ========================================
+cryptography>=43.0.0
+pycryptodome>=3.20.0
+cffi>=1.15.0
+pycparser>=2.20.0
+
+# ========================================
+# Data Formats and Serialization
+# ========================================
+PyYAML>=6.0.0
+lxml>=5.0.0
+beautifulsoup4>=4.12.0
+soupsieve>=2.4.0
+jinja2>=3.1.0
+markupsafe>=3.0.0
+
+# ========================================
+# File and Content Analysis
+# ========================================
+filetype>=1.2.0
+python-magic>=0.4.24
+chardet>=5.0.0
+regex>=2024.0.0
+
+# ========================================
+# Caching and Performance
+# ========================================
+cachetools>=5.0.0
+psutil>=6.0.0
+memory-profiler>=0.60.0
+
+# ========================================
+# Date and Time Utilities
+# ========================================
+python-dateutil>=2.8.0
+pytz>=2024.0
+tzdata>=2024.0
+
+# ========================================
+# Dynamic Analysis and Instrumentation
+# ========================================
+frida>=16.0.0
+frida-tools>=12.0.0
+objection>=1.11.0
+
+# ========================================
+# Visualization and Reporting
+# ========================================
+matplotlib>=3.8.0
+seaborn>=0.13.0
+pillow>=10.0.0
+contourpy>=1.2.0
+cycler>=0.12.0
+fonttools>=4.40.0
+kiwisolver>=1.4.0
+pyparsing>=3.1.0
+
+# ========================================
+# Database and SQL
+# ========================================
+sqlparse>=0.5.0
+
+# ========================================
+# Web Framework Support
+# ========================================
+flask>=3.0.0
+flask-socketio>=5.0.0
+werkzeug>=3.0.0
+itsdangerous>=2.1.0
+python-socketio>=5.8.0
+python-engineio>=4.7.0
+simple-websocket>=1.0.0
+blinker>=1.6.0
+
+# ========================================
+# Text Processing and Utilities
+# ========================================
+pygments>=2.15.0
+levenshtein>=0.25.0
+textdistance>=4.0.0
+rapidfuzz>=3.0.0
+python-levenshtein>=0.25.0
+
+# ========================================
+# Configuration and Validation
+# ========================================
+pydantic>=2.0.0
+pydantic-core>=2.14.0
+annotated-types>=0.6.0
+validators>=0.20.0
+configobj>=5.0.0
+
+# ========================================
+# Additional Analysis Tools
+# ========================================
+publicsuffix2>=2.0.0
+tldextract>=5.0.0
+semver>=3.0.0
+
+# ========================================
+# System and Process Management
+# ========================================
+pexpect>=4.8.0
+ptyprocess>=0.7.0
+
+# ========================================
+# Command Line Interface Helpers
+# ========================================
+cli-helpers>=2.3.0
+
+# ========================================
+# Async and HTTP Support
+# ========================================
+h11>=0.14.0
+wsproto>=1.2.0
+propcache>=0.3.0
+
+# ========================================
+# String and Text Utilities
+# ========================================
+idna>=3.4.0
+charset-normalizer>=3.2.0
+six>=1.16.0
+attrs>=22.0.0
+sortedcontainers>=2.4.0
+tabulate>=0.9.0
+wcwidth>=0.2.0
+mdurl>=0.1.2
+markdown-it-py>=3.0.0
+
+# ========================================
+# Development and Logging
+# ========================================
+loguru>=0.7.0
+typing-extensions>=4.5.0
+typing-inspection>=0.4.0
+
+# ========================================
+# Core Python Enhancement
+# ========================================
+setuptools>=65.0.0
+packaging>=23.0.0
+filelock>=3.12.0
+threadpoolctl>=3.2.0
+
+# ========================================
+# GPU Support (Optional)
+# ========================================
+# Uncomment if NVIDIA GPU support needed
+# nvidia-nccl-cu12>=2.18.0
+
+# ========================================
+# Platform-specific Dependencies
+# ========================================
+# Windows specific
+pywin32>=227; platform_system=="Windows"
+
+# ========================================
+# Additional Optional Dependencies
+# ========================================
+# Uncomment as needed for specific features:
+
+# Advanced PDF generation
+# reportlab>=4.0.0
+
+# Network analysis
+# scapy>=2.5.0
+# mitmproxy>=10.0.0
+
+# Advanced crypto analysis
+# yara-python>=4.3.0
+
+# Android analysis (if needed)
+# androguard>=4.0.0
+# pyaxmlparser>=0.3.0
+
+# Container support
+# docker>=6.0.0
+
+# Cloud support
+# boto3>=1.26.0

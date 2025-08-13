@@ -1,0 +1,248 @@
+# External Service Analysis Patterns Configuration
+# Contains patterns for detecting various external cloud services and their security implications
+
+aws_s3:
+  description: "Amazon S3 Storage Service"
+  patterns:
+    - "s3\\.amazonaws\\.com"
+    - "s3-[a-z0-9-]+\\.amazonaws\\.com"
+    - "[a-zA-Z0-9.-]+\\.s3\\.amazonaws\\.com"
+    - "[a-zA-Z0-9.-]+\\.s3-[a-z0-9-]+\\.amazonaws\\.com"
+    - "AmazonS3Client"
+    - "S3Client"
+    - "aws-android-sdk-s3"
+  risk_factors:
+    - "Public bucket access"
+    - "Insecure credentials"
+    - "Unencrypted data"
+  severity: "high"
+  confidence_base: 0.90
+
+firebase:
+  description: "Google Firebase Services"
+  patterns:
+    - "firebaseio\\.com"
+    - "firebase\\.googleapis\\.com"
+    - "FirebaseDatabase"
+    - "FirebaseAuth"
+    - "FirebaseStorage"
+    - "google-services\\.json"
+    - "firebase-config"
+  risk_factors:
+    - "Insecure rules"
+    - "Public database access"
+    - "Weak authentication"
+  severity: "high"
+  confidence_base: 0.85
+
+google_cloud:
+  description: "Google Cloud Platform"
+  patterns:
+    - "googleapis\\.com"
+    - "storage\\.googleapis\\.com"
+    - "GoogleCloudStorage"
+    - "gcp-android-sdk"
+  risk_factors:
+    - "IAM misconfigurations"
+    - "Public storage buckets"
+    - "API key exposure"
+  severity: "high"
+  confidence_base: 0.85
+
+azure:
+  description: "Microsoft Azure Services"
+  patterns:
+    - "blob\\.core\\.windows\\.net"
+    - "table\\.core\\.windows\\.net"
+    - "queue\\.core\\.windows\\.net"
+    - "AzureStorageClient"
+    - "azure-storage-android"
+  risk_factors:
+    - "Public storage containers"
+    - "Weak access keys"
+    - "Insecure SAS tokens"
+  severity: "high"
+  confidence_base: 0.85
+
+dropbox:
+  description: "Dropbox Cloud Storage"
+  patterns:
+    - "dropboxapi\\.com"
+    - "DropboxAPI"
+    - "dropbox-android-sdk"
+    - "dropbox.*client"
+  risk_factors:
+    - "OAuth token exposure"
+    - "Public folder sharing"
+    - "Weak app permissions"
+  severity: "medium"
+  confidence_base: 0.80
+
+box:
+  description: "Box Cloud Storage"
+  patterns:
+    - "box\\.com/api"
+    - "BoxAPI"
+    - "box-android-sdk"
+    - "box.*client"
+  risk_factors:
+    - "API key exposure"
+    - "Public folder access"
+    - "Weak authentication"
+  severity: "medium"
+  confidence_base: 0.80
+
+onedrive:
+  description: "Microsoft OneDrive"
+  patterns:
+    - "graph\\.microsoft\\.com"
+    - "onedrive\\.live\\.com"
+    - "OneDriveAPI"
+    - "microsoft-graph-android"
+  risk_factors:
+    - "OAuth token exposure"
+    - "Public sharing links"
+    - "Weak access controls"
+  severity: "medium"
+  confidence_base: 0.80
+
+payment_gateways:
+  description: "Payment Processing Services"
+  patterns:
+    - "stripe\\.com/v1"
+    - "paypal\\.com/sdk"
+    - "square.*payment"
+    - "braintree.*payment"
+    - "razorpay\\.com"
+  risk_factors:
+    - "Payment data exposure"
+    - "Weak encryption"
+    - "PCI compliance issues"
+  severity: "critical"
+  confidence_base: 0.95
+
+social_media:
+  description: "Social Media Integration"
+  patterns:
+    - "graph\\.facebook\\.com"
+    - "api\\.twitter\\.com"
+    - "api\\.instagram\\.com"
+    - "api\\.linkedin\\.com"
+    - "FacebookSDK"
+    - "TwitterAPI"
+  risk_factors:
+    - "OAuth token exposure"
+    - "User data leakage"
+    - "Privacy violations"
+  severity: "medium"
+  confidence_base: 0.75
+
+analytics:
+  description: "Analytics and Tracking Services"
+  patterns:
+    - "google-analytics\\.com"
+    - "googletagmanager\\.com"
+    - "mixpanel\\.com"
+    - "amplitude\\.com"
+    - "segment\\.io"
+    - "GoogleAnalytics"
+    - "MixpanelAPI"
+  risk_factors:
+    - "User tracking"
+    - "Data collection"
+    - "Privacy concerns"
+  severity: "low"
+  confidence_base: 0.70
+
+advertising:
+  description: "Advertising Networks"
+  patterns:
+    - "googlesyndication\\.com"
+    - "doubleclick\\.net"
+    - "facebook\\.com/tr"
+    - "ads\\.yahoo\\.com"
+    - "AdMob"
+    - "FacebookAds"
+  risk_factors:
+    - "User profiling"
+    - "Privacy violations"
+    - "Data monetization"
+  severity: "low"
+  confidence_base: 0.70
+
+# Credential exposure patterns
+credential_patterns:
+  api_key:
+    patterns:
+      - "api[_-]?key[\"\\s]*[=:][\"\\s]*[a-zA-Z0-9]{20,}"
+      - "apikey[\"\\s]*[=:][\"\\s]*[a-zA-Z0-9]{20,}"
+      - "key[\"\\s]*[=:][\"\\s]*[a-zA-Z0-9]{32,}"
+    severity: "high"
+    confidence_base: 0.85
+
+  access_token:
+    patterns:
+      - "access[_-]?token[\"\\s]*[=:][\"\\s]*[a-zA-Z0-9]{20,}"
+      - "bearer[\"\\s]*[=:][\"\\s]*[a-zA-Z0-9]{20,}"
+      - "token[\"\\s]*[=:][\"\\s]*[a-zA-Z0-9]{32,}"
+    severity: "high"
+    confidence_base: 0.85
+
+  secret_key:
+    patterns:
+      - "secret[_-]?key[\"\\s]*[=:][\"\\s]*[a-zA-Z0-9]{20,}"
+      - "client[_-]?secret[\"\\s]*[=:][\"\\s]*[a-zA-Z0-9]{20,}"
+    severity: "critical"
+    confidence_base: 0.90
+
+  password:
+    patterns:
+      - "password[\"\\s]*[=:][\"\\s]*[a-zA-Z0-9!@#$%^&*]{8,}"
+      - "passwd[\"\\s]*[=:][\"\\s]*[a-zA-Z0-9!@#$%^&*]{8,}"
+    severity: "critical"
+    confidence_base: 0.80
+
+  private_key:
+    patterns:
+      - "-----BEGIN PRIVATE KEY-----"
+      - "-----BEGIN RSA PRIVATE KEY-----"
+      - "private[_-]?key[\"\\s]*[=:]"
+    severity: "critical"
+    confidence_base: 0.95
+
+  connection_string:
+    patterns:
+      - "mongodb://[^\\s\"']+:[^\\s\"']+@"
+      - "mysql://[^\\s\"']+:[^\\s\"']+@"
+      - "postgres://[^\\s\"']+:[^\\s\"']+@"
+      - "redis://[^\\s\"']+:[^\\s\"']+@"
+    severity: "critical"
+    confidence_base: 0.90
+
+# Network security patterns
+insecure_protocols:
+  patterns:
+    - "http://(?!localhost|127\\.0\\.0\\.1|10\\.|192\\.168\\.|172\\.(1[6-9]|2[0-9]|3[01])\\.).*"
+    - "ftp://.*"
+    - "telnet://.*"
+  severity: "medium"
+  confidence_base: 0.85
+
+weak_ssl_config:
+  patterns:
+    - "TLSv1\\.0"
+    - "TLSv1\\.1"
+    - "SSLv3"
+    - "NULL.*Cipher"
+    - "EXPORT.*Cipher"
+  severity: "high"
+  confidence_base: 0.90
+
+certificate_issues:
+  patterns:
+    - "trustAllCerts"
+    - "allowAllHostnameVerifier"
+    - "setHostnameVerifier.*ALLOW_ALL"
+    - "checkServerTrusted.*return"
+  severity: "critical"
+  confidence_base: 0.95 

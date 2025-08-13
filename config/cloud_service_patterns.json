@@ -1,0 +1,364 @@
+{
+  "aws": {
+    "access_keys": {
+      "pattern": "AKIA[0-9A-Z]{16}",
+      "severity": "CRITICAL",
+      "reason": "AWS access keys provide programmatic access to AWS services",
+      "recommendation": "Remove hardcoded AWS access keys. Use IAM roles, environment variables, or AWS Secrets Manager",
+      "cwe_id": "CWE-798",
+      "confidence": 0.95,
+      "context_keywords": ["aws", "amazon", "s3", "ec2", "lambda"],
+      "exclude_patterns": [
+        "AKIAIOSFODNN7EXAMPLE",
+        "AKIAEXAMPLE",
+        "//.*AKIA",
+        "/\\*.*AKIA.*\\*/",
+        "example.*AKIA",
+        "demo.*AKIA",
+        "test.*AKIA"
+      ]
+    },
+    "secret_keys": {
+      "pattern": "[A-Za-z0-9/+=]{40}",
+      "severity": "CRITICAL", 
+      "reason": "AWS secret access keys paired with access keys provide full account access",
+      "recommendation": "Remove hardcoded AWS secret keys. Use AWS Secrets Manager or environment variables",
+      "cwe_id": "CWE-798",
+      "confidence": 0.80,
+      "context_keywords": ["aws", "secret", "access", "key"],
+      "exclude_patterns": [
+        "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+        "//.*secret",
+        "/\\*.*secret.*\\*/",
+        "example.*secret",
+        "demo.*secret",
+        "test.*secret"
+      ],
+      "require_context": ["AKIA", "access.*key", "aws"]
+    },
+    "bucket_names": {
+      "pattern": "s3://[a-z0-9.-]+",
+      "severity": "MEDIUM",
+      "reason": "Hardcoded S3 bucket names may expose sensitive data locations",
+      "recommendation": "Use configuration files or environment variables for S3 bucket names",
+      "cwe_id": "CWE-200",
+      "confidence": 0.70,
+      "context_keywords": ["s3", "bucket", "aws"],
+      "exclude_patterns": [
+        "s3://example",
+        "s3://demo",
+        "s3://test",
+        "s3://sample"
+      ]
+    },
+    "endpoints": {
+      "pattern": "[a-zA-Z0-9.-]+\\.amazonaws\\.com",
+      "severity": "LOW",
+      "reason": "AWS service endpoints may indicate service dependencies",
+      "recommendation": "Consider using service discovery or configuration management",
+      "cwe_id": "CWE-200",
+      "confidence": 0.60,
+      "context_keywords": ["aws", "endpoint", "service"],
+      "exclude_patterns": []
+    },
+    "session_tokens": {
+      "pattern": "FwoGZXIvYXdzE[A-Za-z0-9+/=]{100,}",
+      "severity": "HIGH",
+      "reason": "AWS session tokens provide temporary access and should not be hardcoded",
+      "recommendation": "Use STS to generate session tokens dynamically",
+      "cwe_id": "CWE-798",
+      "confidence": 0.85,
+      "context_keywords": ["aws", "session", "token", "sts"],
+      "exclude_patterns": [
+        "//.*session",
+        "example.*token"
+      ]
+    }
+  },
+  "firebase": {
+    "project_ids": {
+      "pattern": "[a-z0-9-]+\\.firebaseio\\.com",
+      "severity": "MEDIUM",
+      "reason": "Firebase project URLs may expose project structure and dependencies",
+      "recommendation": "Use Firebase configuration files and environment-specific projects",
+      "cwe_id": "CWE-200",
+      "confidence": 0.75,
+      "context_keywords": ["firebase", "project", "database"],
+      "exclude_patterns": [
+        "example.firebaseio.com",
+        "demo.firebaseio.com",
+        "test.firebaseio.com"
+      ]
+    },
+    "api_keys": {
+      "pattern": "AIza[0-9A-Za-z_-]{35}",
+      "severity": "HIGH",
+      "reason": "Firebase API keys provide access to Firebase services",
+      "recommendation": "Use Firebase App Check and restrict API key usage by IP/domain",
+      "cwe_id": "CWE-798",
+      "confidence": 0.90,
+      "context_keywords": ["firebase", "api", "key", "google"],
+      "exclude_patterns": [
+        "AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI",
+        "//.*AIza",
+        "/\\*.*AIza.*\\*/",
+        "example.*AIza",
+        "demo.*AIza"
+      ]
+    },
+    "config_objects": {
+      "pattern": "firebase[_-]?config",
+      "severity": "MEDIUM",
+      "reason": "Firebase configuration objects may contain sensitive project details",
+      "recommendation": "Validate Firebase configuration and use environment-specific configs",
+      "cwe_id": "CWE-200",
+      "confidence": 0.65,
+      "context_keywords": ["firebase", "config", "initialization"],
+      "exclude_patterns": []
+    },
+    "database_secrets": {
+      "pattern": "firebase.*secret.*[A-Za-z0-9+/=]{20,}",
+      "severity": "CRITICAL",
+      "reason": "Firebase database secrets provide administrative access",
+      "recommendation": "Use Firebase Admin SDK with proper service account credentials",
+      "cwe_id": "CWE-798",
+      "confidence": 0.85,
+      "context_keywords": ["firebase", "secret", "admin", "database"],
+      "exclude_patterns": [
+        "//.*secret",
+        "example.*secret"
+      ]
+    }
+  },
+  "gcp": {
+    "service_account_keys": {
+      "pattern": "\"type\":\\s*\"service_account\"",
+      "severity": "CRITICAL",
+      "reason": "GCP service account keys provide programmatic access to Google Cloud services",
+      "recommendation": "Use Workload Identity or metadata service instead of embedded service account keys",
+      "cwe_id": "CWE-798", 
+      "confidence": 0.90,
+      "context_keywords": ["gcp", "google", "service", "account"],
+      "exclude_patterns": [
+        "//.*service_account",
+        "example.*service_account"
+      ]
+    },
+    "project_ids": {
+      "pattern": "\"project_id\":\\s*\"[^\"]+\"",
+      "severity": "MEDIUM",
+      "reason": "Hardcoded GCP project IDs may expose project structure",
+      "recommendation": "Use metadata service or environment variables for project identification",
+      "cwe_id": "CWE-200",
+      "confidence": 0.70,
+      "context_keywords": ["gcp", "project", "google"],
+      "exclude_patterns": [
+        "example-project",
+        "demo-project",
+        "test-project"
+      ]
+    },
+    "private_keys": {
+      "pattern": "\"private_key\":\\s*\"-----BEGIN PRIVATE KEY-----[\\s\\S]*?-----END PRIVATE KEY-----\"",
+      "severity": "CRITICAL",
+      "reason": "GCP service account private keys provide authentication credentials",
+      "recommendation": "Use Workload Identity or secure key management systems",
+      "cwe_id": "CWE-798",
+      "confidence": 0.95,
+      "context_keywords": ["gcp", "private", "key", "service"],
+      "exclude_patterns": [
+        "//.*private_key",
+        "example.*private"
+      ]
+    },
+    "oauth_credentials": {
+      "pattern": "\"client_id\":\\s*\"[0-9]+-[a-zA-Z0-9]+\\.apps\\.googleusercontent\\.com\"",
+      "severity": "HIGH",
+      "reason": "OAuth client credentials may provide unauthorized access",
+      "recommendation": "Use secure OAuth flows and avoid embedding client secrets",
+      "cwe_id": "CWE-798",
+      "confidence": 0.85,
+      "context_keywords": ["oauth", "client", "google", "auth"],
+      "exclude_patterns": [
+        "example.*googleusercontent",
+        "demo.*googleusercontent"
+      ]
+    }
+  },
+  "azure": {
+    "connection_strings": {
+      "pattern": "DefaultEndpointsProtocol=https;AccountName=[^;]+;AccountKey=[A-Za-z0-9+/=]{88}==;",
+      "severity": "CRITICAL",
+      "reason": "Azure storage connection strings contain account keys with full access",
+      "recommendation": "Use Azure Key Vault or Managed Identity for secure credential access",
+      "cwe_id": "CWE-798",
+      "confidence": 0.95,
+      "context_keywords": ["azure", "storage", "connection", "account"],
+      "exclude_patterns": [
+        "//.*connection",
+        "example.*connection",
+        "demo.*DefaultEndpoints"
+      ]
+    },
+    "subscription_ids": {
+      "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+      "severity": "MEDIUM",
+      "reason": "Azure subscription IDs may expose account structure",
+      "recommendation": "Use environment variables or secure configuration for subscription IDs",
+      "cwe_id": "CWE-200",
+      "confidence": 0.60,
+      "context_keywords": ["azure", "subscription", "guid", "uuid"],
+      "exclude_patterns": [
+        "00000000-0000-0000-0000-000000000000",
+        "11111111-1111-1111-1111-111111111111",
+        "example.*uuid"
+      ],
+      "require_context": ["azure", "subscription", "tenant"]
+    },
+    "client_secrets": {
+      "pattern": "client.*secret.*[A-Za-z0-9._~-]{34,}",
+      "severity": "CRITICAL",
+      "reason": "Azure application client secrets provide authentication credentials",
+      "recommendation": "Use Azure Key Vault or certificate-based authentication",
+      "cwe_id": "CWE-798",
+      "confidence": 0.80,
+      "context_keywords": ["azure", "client", "secret", "application"],
+      "exclude_patterns": [
+        "//.*client.*secret",
+        "example.*secret",
+        "demo.*client"
+      ]
+    },
+    "sas_tokens": {
+      "pattern": "\\?sv=[0-9]{4}-[0-9]{2}-[0-9]{2}&ss=[a-z]+&srt=[a-z]+&sp=[rwdlacup]+&se=[^&]+&st=[^&]+&spr=https&sig=[A-Za-z0-9+/=]+",
+      "severity": "HIGH",
+      "reason": "Azure SAS tokens provide time-limited access to storage resources",
+      "recommendation": "Generate SAS tokens dynamically and use short expiration times",
+      "cwe_id": "CWE-798",
+      "confidence": 0.90,
+      "context_keywords": ["azure", "sas", "storage", "token"],
+      "exclude_patterns": [
+        "//.*sas",
+        "example.*sig="
+      ]
+    }
+  },
+  "generic_cloud": {
+    "api_tokens": {
+      "pattern": "[a-zA-Z0-9]{32,}",
+      "severity": "MEDIUM",
+      "reason": "Generic API tokens may provide unauthorized service access",
+      "recommendation": "Use secure token management and rotate tokens regularly",
+      "cwe_id": "CWE-798",
+      "confidence": 0.50,
+      "context_keywords": ["api", "token", "auth", "bearer"],
+      "exclude_patterns": [
+        "//.*token",
+        "example.*token",
+        "demo.*api",
+        "test.*auth"
+      ],
+      "require_context": ["api", "auth", "token", "bearer", "secret"]
+    },
+    "private_keys": {
+      "pattern": "-----BEGIN (RSA |EC |)PRIVATE KEY-----[\\s\\S]*?-----END (RSA |EC |)PRIVATE KEY-----",
+      "severity": "CRITICAL",
+      "reason": "Private keys in source code can compromise cryptographic security",
+      "recommendation": "Use secure key management systems and never embed private keys in code",
+      "cwe_id": "CWE-798",
+      "confidence": 0.95,
+      "context_keywords": ["private", "key", "certificate", "crypto"],
+      "exclude_patterns": [
+        "//.*BEGIN.*PRIVATE",
+        "example.*private",
+        "demo.*key",
+        "test.*BEGIN"
+      ]
+    },
+    "webhook_secrets": {
+      "pattern": "webhook.*secret.*[A-Za-z0-9+/=]{16,}",
+      "severity": "HIGH",
+      "reason": "Webhook secrets verify the authenticity of incoming requests",
+      "recommendation": "Store webhook secrets in environment variables or secure vaults",
+      "cwe_id": "CWE-798",
+      "confidence": 0.75,
+      "context_keywords": ["webhook", "secret", "signature", "hmac"],
+      "exclude_patterns": [
+        "//.*webhook",
+        "example.*secret"
+      ]
+    }
+  },
+  "database_credentials": {
+    "connection_strings": {
+      "pattern": "(mongodb|mysql|postgresql|oracle|sqlserver)://[^\\s\"']+:[^\\s\"']+@[^\\s\"']+",
+      "severity": "CRITICAL",
+      "reason": "Database connection strings contain credentials that provide direct database access",
+      "recommendation": "Use connection pooling, environment variables, or secure credential management",
+      "cwe_id": "CWE-798",
+      "confidence": 0.90,
+      "context_keywords": ["database", "connection", "credentials", "password"],
+      "exclude_patterns": [
+        "//.*://",
+        "example.*database",
+        "demo.*connection",
+        "username.*password.*localhost"
+      ]
+    },
+    "jdbc_urls": {
+      "pattern": "jdbc:[^\\s\"']*password=[^\\s;\"']+",
+      "severity": "CRITICAL",
+      "reason": "JDBC URLs with embedded passwords expose database credentials",
+      "recommendation": "Use connection pooling with external credential management",
+      "cwe_id": "CWE-798",
+      "confidence": 0.95,
+      "context_keywords": ["jdbc", "database", "password", "connection"],
+      "exclude_patterns": [
+        "//.*jdbc",
+        "example.*password",
+        "demo.*jdbc"
+      ]
+    }
+  },
+  "third_party_services": {
+    "stripe_keys": {
+      "pattern": "(sk|pk)_(test|live)_[0-9a-zA-Z]{24,}",
+      "severity": "CRITICAL",
+      "reason": "Stripe API keys provide access to payment processing functions",
+      "recommendation": "Use environment variables and restrict key permissions by function",
+      "cwe_id": "CWE-798",
+      "confidence": 0.95,
+      "context_keywords": ["stripe", "payment", "api", "key"],
+      "exclude_patterns": [
+        "sk_test_example",
+        "pk_test_example"
+      ]
+    },
+    "sendgrid_keys": {
+      "pattern": "SG\\.[A-Za-z0-9._-]{22}\\.[A-Za-z0-9._-]{43}",
+      "severity": "HIGH",
+      "reason": "SendGrid API keys provide access to email sending services",
+      "recommendation": "Use environment variables and scope API key permissions appropriately",
+      "cwe_id": "CWE-798",
+      "confidence": 0.90,
+      "context_keywords": ["sendgrid", "email", "api", "mail"],
+      "exclude_patterns": [
+        "SG.example",
+        "//.*SG\\."
+      ]
+    },
+    "twilio_credentials": {
+      "pattern": "(AC[a-z0-9]{32}|SK[a-z0-9]{32})",
+      "severity": "HIGH",
+      "reason": "Twilio credentials provide access to SMS and voice services",
+      "recommendation": "Use environment variables and implement credential rotation",
+      "cwe_id": "CWE-798",
+      "confidence": 0.85,
+      "context_keywords": ["twilio", "sms", "voice", "api"],
+      "exclude_patterns": [
+        "ACexample",
+        "SKexample"
+      ]
+    }
+  }
+} 

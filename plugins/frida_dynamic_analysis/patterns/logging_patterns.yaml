@@ -1,0 +1,256 @@
+# Logging Vulnerability Detection Patterns
+# 
+# Comprehensive patterns for detecting insecure logging vulnerabilities
+# during runtime analysis. These patterns identify sensitive data being
+# logged in production applications.
+
+logging_vulnerabilities:
+  
+  # High-severity authentication data logging
+  authentication_logging:
+    - pattern: "password|passwd|pwd|passphrase"
+      severity: "HIGH"
+      cwe: "CWE-532"
+      masvs: "MASVS-STORAGE-1"
+      description: "Password data detected in application logs"
+      remediation: "Remove password logging in production builds"
+      confidence: 0.95
+      
+    - pattern: "token|jwt|bearer|oauth|auth.*token"
+      severity: "HIGH" 
+      cwe: "CWE-532"
+      masvs: "MASVS-AUTH-1"
+      description: "Authentication token detected in application logs"
+      remediation: "Remove authentication token logging"
+      confidence: 0.90
+      
+    - pattern: "secret|api.*key|private.*key|encryption.*key"
+      severity: "HIGH"
+      cwe: "CWE-532" 
+      masvs: "MASVS-CRYPTO-1"
+      description: "Secret or API key detected in application logs"
+      remediation: "Remove secret key logging in production"
+      confidence: 0.95
+      
+    - pattern: "session|cookie|credential"
+      severity: "HIGH"
+      cwe: "CWE-532"
+      masvs: "MASVS-AUTH-2"
+      description: "Session or credential data detected in logs"
+      remediation: "Remove session data from logs"
+      confidence: 0.85
+
+  # Medium-severity financial and PII logging  
+  financial_pii_logging:
+    - pattern: "credit.*card|debit.*card|card.*number"
+      severity: "HIGH"
+      cwe: "CWE-532"
+      masvs: "MASVS-STORAGE-1"
+      description: "Credit card information detected in logs"
+      remediation: "Remove financial data from logs"
+      confidence: 0.95
+      
+    - pattern: "ssn|social.*security|tax.*id"
+      severity: "HIGH"
+      cwe: "CWE-532"
+      masvs: "MASVS-STORAGE-1" 
+      description: "Social Security Number detected in logs"
+      remediation: "Remove PII from application logs"
+      confidence: 0.90
+      
+    - pattern: "bank.*account|routing.*number|account.*number"
+      severity: "HIGH"
+      cwe: "CWE-532"
+      masvs: "MASVS-STORAGE-1"
+      description: "Banking information detected in logs"
+      remediation: "Remove banking data from logs"
+      confidence: 0.90
+      
+    - pattern: "email.*address|phone.*number|mobile.*number"
+      severity: "MEDIUM"
+      cwe: "CWE-532"
+      masvs: "MASVS-STORAGE-1"
+      description: "Personal contact information detected in logs"
+      remediation: "Remove contact information from logs"
+      confidence: 0.75
+
+  # Medium-severity system and network logging
+  system_network_logging:
+    - pattern: "database.*url|connection.*string|jdbc.*url"
+      severity: "MEDIUM"
+      cwe: "CWE-532"
+      masvs: "MASVS-NETWORK-1"
+      description: "Database connection information detected in logs"
+      remediation: "Remove database URLs from logs"
+      confidence: 0.85
+      
+    - pattern: "server.*url|endpoint.*url|api.*endpoint"
+      severity: "MEDIUM"
+      cwe: "CWE-532"
+      masvs: "MASVS-NETWORK-1" 
+      description: "Server endpoint information detected in logs"
+      remediation: "Remove server URLs from logs"
+      confidence: 0.80
+      
+    - pattern: "host.*name|ip.*address|port.*number"
+      severity: "MEDIUM"
+      cwe: "CWE-532"
+      masvs: "MASVS-NETWORK-1"
+      description: "Network configuration detected in logs"
+      remediation: "Remove network details from logs" 
+      confidence: 0.75
+      
+    - pattern: "certificate|signature|encryption.*cert"
+      severity: "MEDIUM"
+      cwe: "CWE-532"
+      masvs: "MASVS-CRYPTO-1"
+      description: "Certificate information detected in logs"
+      remediation: "Remove certificate data from logs"
+      confidence: 0.80
+
+  # Medium-severity mobile-specific logging
+  mobile_specific_logging:
+    - pattern: "device.*id|imei|android.*id|advertising.*id"
+      severity: "MEDIUM"
+      cwe: "CWE-532"
+      masvs: "MASVS-STORAGE-1"
+      description: "Device identifier detected in logs"
+      remediation: "Remove device IDs from logs"
+      confidence: 0.85
+      
+    - pattern: "mac.*address|bluetooth.*address|wifi.*mac"
+      severity: "MEDIUM"
+      cwe: "CWE-532"
+      masvs: "MASVS-STORAGE-1"
+      description: "Hardware address detected in logs"
+      remediation: "Remove hardware addresses from logs"
+      confidence: 0.85
+      
+    - pattern: "location|gps|coordinate|latitude|longitude"
+      severity: "MEDIUM"
+      cwe: "CWE-532"
+      masvs: "MASVS-STORAGE-1"
+      description: "Location information detected in logs"
+      remediation: "Remove location data from logs"
+      confidence: 0.75
+      
+    - pattern: "contact.*list|address.*book|calendar.*data"
+      severity: "MEDIUM"
+      cwe: "CWE-532"
+      masvs: "MASVS-STORAGE-1"
+      description: "Personal data detected in logs"
+      remediation: "Remove personal data from logs"
+      confidence: 0.80
+
+  # Low-severity debug and development logging
+  debug_development_logging:
+    - pattern: "debug.*info|development.*data|test.*data"
+      severity: "LOW"
+      cwe: "CWE-532"
+      masvs: "MASVS-CODE-8"
+      description: "Development/debug information detected in logs"
+      remediation: "Remove debug logging in production builds"
+      confidence: 0.70
+      
+    - pattern: "stack.*trace|exception.*detail|error.*detail"
+      severity: "LOW" 
+      cwe: "CWE-532"
+      masvs: "MASVS-CODE-8"
+      description: "Detailed error information detected in logs"
+      remediation: "Sanitize error messages in production"
+      confidence: 0.60
+      
+    - pattern: "internal.*state|application.*state|user.*state"
+      severity: "LOW"
+      cwe: "CWE-532"
+      masvs: "MASVS-CODE-8"
+      description: "Internal application state detected in logs"
+      remediation: "Remove state information from logs"
+      confidence: 0.65
+
+# Detection thresholds and configuration
+detection_config:
+  
+  # Minimum confidence threshold for reporting
+  min_confidence: 0.60
+  
+  # Maximum log entries to analyze per session
+  max_log_entries: 1000
+  
+  # Time window for log aggregation (seconds)
+  aggregation_window: 300
+  
+  # Severity weights for scoring
+  severity_weights:
+    HIGH: 1.0
+    MEDIUM: 0.7
+    LOW: 0.4
+    
+  # Framework detection patterns
+  framework_patterns:
+    - name: "Android Log"
+      pattern: "android\\.util\\.Log"
+      confidence_modifier: 1.0
+      
+    - name: "Timber"
+      pattern: "timber\\.log\\.Timber"
+      confidence_modifier: 0.95
+      
+    - name: "Apache Commons"
+      pattern: "org\\.apache\\.commons\\.logging"
+      confidence_modifier: 0.90
+      
+    - name: "System.out"
+      pattern: "java\\.lang\\.System\\.out"
+      confidence_modifier: 0.80
+      
+    - name: "Custom Logger"
+      pattern: ".*[Ll]og.*"
+      confidence_modifier: 0.75
+
+# Evidence collection configuration
+evidence_config:
+  
+  # Collect full stack traces
+  collect_stack_traces: true
+  
+  # Maximum stack trace depth
+  max_stack_depth: 20
+  
+  # Collect execution context
+  collect_execution_context: true
+  
+  # Include log message content in evidence
+  include_log_content: true
+  
+  # Maximum log message length to capture
+  max_log_length: 500
+  
+  # Collect timing information
+  collect_timing: true
+  
+  # Include thread information
+  include_thread_info: true
+
+# False positive reduction
+false_positive_reduction:
+  
+  # Exclude common development patterns
+  exclude_patterns:
+    - "test.*log"
+    - "debug.*log"
+    - "sample.*data"
+    - "mock.*data"
+    - "dummy.*data"
+    
+  # Minimum message length to analyze
+  min_message_length: 5
+  
+  # Exclude system messages
+  exclude_system_logs: true
+  
+  # Context-based filtering
+  context_filtering:
+    enabled: true
+    exclude_test_methods: true
+    exclude_debug_builds: false  # Still check debug builds for vulnerabilities

@@ -1,0 +1,72 @@
+# AODS Development Requirements
+# Complete development environment dependencies
+# 
+# This includes full analysis capabilities plus development tools
+# Use this for contributing to AODS
+
+# Include full analysis capabilities
+-r analysis.txt
+
+# ========================================
+# Testing Framework
+# ========================================
+pytest-cov>=4.0.0          # Coverage reporting
+pytest-mock>=3.12.0        # Mocking utilities
+pytest-xdist>=3.5.0        # Parallel test execution
+pytest-benchmark>=4.0.0    # Performance benchmarking
+pytest-asyncio>=0.23.0     # Async testing
+
+# ========================================
+# Code Quality & Formatting
+# ========================================
+black>=24.0.0               # Code formatter
+flake8>=7.0.0               # Linting
+mypy>=1.8.0                 # Static type checking
+isort>=5.13.0               # Import sorting
+pre-commit>=4.0.0           # Git hooks
+
+# ========================================
+# Security & Vulnerability Scanning
+# ========================================
+bandit>=1.7.0               # Security linting
+safety>=3.0.0               # Dependency vulnerability scanning
+
+# ========================================
+# Documentation
+# ========================================
+mkdocs>=1.6.0               # Documentation generator
+mkdocs-material>=9.5.0      # Material theme
+sphinx>=8.0.0               # Alternative documentation
+
+# ========================================
+# Development Tools
+# ========================================
+ipython>=8.30.0             # Enhanced REPL
+jupyter>=1.1.0              # Notebook environment
+
+# ========================================
+# Debugging & Profiling
+# ========================================
+pdbpp>=0.10.3               # Enhanced debugger
+py-spy>=0.3.14              # Sampling profiler
+
+# ========================================
+# Build & Distribution
+# ========================================
+build>=1.2.0                # Build frontend
+twine>=5.0.0                # Package uploading
+setuptools>=75.0.0          # Package tools
+wheel>=0.45.0               # Wheel format
+
+# ========================================
+# Environment Management
+# ========================================
+python-dotenv>=1.0.0        # Environment variables
+
+# ========================================
+# Testing Utilities
+# ========================================
+factory-boy>=3.3.0          # Test data generation
+faker>=33.0.0               # Fake data
+responses>=0.25.0           # Mock HTTP requests
+freezegun>=1.5.0            # Mock datetime 

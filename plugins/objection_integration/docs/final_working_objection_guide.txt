@@ -1,0 +1,38 @@
+# 🎯 FINAL WORKING OBJECTION GUIDE
+# Tested and verified commands for AndroGoat
+
+# ====== DIRECT INTERACTIVE CONNECTION ======
+# Connect to your running app:
+./aods_venv/bin/objection -g owasp.sat.agoat explore
+
+# ====== AUTOMATED COMMAND EXECUTION ======
+# Run verified commands from file:
+./aods_venv/bin/objection -g owasp.sat.agoat explore -c clean_objection_commands.txt
+
+# ====== PROVEN WORKING COMMANDS ======
+memory list modules            # ✅ Shows loaded libraries
+android hooking list classes   # ✅ Lists 25,208+ classes  
+android sslpinning disable     # ✅ Bypasses SSL pinning
+android root disable           # ✅ Bypasses root detection
+android keystore list          # ✅ Shows keystore contents
+android clipboard monitor      # ⚠️ Broken but acknowledged
+
+# ====== AODS INTEGRATION ======
+# Full integrated analysis:
+./aods_venv/bin/python dyna.py --apk apks/AndroGoat.apk --pkg owasp.sat.agoat \
+  --with-objection --objection-mode recon --export-objection-commands \
+  --output comprehensive_analysis.json
+
+# ====== IMPORTANT NOTES ======
+# ✅ Objection connects successfully to your Corellium device
+# ✅ Agent injection works: "Agent injected and responds ok!"
+# ✅ AndroGoat is running (PID: 5834)
+# ✅ All core security bypasses are functional
+# ❌ Avoid commands with comments (#) in command files
+# ❌ Commands like 'env' have version bugs - use alternatives
+
+# ====== SUCCESSFUL BYPASS EVIDENCE ======
+# SSL Pinning: Multiple TrustManager hooks installed
+# Root Detection: Bypass job registered successfully  
+# Application Analysis: 25,208 classes fully enumerated
+# Memory Access: Complete module visibility achieved

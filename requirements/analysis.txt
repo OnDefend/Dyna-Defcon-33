@@ -1,0 +1,74 @@
+# AODS Full Analysis Requirements
+# Complete dependencies for all AODS analysis capabilities
+# 
+# This includes base requirements plus advanced analysis tools
+# Use this for full-featured AODS installations
+
+# Include base requirements
+-r base.txt
+
+# ========================================
+# Advanced Dynamic Analysis
+# ========================================
+frida>=16.0.0              # Dynamic instrumentation
+frida-tools>=12.0.0        # Frida CLI tools
+mitmproxy>=11.0.0          # HTTP/HTTPS proxy analysis
+
+# ========================================
+# Advanced Static Analysis
+# ========================================
+pyjadx>=0.4.0              # Java decompiler integration
+yara-python>=4.5.0         # Pattern matching engine
+
+# ========================================
+# Enhanced Data Analysis
+# ========================================
+scipy>=1.14.0              # Scientific computing
+scikit-learn>=1.4.0        # Machine learning for pattern detection
+joblib>=1.3.0              # ML model serialization
+
+# ========================================
+# Advanced Cryptographic Analysis
+# ========================================
+pycryptodome>=3.20.0       # Extended crypto toolkit
+
+# ========================================
+# Network Analysis
+# ========================================
+scapy>=2.6.0               # Network packet manipulation
+dnspython>=2.6.0           # DNS analysis
+
+# ========================================
+# Advanced Reporting
+# ========================================
+matplotlib>=3.8.0          # Visualization
+reportlab>=4.3.0           # PDF generation
+# weasyprint>=62.0.0         # HTML to PDF conversion - removed (HTML generation no longer supported)
+pillow>=11.0.0             # Image processing
+
+# ========================================
+# Enhanced File Processing
+# ========================================
+zipfile36>=0.1.3           # Advanced ZIP handling
+chardet>=5.2.0             # Character encoding detection
+defusedxml>=0.7.1          # Secure XML processing
+
+# ========================================
+# Advanced Text Processing
+# ========================================
+regex>=2024.11.6           # Enhanced regex support
+markupsafe>=2.1.5          # Safe string handling
+
+# ========================================
+# Performance & Profiling
+# ========================================
+memory-profiler>=0.61.0    # Memory profiling
+line-profiler>=4.0.0       # Line profiling
+tqdm>=4.67.0               # Progress bars
+psutil>=6.1.0              # Process and system monitoring
+
+# ========================================
+# Network Security
+# ========================================
+pyopenssl>=25.0.0          # OpenSSL bindings
+certifi>=2025.1.31         # Certificate bundle 

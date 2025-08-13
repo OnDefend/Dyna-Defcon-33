@@ -1,0 +1,41 @@
+# AODS Docker Deployment Requirements
+# Optimized dependencies for Docker containerization
+# 
+# This includes only what's needed for production Docker deployment
+# Excludes development tools and system-dependent packages
+
+# Include base requirements
+-r base.txt
+
+# ========================================
+# API Framework
+# ========================================
+fastapi>=0.104.0           # Modern API framework
+uvicorn[standard]>=0.24.0  # ASGI server
+pydantic>=2.5.0            # Data validation
+python-multipart>=0.0.6    # File upload support
+
+# ========================================
+# Database & Storage
+# ========================================
+sqlalchemy>=2.0.0          # Database ORM
+psycopg2-binary>=2.9.0     # PostgreSQL adapter
+redis>=4.6.0               # Redis client
+alembic>=1.13.0            # Database migrations
+
+# ========================================
+# Monitoring & Metrics
+# ========================================
+prometheus-client>=0.18.0  # Metrics export
+
+# ========================================
+# Enhanced Processing (Docker-safe)
+# ========================================
+urllib3>=2.0.0             # HTTP utilities
+unicodedata2>=15.1.0       # Unicode support
+typing-extensions>=4.12.0  # Type hints
+
+# ========================================
+# Utilities
+# ========================================
+dataclasses-json>=0.6.0    # JSON serialization 

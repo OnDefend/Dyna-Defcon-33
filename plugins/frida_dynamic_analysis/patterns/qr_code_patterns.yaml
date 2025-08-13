@@ -1,0 +1,276 @@
+# QR Code Vulnerability Patterns
+# Comprehensive patterns for detecting QR code security vulnerabilities
+# Used by AODS for runtime and static analysis
+
+version: "1.0.0"
+last_updated: "2025-01-22"
+category: "qr_code_security"
+
+# ========================================
+# QR CODE VULNERABILITY PATTERNS
+# ========================================
+
+qr_code_vulnerabilities:
+
+  # URL Injection Vulnerabilities
+  url_injection:
+    - pattern: "javascript:|data:|file:|ftp:|vbscript:|about:"
+      severity: "HIGH"
+      description: "Dangerous URL scheme in QR code content"
+      cwe_id: "CWE-79"
+      masvs_control: "MASVS-CODE-4"
+      confidence: 0.95
+      attack_vector: "Cross-Site Scripting via QR code"
+      remediation: "Validate and sanitize URL schemes before processing"
+      
+    - pattern: "javascript:\\s*eval\\s*\\("
+      severity: "CRITICAL"
+      description: "JavaScript code execution via QR code"
+      cwe_id: "CWE-94"
+      masvs_control: "MASVS-CODE-4"
+      confidence: 0.98
+      attack_vector: "Remote code execution"
+      remediation: "Block all javascript: URLs from QR codes"
+
+  # Intent Injection Vulnerabilities
+  intent_injection:
+    - pattern: "intent://.*#Intent.*scheme="
+      severity: "MEDIUM"
+      description: "Potentially unsafe intent from QR code"
+      cwe_id: "CWE-601"
+      masvs_control: "MASVS-PLATFORM-11"
+      confidence: 0.7
+      attack_vector: "Intent redirection attack"
+      remediation: "Validate intent URIs and use explicit intents"
+      
+    - pattern: "content://settings|content://.*secure"
+      severity: "HIGH"
+      description: "QR code accessing sensitive content providers"
+      cwe_id: "CWE-200"
+      masvs_control: "MASVS-PLATFORM-11"
+      confidence: 0.9
+      attack_vector: "Unauthorized access to system settings"
+      remediation: "Block access to sensitive content providers"
+
+  # Phishing and Social Engineering
+  phishing_indicators:
+    - pattern: "bit\\.ly|tinyurl|goo\\.gl|t\\.co|ow\\.ly|tiny\\.cc"
+      severity: "MEDIUM"
+      description: "URL shortener detected - potential phishing"
+      cwe_id: "CWE-601"
+      masvs_control: "MASVS-AUTH-2"
+      confidence: 0.6
+      attack_vector: "Phishing via shortened URLs"
+      remediation: "Expand and validate shortened URLs before use"
+      
+    - pattern: "login|signin|authenticate|password|account"
+      severity: "MEDIUM"
+      description: "Authentication-related QR code - verify legitimacy"
+      cwe_id: "CWE-346"
+      masvs_control: "MASVS-AUTH-2"
+      confidence: 0.5
+      attack_vector: "Credential harvesting"
+      remediation: "Verify QR code authenticity for auth flows"
+
+  # Sensitive Data Exposure
+  sensitive_data_exposure:
+    - pattern: "password=|token=|api_key=|secret=|auth=|bearer\\s+"
+      severity: "HIGH"
+      description: "Sensitive credentials exposed in QR code"
+      cwe_id: "CWE-200"
+      masvs_control: "MASVS-CRYPTO-1"
+      confidence: 0.9
+      attack_vector: "Credential exposure"
+      remediation: "Never embed credentials in QR codes"
+      
+    - pattern: "session_id=|sess=|sid=|sessionid="
+      severity: "MEDIUM"
+      description: "Session identifier exposed in QR code"
+      cwe_id: "CWE-200"
+      masvs_control: "MASVS-AUTH-2"
+      confidence: 0.8
+      attack_vector: "Session hijacking"
+      remediation: "Use secure session management"
+
+  # Data Parsing Vulnerabilities
+  data_parsing_vulnerabilities:
+    - pattern: "\\{.*\"__proto__\".*\\}|\\{.*\"constructor\".*\\}"
+      severity: "HIGH"
+      description: "Prototype pollution attempt in QR JSON data"
+      cwe_id: "CWE-1321"
+      masvs_control: "MASVS-CODE-4"
+      confidence: 0.85
+      attack_vector: "Prototype pollution"
+      remediation: "Use safe JSON parsing libraries"
+      
+    - pattern: "<%.*%>|<\\?.*\\?>|\\$\\{.*\\}"
+      severity: "MEDIUM"
+      description: "Template injection patterns in QR code"
+      cwe_id: "CWE-94"
+      masvs_control: "MASVS-CODE-4"
+      confidence: 0.7
+      attack_vector: "Server-side template injection"
+      remediation: "Sanitize template expressions"
+
+  # Camera Permission Abuse
+  camera_permission_patterns:
+    - pattern: "camera.*hidden|stealth.*camera|background.*capture"
+      severity: "HIGH"
+      description: "Suspicious camera usage patterns"
+      cwe_id: "CWE-250"
+      masvs_control: "MASVS-PLATFORM-1"
+      confidence: 0.8
+      attack_vector: "Unauthorized surveillance"
+      remediation: "Implement proper camera permission handling"
+
+  # Content Length and Format Attacks
+  format_attacks:
+    - pattern: ".{2000,}"  # Very long QR content
+      severity: "MEDIUM"
+      description: "Unusually long QR code content - potential DoS"
+      cwe_id: "CWE-400"
+      masvs_control: "MASVS-RESILIENCE-1"
+      confidence: 0.6
+      attack_vector: "Denial of Service via large payloads"
+      remediation: "Implement content length limits"
+      
+    - pattern: "\\x00|\\xff|[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x7f-\\x9f]"
+      severity: "LOW"
+      description: "Binary or control characters in QR code"
+      cwe_id: "CWE-20"
+      masvs_control: "MASVS-CODE-4"
+      confidence: 0.5
+      attack_vector: "Data corruption or parsing errors"
+      remediation: "Filter control characters from QR content"
+
+# ========================================
+# STATIC ANALYSIS PATTERNS
+# ========================================
+
+static_code_patterns:
+
+  # QR Library Usage Patterns
+  qr_library_imports:
+    - pattern: "import\\s+com\\.google\\.zxing"
+      description: "ZXing QR library imported"
+      security_note: "Ensure proper input validation"
+      
+    - pattern: "import\\s+com\\.google\\.mlkit\\.vision\\.barcode"
+      description: "ML Kit barcode library imported"
+      security_note: "Validate ML Kit results before use"
+
+  # Unsafe QR Processing Patterns
+  unsafe_qr_processing:
+    - pattern: "loadUrl\\s*\\(\\s*qr.*\\)"
+      severity: "HIGH"
+      description: "QR content loaded directly into WebView"
+      cwe_id: "CWE-79"
+      remediation: "Validate URLs before loading"
+      
+    - pattern: "startActivity\\s*\\(\\s*.*qr.*\\)"
+      severity: "MEDIUM"
+      description: "QR content used to start activities"
+      cwe_id: "CWE-601"
+      remediation: "Validate intents before launching"
+      
+    - pattern: "Intent\\.parseUri\\s*\\(\\s*qr.*\\)"
+      severity: "HIGH"
+      description: "QR content parsed as intent URI"
+      cwe_id: "CWE-601"
+      remediation: "Validate intent URIs thoroughly"
+
+  # Input Validation Bypass Patterns
+  input_validation_bypass:
+    - pattern: "qr.*\\.substring\\s*\\(|qr.*\\.replace\\s*\\("
+      severity: "MEDIUM"
+      description: "String manipulation on QR content without validation"
+      cwe_id: "CWE-20"
+      remediation: "Validate input before manipulation"
+      
+    - pattern: "new\\s+URL\\s*\\(\\s*qr.*\\)"
+      severity: "MEDIUM"
+      description: "QR content used to create URL objects"
+      cwe_id: "CWE-20"
+      remediation: "Validate URL format and scheme"
+
+# ========================================
+# DETECTION CONFIGURATION
+# ========================================
+
+detection_config:
+  # Minimum confidence thresholds
+  min_confidence:
+    critical: 0.9
+    high: 0.8
+    medium: 0.6
+    low: 0.4
+    
+  # Pattern matching options
+  case_sensitive: false
+  multiline: true
+  unicode: true
+  
+  # Analysis scope
+  analyze_comments: false
+  analyze_strings: true
+  analyze_urls: true
+  
+  # Performance limits
+  max_pattern_matches: 100
+  max_content_length: 5000
+  timeout_seconds: 30
+
+# ========================================
+# REMEDIATION GUIDELINES
+# ========================================
+
+remediation_guidelines:
+  url_injection:
+    - "Implement URL scheme allowlists"
+    - "Sanitize URLs before processing"
+    - "Use Content Security Policy (CSP) headers"
+    - "Validate URL destinations"
+    
+  intent_injection:
+    - "Use explicit intents instead of implicit ones"
+    - "Validate intent actions and data"
+    - "Implement intent filters carefully"
+    - "Check intent sender authentication"
+    
+  data_validation:
+    - "Implement comprehensive input validation"
+    - "Use parameterized queries for databases"
+    - "Sanitize data before JSON parsing"
+    - "Limit content length and complexity"
+    
+  camera_security:
+    - "Request permissions only when needed"
+    - "Provide clear user consent mechanisms"
+    - "Implement runtime permission checks"
+    - "Use camera session management"
+
+# ========================================
+# TESTING PAYLOADS
+# ========================================
+
+test_payloads:
+  malicious_urls:
+    - "javascript:alert('XSS')"
+    - "file:///etc/passwd"
+    - "data:text/html,<script>alert('XSS')</script>"
+    - "vbscript:MsgBox('VBS')"
+    
+  intent_attacks:
+    - "intent://malicious#Intent;scheme=evil;end"
+    - "content://settings/secure"
+    - "content://com.android.providers.settings/secure"
+    
+  phishing_examples:
+    - "https://bit.ly/suspicious-link"
+    - "http://goo.gl/phishing-attempt"
+    - "https://fake-login.example.com"
+    
+  data_exposure:
+    - "password=admin123"
+    - "api_key=sk_live_abc123xyz789"
+    - "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"

@@ -1,0 +1,211 @@
+# Storage Security Vulnerability Patterns
+# These patterns define runtime detection rules for storage security issues
+
+external_storage_usage:
+  name: "External Storage Usage"
+  pattern: "(/sdcard/|/external/|Environment.getExternalStorageDirectory)"
+  type: "INSECURE_STORAGE"
+  severity: "MEDIUM"
+  cwe: "CWE-200"
+  masvs: "MASVS-STORAGE-2"
+  confidence: 0.70
+  description: "External storage usage detected during runtime"
+  remediation: "Use internal storage for sensitive data or implement proper encryption"
+  examples:
+    - "/sdcard/app_data/"
+    - "/external/cache/"
+
+sensitive_file_access:
+  name: "Sensitive File Access"
+  pattern: "(password|key|token|secret|credential|private)"
+  type: "INSECURE_STORAGE"
+  severity: "MEDIUM"
+  cwe: "CWE-200"
+  masvs: "MASVS-STORAGE-1"
+  confidence: 0.80
+  description: "Sensitive file access detected during runtime"
+  remediation: "Encrypt sensitive files and restrict access permissions"
+  examples:
+    - "password_file.txt"
+    - "secret_keys.dat"
+
+world_readable_file:
+  name: "World Readable File"
+  pattern: "(MODE_WORLD_READABLE|0644|0666|0777)"
+  type: "INSECURE_STORAGE"
+  severity: "HIGH"
+  cwe: "CWE-732"
+  masvs: "MASVS-STORAGE-1"
+  confidence: 0.85
+  description: "World readable file permissions detected during runtime"
+  remediation: "Use private file permissions (MODE_PRIVATE) for sensitive data"
+  examples:
+    - "MODE_WORLD_READABLE"
+    - "openFileOutput(file, 0644)"
+
+world_writable_file:
+  name: "World Writable File"
+  pattern: "(MODE_WORLD_WRITEABLE|0666|0777)"
+  type: "INSECURE_STORAGE"
+  severity: "HIGH"
+  cwe: "CWE-732"
+  masvs: "MASVS-STORAGE-1"
+  confidence: 0.90
+  description: "World writable file permissions detected during runtime"
+  remediation: "Use private file permissions (MODE_PRIVATE) for all application files"
+  examples:
+    - "MODE_WORLD_WRITEABLE"
+    - "openFileOutput(file, 0666)"
+
+unencrypted_database:
+  name: "Unencrypted Database"
+  pattern: "(SQLiteDatabase.openDatabase|SQLiteOpenHelper)(?!.*encrypt)"
+  type: "INSECURE_STORAGE"
+  severity: "MEDIUM"
+  cwe: "CWE-312"
+  masvs: "MASVS-STORAGE-1"
+  confidence: 0.75
+  description: "Unencrypted database usage detected during runtime"
+  remediation: "Use SQLCipher or implement database encryption"
+  examples:
+    - "SQLiteDatabase.openDatabase(path, null, 0)"
+    - "new SQLiteOpenHelper()"
+
+sensitive_shared_prefs:
+  name: "Sensitive Data in SharedPreferences"
+  pattern: "(password|token|key|secret|credential)"
+  type: "INSECURE_STORAGE"
+  severity: "MEDIUM"
+  cwe: "CWE-312"
+  masvs: "MASVS-STORAGE-1"
+  confidence: 0.80
+  description: "Sensitive data in SharedPreferences detected during runtime"
+  remediation: "Encrypt sensitive data before storing in SharedPreferences"
+  examples:
+    - "putString(\"password\", value)"
+    - "putString(\"api_token\", token)"
+
+temp_file_usage:
+  name: "Temporary File Usage"
+  pattern: "(/tmp/|createTempFile|getTempDir)"
+  type: "INSECURE_STORAGE"
+  severity: "LOW"
+  cwe: "CWE-379"
+  masvs: "MASVS-STORAGE-1"
+  confidence: 0.60
+  description: "Temporary file usage detected during runtime"
+  remediation: "Ensure temporary files are properly cleaned up and don't contain sensitive data"
+  examples:
+    - "File.createTempFile()"
+    - "/tmp/app_temp"
+
+cache_sensitive_data:
+  name: "Sensitive Data in Cache"
+  pattern: "(getCacheDir|getExternalCacheDir).*write"
+  type: "INSECURE_STORAGE"
+  severity: "MEDIUM"
+  cwe: "CWE-312"
+  masvs: "MASVS-STORAGE-1"
+  confidence: 0.70
+  description: "Potentially sensitive data stored in cache during runtime"
+  remediation: "Avoid storing sensitive data in cache directories"
+  examples:
+    - "getCacheDir() + write operation"
+    - "getExternalCacheDir() + file creation"
+
+backup_flag_enabled:
+  name: "Backup Flag Enabled"
+  pattern: "(allowBackup=true|android:allowBackup=\"true\")"
+  type: "INSECURE_STORAGE"
+  severity: "MEDIUM"
+  cwe: "CWE-200"
+  masvs: "MASVS-STORAGE-2"
+  confidence: 0.85
+  description: "Application backup flag enabled during runtime"
+  remediation: "Set allowBackup to false for applications handling sensitive data"
+  examples:
+    - "allowBackup=true"
+
+log_sensitive_data:
+  name: "Sensitive Data in Logs"
+  pattern: "(Log\\.(d|i|w|e).*)(password|token|key|secret|credential)"
+  type: "DATA_LEAKAGE"
+  severity: "MEDIUM"
+  cwe: "CWE-532"
+  masvs: "MASVS-STORAGE-1"
+  confidence: 0.75
+  description: "Sensitive data logged during runtime"
+  remediation: "Remove sensitive data from log statements or disable logging in production"
+  examples:
+    - "Log.d(TAG, \"Password: \" + password)"
+    - "Log.i(TAG, \"Token: \" + authToken)"
+
+sqlite_injection:
+  name: "Potential SQL Injection"
+  pattern: "(execSQL|rawQuery).*\\+.*['\"]"
+  type: "CODE_INJECTION"
+  severity: "HIGH"
+  cwe: "CWE-89"
+  masvs: "MASVS-CODE-8"
+  confidence: 0.70
+  description: "Potential SQL injection vulnerability detected during runtime"
+  remediation: "Use parameterized queries instead of string concatenation"
+  examples:
+    - "execSQL(\"SELECT * FROM users WHERE id = \" + userId)"
+    - "rawQuery(\"SELECT * FROM \" + tableName)"
+
+file_path_traversal:
+  name: "File Path Traversal"
+  pattern: "(\\.\\./|\\.\\.\\\\|%2e%2e%2f)"
+  type: "INSECURE_STORAGE"
+  severity: "HIGH"
+  cwe: "CWE-22"
+  masvs: "MASVS-STORAGE-1"
+  confidence: 0.85
+  description: "File path traversal pattern detected during runtime"
+  remediation: "Validate and sanitize file paths to prevent directory traversal"
+  examples:
+    - "../../../etc/passwd"
+    - "..\\..\\windows\\system32"
+
+keystore_weak_key:
+  name: "Weak Keystore Key"
+  pattern: "(KeyStore.*generateKey.*1024|KeyStore.*generateKey.*512)"
+  type: "WEAK_CRYPTOGRAPHY"
+  severity: "HIGH"
+  cwe: "CWE-326"
+  masvs: "MASVS-CRYPTO-1"
+  confidence: 0.80
+  description: "Weak key size in Android Keystore detected during runtime"
+  remediation: "Use at least 2048-bit keys for RSA and 256-bit keys for AES"
+  examples:
+    - "generateKey with 1024-bit RSA"
+    - "generateKey with 512-bit key"
+
+file_overwrite:
+  name: "File Overwrite Vulnerability"
+  pattern: "(FileOutputStream.*append.*false|truncate)"
+  type: "INSECURE_STORAGE"
+  severity: "MEDIUM"
+  cwe: "CWE-379"
+  masvs: "MASVS-STORAGE-1"
+  confidence: 0.65
+  description: "File overwrite operation detected during runtime"
+  remediation: "Implement proper file locking and backup mechanisms"
+  examples:
+    - "FileOutputStream(file, false)"
+    - "truncate file operation"
+
+race_condition_file:
+  name: "File Race Condition"
+  pattern: "(exists.*delete|exists.*create)"
+  type: "INSECURE_STORAGE"
+  severity: "MEDIUM"
+  cwe: "CWE-362"
+  masvs: "MASVS-STORAGE-1"
+  confidence: 0.60
+  description: "Potential file race condition detected during runtime"
+  remediation: "Use atomic file operations and proper synchronization"
+  examples:
+    - "if (file.exists()) file.delete()"
+    - "check-then-create pattern"

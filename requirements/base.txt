@@ -1,0 +1,54 @@
+# AODS Core Requirements
+# Essential dependencies for basic AODS functionality
+# 
+# This file contains ONLY the core dependencies needed to run AODS
+# For other use cases, see:
+# - requirements/analysis.txt    (Full analysis capabilities)
+# - requirements/docker.txt      (Docker deployment)
+# - requirements/dev.txt         (Development tools)
+
+# ========================================
+# Core UI and Experience
+# ========================================
+rich>=13.9.0              # Essential terminal formatting and progress
+click>=8.1.0               # CLI framework
+colorama>=0.4.6            # Cross-platform terminal colors
+
+# ========================================
+# Essential Android Analysis
+# ========================================
+androguard>=4.1.0          # Core Android APK analysis
+pyaxmlparser>=0.3.28       # AndroidManifest.xml parsing
+
+# ========================================
+# Core Data Processing
+# ========================================
+requests>=2.32.0           # HTTP requests
+pyyaml>=6.0.0              # Configuration parsing
+pandas>=2.2.0              # Data manipulation
+numpy>=1.26.0              # Numerical operations
+
+# ========================================
+# Essential File & Text Processing
+# ========================================
+lxml>=5.3.0                # XML processing
+beautifulsoup4>=4.13.0     # HTML/XML parsing
+jinja2>=3.1.0              # Template engine for reports
+
+# ========================================
+# Core Security Analysis
+# ========================================
+cryptography>=43.0.0       # Cryptographic analysis
+sqlparse>=0.5.0            # SQL parsing
+
+# ========================================
+# System Utilities
+# ========================================
+psutil>=5.9.0              # System monitoring
+pathlib2>=2.3.7            # Enhanced path handling
+python-dateutil>=2.9.0     # Date utilities
+
+# ========================================
+# Basic Testing
+# ========================================
+pytest>=8.3.0              # Testing framework 

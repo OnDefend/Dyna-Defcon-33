@@ -1,0 +1,135 @@
+# Pattern Template Definitions
+# Templates for generating vulnerability patterns with systematic variations
+
+templates:
+  # SQL Injection Templates
+  sql_injection:
+    - template_id: "android_sql_injection"
+      template_name: "Android SQL Injection Patterns"
+      base_regex: "(?i){method}\\s*\\(\\s*[^)]*\\+[^)]*\\)"
+      vulnerability_type: "sql_injection"
+      severity: "HIGH"
+      cwe_id: "CWE-89"
+      masvs_category: "MSTG-CODE-8"
+      variations:
+        - method: "rawQuery"
+          context: "Android SQLite raw queries"
+          confidence: 0.9
+        - method: "execSQL"  
+          context: "Android SQLite SQL execution"
+          confidence: 0.85
+        - method: "query"
+          context: "Android SQLite query builder"
+          confidence: 0.8
+        - method: "compileStatement"
+          context: "Android SQLite compiled statements"
+          confidence: 0.75
+
+  # Path Traversal Templates
+  path_traversal:
+    - template_id: "android_path_traversal"
+      template_name: "Android Path Traversal Patterns"
+      base_regex: "new\\s+File\\s*\\(\\s*[^)]*{traversal_pattern}[^)]*\\)"
+      vulnerability_type: "path_traversal"
+      severity: "HIGH"
+      cwe_id: "CWE-22"
+      masvs_category: "MSTG-STORAGE-2"
+      variations:
+        - traversal_pattern: "\\.\\.\\/?"
+          context: "Relative path traversal"
+          confidence: 0.9
+        - traversal_pattern: "\\.\\.\\\\\\.\\.\\/?"
+          context: "Multiple level traversal" 
+          confidence: 0.85
+        - traversal_pattern: "%2e%2e%2f"
+          context: "URL-encoded traversal"
+          confidence: 0.8
+
+  # Code Injection Templates
+  code_injection:
+    - template_id: "android_code_injection"
+      template_name: "Android Code Injection Patterns"
+      base_regex: "{runtime_method}\\s*\\(\\s*[^)]*\\+[^)]*\\)"
+      vulnerability_type: "code_injection"
+      severity: "CRITICAL"
+      cwe_id: "CWE-78"
+      masvs_category: "MSTG-CODE-8"
+      variations:
+        - runtime_method: "Runtime\\.getRuntime\\(\\)\\.exec"
+          context: "Runtime command execution"
+          confidence: 0.95
+        - runtime_method: "ProcessBuilder"
+          context: "Process builder execution"
+          confidence: 0.9
+
+  # Hardcoded Secrets Templates
+  hardcoded_secrets:
+    - template_id: "android_hardcoded_secrets"
+      template_name: "Android Hardcoded Secrets Patterns"
+      base_regex: "(?i){secret_type}\\s*=\\s*[\"'][a-zA-Z0-9+/={{8,}}[\"']"
+      vulnerability_type: "hardcoded_secrets"
+      severity: "HIGH"
+      cwe_id: "CWE-798"
+      masvs_category: "MSTG-CRYPTO-1"
+      variations:
+        - secret_type: "API_KEY"
+          context: "Hardcoded API keys"
+          confidence: 0.85
+        - secret_type: "SECRET_KEY"
+          context: "Hardcoded secret keys"
+          confidence: 0.9
+        - secret_type: "PASSWORD"
+          context: "Hardcoded passwords"
+          confidence: 0.8
+
+  # WebView Security Templates
+  webview_security:
+    - template_id: "android_webview_security"
+      template_name: "Android WebView Security Patterns"
+      base_regex: "{webview_method}\\s*\\(\\s*{value}\\s*\\)"
+      vulnerability_type: "webview_security"
+      severity: "MEDIUM"
+      cwe_id: "CWE-200"
+      masvs_category: "MSTG-PLATFORM-2"
+      variations:
+        - webview_method: "setJavaScriptEnabled"
+          value: "true"
+          context: "JavaScript enabled in WebView"
+          confidence: 0.7
+        - webview_method: "setAllowFileAccess"
+          value: "true"
+          context: "File access enabled in WebView"
+          confidence: 0.75
+
+# Template expansion rules
+expansion_rules:
+  max_variations_per_template: 10
+  enable_context_substitution: true
+  enable_confidence_adjustment: true
+  
+  # Confidence adjustment factors
+  confidence_factors:
+    high_risk_methods: 1.1
+    deprecated_apis: 1.05
+    common_patterns: 0.95
+    edge_cases: 0.9
+
+# Template categories for organization
+categories:
+  android_security:
+    - sql_injection
+    - path_traversal
+    - code_injection
+    - hardcoded_secrets
+    - webview_security
+  
+  owasp_top_10:
+    - sql_injection
+    - code_injection
+    - hardcoded_secrets
+  
+  masvs_compliance:
+    - sql_injection
+    - path_traversal
+    - hardcoded_secrets
+    - webview_security 

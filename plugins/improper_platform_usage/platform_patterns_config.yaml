@@ -1,0 +1,245 @@
+# Platform Usage Security Patterns Configuration
+# External configuration for improper platform usage vulnerability detection
+
+security_control_patterns:
+  root_detection:
+    - name: "Android Package Manager Root Detection"
+      pattern: "pm\\s+(?:list|install|uninstall).*su"
+      description: "Package manager commands with su access"
+      severity: "MEDIUM"
+      confidence_base: 0.75
+      cwe: "CWE-250"
+      masvs_control: "MSTG-RESILIENCE-1"
+      
+    - name: "Root Binary Detection"
+      pattern: "(?:/system/xbin/su|/system/bin/su|/sbin/su|/system/app/SuperSU|/system/app/Superuser)"
+      description: "Detection of common root binaries"
+      severity: "HIGH"
+      confidence_base: 0.85
+      cwe: "CWE-250"
+      masvs_control: "MSTG-RESILIENCE-1"
+      
+    - name: "Build Tags Root Detection"
+      pattern: "Build\\.TAGS.*test-keys"
+      description: "Detection of test-keys in build tags"
+      severity: "MEDIUM"
+      confidence_base: 0.70
+      cwe: "CWE-250"
+      masvs_control: "MSTG-RESILIENCE-1"
+
+  anti_tampering:
+    - name: "Application Signature Verification"
+      pattern: "getPackageInfo.*GET_SIGNATURES"
+      description: "Application signature verification"
+      severity: "MEDIUM"
+      confidence_base: 0.80
+      cwe: "CWE-345"
+      masvs_control: "MSTG-RESILIENCE-9"
+      
+    - name: "Installer Package Verification"
+      pattern: "getInstallerPackageName"
+      description: "Verification of installer package"
+      severity: "MEDIUM"
+      confidence_base: 0.75
+      cwe: "CWE-345"
+      masvs_control: "MSTG-RESILIENCE-9"
+      
+    - name: "Runtime Application Self Protection"
+      pattern: "(?:checkSelfPermission|enforcePermission).*WRITE_EXTERNAL_STORAGE"
+      description: "Runtime application self protection"
+      severity: "HIGH"
+      confidence_base: 0.85
+      cwe: "CWE-345"
+      masvs_control: "MSTG-RESILIENCE-9"
+
+  debugger_detection:
+    - name: "Debug Flag Detection"
+      pattern: "ApplicationInfo\\.FLAG_DEBUGGABLE"
+      description: "Detection of debug flags"
+      severity: "HIGH"
+      confidence_base: 0.90
+      cwe: "CWE-489"
+      masvs_control: "MSTG-RESILIENCE-2"
+      
+    - name: "Debugger Process Detection"
+      pattern: "(?:isDebuggerConnected|isDebugging)"
+      description: "Detection of debugger processes"
+      severity: "HIGH"
+      confidence_base: 0.85
+      cwe: "CWE-489"
+      masvs_control: "MSTG-RESILIENCE-2"
+
+  emulator_detection:
+    - name: "Android Emulator Detection"
+      pattern: "(?:generic|unknown|emulator|simulator)"
+      description: "Detection of Android emulator environment"
+      severity: "MEDIUM"
+      confidence_base: 0.70
+      cwe: "CWE-250"
+      masvs_control: "MSTG-RESILIENCE-3"
+      
+    - name: "Build Model Emulator Detection"
+      pattern: "Build\\.MODEL.*(?:sdk|emulator)"
+      description: "Emulator detection via build model"
+      severity: "MEDIUM"
+      confidence_base: 0.75
+      cwe: "CWE-250"
+      masvs_control: "MSTG-RESILIENCE-3"
+
+tampering_protection_patterns:
+  integrity_verification:
+    - name: "File Integrity Verification"
+      pattern: "MessageDigest\\.getInstance.*(?:SHA-256|SHA-512)"
+      description: "File integrity verification using secure hashing"
+      severity: "HIGH"
+      confidence_base: 0.85
+      cwe: "CWE-345"
+      masvs_control: "MSTG-RESILIENCE-9"
+      
+    - name: "Code Integrity Checking"
+      pattern: "CRC32|Adler32"
+      description: "Code integrity checking mechanisms"
+      severity: "MEDIUM"
+      confidence_base: 0.70
+      cwe: "CWE-345"
+      masvs_control: "MSTG-RESILIENCE-9"
+
+  runtime_protection:
+    - name: "Runtime Application Self Protection"
+      pattern: "(?:SecurityManager|Permission).*check"
+      description: "Runtime application self protection mechanisms"
+      severity: "HIGH"
+      confidence_base: 0.80
+      cwe: "CWE-489"
+      masvs_control: "MSTG-RESILIENCE-9"
+      
+    - name: "Dynamic Loading Protection"
+      pattern: "DexClassLoader.*(?:verify|check)"
+      description: "Protection against dynamic loading attacks"
+      severity: "HIGH"
+      confidence_base: 0.85
+      cwe: "CWE-470"
+      masvs_control: "MSTG-RESILIENCE-9"
+
+  hook_detection:
+    - name: "Xposed Framework Detection"
+      pattern: "(?:de\\.robv\\.android\\.xposed|XposedBridge)"
+      description: "Detection of Xposed framework"
+      severity: "HIGH"
+      confidence_base: 0.90
+      cwe: "CWE-250"
+      masvs_control: "MSTG-RESILIENCE-4"
+      
+    - name: "Substrate Hook Detection"
+      pattern: "(?:com\\.saurik\\.substrate|MSHookFunction)"
+      description: "Detection of Substrate hooking framework"
+      severity: "HIGH"
+      confidence_base: 0.85
+      cwe: "CWE-250"
+      masvs_control: "MSTG-RESILIENCE-4"
+
+platform_usage_patterns:
+  exported_components:
+    - name: "Exported Activity Without Protection"
+      pattern: "android:exported=\"true\""
+      description: "Exported activity without proper permission protection"
+      severity: "HIGH"
+      confidence_base: 0.80
+      cwe: "CWE-200"
+      masvs_control: "MSTG-PLATFORM-1"
+      
+    - name: "Exported Service Without Protection"
+      pattern: "<service.*android:exported=\"true\""
+      description: "Exported service without proper permission protection"
+      severity: "HIGH"
+      confidence_base: 0.85
+      cwe: "CWE-200"
+      masvs_control: "MSTG-PLATFORM-1"
+      
+    - name: "Exported Broadcast Receiver"
+      pattern: "<receiver.*android:exported=\"true\""
+      description: "Exported broadcast receiver without proper filtering"
+      severity: "MEDIUM"
+      confidence_base: 0.75
+      cwe: "CWE-200"
+      masvs_control: "MSTG-PLATFORM-1"
+
+  content_provider_security:
+    - name: "Exported Content Provider"
+      pattern: "<provider.*android:exported=\"true\""
+      description: "Exported content provider without proper permission protection"
+      severity: "CRITICAL"
+      confidence_base: 0.90
+      cwe: "CWE-200"
+      masvs_control: "MSTG-PLATFORM-2"
+      
+    - name: "Content Provider Grant URI Permissions"
+      pattern: "android:grantUriPermissions=\"true\""
+      description: "Content provider granting URI permissions"
+      severity: "HIGH"
+      confidence_base: 0.80
+      cwe: "CWE-200"
+      masvs_control: "MSTG-PLATFORM-2"
+
+  intent_handling:
+    - name: "Unprotected Intent Filter"
+      pattern: "<intent-filter>.*<action.*android\\.intent\\.action"
+      description: "Intent filter without proper protection"
+      severity: "MEDIUM"
+      confidence_base: 0.70
+      cwe: "CWE-200"
+      masvs_control: "MSTG-PLATFORM-3"
+      
+    - name: "Deep Link Handling"
+      pattern: "<data.*android:scheme="
+      description: "Deep link handling without proper validation"
+      severity: "HIGH"
+      confidence_base: 0.80
+      cwe: "CWE-200"
+      masvs_control: "MSTG-PLATFORM-3"
+
+  permission_patterns:
+    - name: "Dangerous Permission Usage"
+      pattern: "android\\.permission\\.(?:CAMERA|RECORD_AUDIO|ACCESS_FINE_LOCATION|READ_CONTACTS)"
+      description: "Usage of dangerous permissions"
+      severity: "MEDIUM"
+      confidence_base: 0.70
+      cwe: "CWE-250"
+      masvs_control: "MSTG-PLATFORM-1"
+      
+    - name: "Custom Permission Definition"
+      pattern: "<permission.*android:protectionLevel"
+      description: "Custom permission definition"
+      severity: "MEDIUM"
+      confidence_base: 0.75
+      cwe: "CWE-250"
+      masvs_control: "MSTG-PLATFORM-1"
+
+vulnerability_thresholds:
+  effectiveness_scores:
+    very_strong: 0.9
+    strong: 0.7
+    moderate: 0.5
+    weak: 0.2
+    none: 0.0
+    
+  confidence_adjustments:
+    multiple_indicators: 0.1
+    implementation_context: 0.05
+    cross_validation: 0.1
+    pattern_reliability: 0.05
+    
+  severity_mappings:
+    critical: ["CWE-200", "CWE-345"]
+    high: ["CWE-250", "CWE-489"]
+    medium: ["CWE-470"]
+    low: []
+
+analysis_settings:
+  max_analysis_time: 300  # seconds
+  max_file_size_mb: 20
+  pattern_timeout: 30  # seconds per pattern
+  enable_parallel_processing: true
+  thread_pool_size: 4
+  enable_deep_analysis: true
+  confidence_threshold: 0.6 

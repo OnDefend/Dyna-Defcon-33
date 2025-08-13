@@ -1,0 +1,6 @@
+memory list modules
+android hooking list classes
+android sslpinning disable
+android root disable
+android keystore list
+android clipboard monitor

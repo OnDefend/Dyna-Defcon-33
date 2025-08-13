@@ -1,0 +1,70 @@
+{
+  "ml_integration": {
+    "enabled": true,
+    "models_path": "models/production",
+    "ensemble_model": "ensemble_production.pkl",
+    "feature_extractor": "feature_extractor_production.pkl",
+    "confidence_threshold": 0.7,
+    "research_enhanced": true,
+    "deployment_date": "2025-07-20T23:14:22.885830",
+    "model_version": "1.0.0-research-enhanced",
+    "training_data_source": "7_academic_datasets",
+    "training_samples": 338,
+    "fallback_enabled": true
+  },
+  "deployment_info": {
+    "deployed_by": "immediate_deployment_script",
+    "deployment_timestamp": "2025-07-20T23:14:22.885854",
+    "source_data": "research_training_datasets",
+    "validation_status": "production_ready"
+  },
+  "false_positive_learning": {
+    "enabled": true,
+    "integration_module": "core.aods_fp_learning_integration",
+    "real_time_learning": true,
+    "learning_integration_date": "2025-07-20T23:23:05.671734",
+    "integration_version": "1.0.0"
+  },
+  "research_enhancement": {
+    "real_time_learning": {
+      "enabled": true,
+      "feedback_collection": true,
+      "pattern_learning": true,
+      "continuous_improvement": true
+    },
+    "confidence_enhancement": {
+      "enabled": true,
+      "ml_prediction": true,
+      "uncertainty_quantification": true,
+      "historical_calibration": true,
+      "explainable_confidence": true
+    },
+    "masvs_coverage": {
+      "enabled": true,
+      "compliance_tracking": true,
+      "control_validation": true,
+      "category_analysis": true,
+      "recommendation_generation": true
+    }
+  },
+  "ml_confidence_enhancement": {
+    "enabled": true,
+    "integration_module": "core.aods_ml_confidence_integration",
+    "uncertainty_quantification": true,
+    "ensemble_aggregation": true,
+    "evidence_analysis": true,
+    "calibration_learning": true,
+    "deployment_date": "2025-07-20T23:27:32.827604",
+    "enhancement_version": "1.0.0"
+  },
+  "masvs_integration": {
+    "enabled": true,
+    "version": "2.0",
+    "coverage_target": 20,
+    "operational_categories": 8,
+    "compliance_analysis": true,
+    "auto_reporting": true,
+    "integration_date": "2025-07-21T03:44:26.637265",
+    "integration_version": "1.0.0"
+  }
+}
